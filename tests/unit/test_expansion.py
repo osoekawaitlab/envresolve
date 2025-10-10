@@ -2,7 +2,7 @@
 
 import pytest
 
-from envresolve.exceptions import CircularReferenceError
+from envresolve.exceptions import CircularReferenceError, VariableNotFoundError
 from envresolve.services.expansion import VariableExpander
 
 
@@ -41,3 +41,12 @@ def test_circular_reference_raises_error() -> None:
 
     with pytest.raises(CircularReferenceError):
         expander.expand(env["A"], env)
+
+
+def test_missing_variable_raises_error() -> None:
+    """Test that missing variable raises VariableNotFoundError."""
+    expander = VariableExpander()
+    env = {"A": "value"}
+
+    with pytest.raises(VariableNotFoundError, match=r"MISSING"):
+        expander.expand("${MISSING}", env)

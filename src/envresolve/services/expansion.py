@@ -2,7 +2,7 @@
 
 import re
 
-from envresolve.exceptions import CircularReferenceError
+from envresolve.exceptions import CircularReferenceError, VariableNotFoundError
 
 
 class VariableExpander:
@@ -37,11 +37,13 @@ class VariableExpander:
 
             # Check for circular reference
             if var_name in visited:
-                msg = f"Circular reference detected: {var_name} references itself"
-                raise CircularReferenceError(msg)
+                raise CircularReferenceError(var_name)
 
             # Get the value and recursively expand it
-            value = env[var_name]
+            try:
+                value = env[var_name]
+            except KeyError as e:
+                raise VariableNotFoundError(var_name) from e
 
             # Add to visited set before recursing
             new_visited = visited | {var_name}
