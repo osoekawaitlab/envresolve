@@ -1,0 +1,49 @@
+name: ADR Request
+description: Request an Architecture Decision Record
+title: "[ADR]: "
+labels: ["adr", "documentation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Request documentation of an architectural decision
+
+  - type: textarea
+    id: decision
+    attributes:
+      label: Decision Topic
+      description: What architectural decision needs to be documented?
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: What is the context or background for this decision?
+    validations:
+      required: true
+
+  - type: textarea
+    id: options
+    attributes:
+      label: Options Considered
+      description: What alternatives or options should be evaluated?
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance Criteria
+      description: What should be included in the ADR?
+      placeholder: |
+        - [ ] Context is clearly described
+        - [ ] Options are evaluated with pros/cons
+        - [ ] Decision is documented with rationale
+        - [ ] Consequences are discussed
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
