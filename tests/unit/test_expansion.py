@@ -1,5 +1,8 @@
 """Unit tests for variable expansion."""
 
+import pytest
+
+from envresolve.exceptions import CircularReferenceError
 from envresolve.services.expansion import VariableExpander
 
 
@@ -29,3 +32,12 @@ def test_expand_simple_without_curly_braces() -> None:
     result = expander.expand("$VAULT", {"VAULT": "my-vault"})
 
     assert result == "my-vault"
+
+
+def test_circular_reference_raises_error() -> None:
+    """Test that circular reference raises CircularReferenceError."""
+    expander = VariableExpander()
+    env = {"A": "${B}", "B": "${A}"}
+
+    with pytest.raises(CircularReferenceError):
+        expander.expand(env["A"], env)
