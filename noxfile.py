@@ -8,6 +8,20 @@ PYTHON_VERSIONS = ["3.9", "3.10", "3.11", "3.12", "3.13"]
 
 
 @nox.session(python="3.12")
+def tests_unit(session: nox.Session) -> None:
+    """Run unit tests only."""
+    session.install("-e", ".", "--group=dev")
+    session.run("uv", "run", "--active", "pytest", "tests/unit/", "-v")
+
+
+@nox.session(python="3.12")
+def tests_e2e(session: nox.Session) -> None:
+    """Run E2E tests only."""
+    session.install("-e", ".", "--group=dev")
+    session.run("uv", "run", "--active", "pytest", "tests/e2e/", "-v")
+
+
+@nox.session(python="3.12")
 def tests(session: nox.Session) -> None:
     """Run all tests with coverage reporting."""
     session.install("-e", ".", "--group=dev")
