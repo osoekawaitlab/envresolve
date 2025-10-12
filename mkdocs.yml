@@ -1,0 +1,75 @@
+site_name: envresolve
+site_description: Python library for resolving environment variables from secret stores
+site_url: https://github.com/osoekawaitlab/envresolve
+repo_url: https://github.com/osoekawaitlab/envresolve
+repo_name: osoekawaitlab/envresolve
+
+theme:
+  name: material
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_source: true
+            show_root_heading: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            members_order: source
+            separate_signature: true
+            show_signature_annotations: true
+            signature_crossrefs: true
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Roadmap: roadmap.md
+  - User Guide:
+      - Installation: user-guide/installation.md
+      - Basic Usage: user-guide/basic-usage.md
+  - API Reference:
+      - Variable Expansion: api-reference/expansion.md
+  - Architecture:
+      - ADRs: architecture/adr.md
+  - Contributing: contributing.md
