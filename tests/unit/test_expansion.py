@@ -5,13 +5,9 @@ from pathlib import Path
 
 import pytest
 
+from envresolve.application.expanders import BaseExpander, DotEnvExpander, EnvExpander
 from envresolve.exceptions import CircularReferenceError, VariableNotFoundError
-from envresolve.services.expansion import (
-    BaseExpander,
-    DotEnvExpander,
-    EnvExpander,
-    expand_variables,
-)
+from envresolve.services.expansion import expand_variables
 
 
 def test_expand_variables_function_exists() -> None:
@@ -38,8 +34,11 @@ def test_circular_reference_raises_error() -> None:
     """Test that circular reference raises CircularReferenceError."""
     env = {"A": "${B}", "B": "${A}"}
 
-    with pytest.raises(CircularReferenceError):
-        expand_variables(env["A"], env)
+    with pytest.raises(CircularReferenceError) as exc:
+        expand_variables("${A}", env)
+
+    assert exc.value.chain == ["A", "B", "A"]
+    assert str(exc.value) == "Circular reference detected: A -> B -> A"
 
 
 def test_missing_variable_raises_error() -> None:
@@ -186,3 +185,10 @@ def test_dotenv_expander_default_path(
     expander = DotEnvExpander()
 
     assert expander.env == {"VAR": "value"}
+
+
+def test_expand_nested_curly_braces() -> None:
+    """Test that nested curly braces are expanded correctly."""
+    env = {"NESTED": "BAR", "VAR_BAR": "value"}
+    result = expand_variables("${VAR_${NESTED}}", env)
+    assert result == "value"

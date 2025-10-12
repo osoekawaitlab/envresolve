@@ -1,23 +1,24 @@
 """Variable expansion service."""
 
-import os
 import re
-from pathlib import Path
-
-from dotenv import dotenv_values
 
 from envresolve.exceptions import CircularReferenceError, VariableNotFoundError
 
+INNER_CURLY_PATTERN = re.compile(r"\$\{([^{}]+)\}")
+SIMPLE_VAR_PATTERN = re.compile(r"\$([A-Za-z_][A-Za-z0-9_]*)\b")
 
-def expand_variables(
-    text: str, env: dict[str, str], visited: set[str] | None = None
-) -> str:
+
+def expand_variables(text: str, env: dict[str, str]) -> str:
     """Expand ${VAR} and $VAR in text using provided environment dictionary.
+
+    This function expands variables recursively to support nested variables and
+    multiple variables in a single string. Circular references are detected by
+    keeping track of the expansion stack and reporting the chain that caused the
+    loop.
 
     Args:
         text: The text containing variables to expand
         env: Dictionary of variable name to value mappings
-        visited: Set of variable names currently being resolved (for cycle detection)
 
     Returns:
         The text with all variables expanded
@@ -29,88 +30,64 @@ def expand_variables(
     Examples:
         >>> expand_variables("${VAULT}", {"VAULT": "my-vault"})
         'my-vault'
-        >>> expand_variables("$VAULT", {"VAULT": "my-vault"})
-        'my-vault'
+        >>> expand_variables("${VAR_${NESTED}}", {"NESTED": "BAR", "VAR_BAR": "value"})
+        'value'
+        >>> expand_variables("akv://${VAULT}/${SECRET}", {"VAULT": "v", "SECRET": "s"})
+        'akv://v/s'
     """
-    if visited is None:
-        visited = set()
-
-    # Pattern for ${VAR} or $VAR (word characters, numbers, underscore)
-    pattern = r"\$\{([^}]+)\}|\$([A-Za-z_][A-Za-z0-9_]*)"
-
-    def replace(match: re.Match[str]) -> str:
-        # Group 1 is from ${VAR}, group 2 is from $VAR
-        var_name = match.group(1) if match.group(1) else match.group(2)
-
-        # Check for circular reference
-        if var_name in visited:
-            raise CircularReferenceError(var_name)
-
-        # Get the value and recursively expand it
-        try:
-            value = env[var_name]
-        except KeyError as e:
-            raise VariableNotFoundError(var_name) from e
-
-        # Add to visited set before recursing
-        new_visited = visited | {var_name}
-
-        # Recursively expand the value
-        return expand_variables(value, env, new_visited)
-
-    return re.sub(pattern, replace, text)
+    return _expand_text(text, env, [])
 
 
-class BaseExpander:
-    """Base class for expanders with common expand logic."""
+def _resolve(var_name: str, env: dict[str, str], stack: list[str]) -> str:
+    if var_name in stack:
+        cycle_start = stack.index(var_name)
+        cycle = [*stack[cycle_start:], var_name]
+        raise CircularReferenceError(var_name, cycle)
 
-    def __init__(self) -> None:
-        """Initialize with empty environment dictionary."""
-        self.env: dict[str, str] = {}
+    if var_name not in env:
+        raise VariableNotFoundError(var_name)
 
-    def expand(self, text: str) -> str:
-        """Expand variables in text using the loaded environment.
-
-        Args:
-            text: The text containing variables to expand
-
-        Returns:
-            The text with all variables expanded
-
-        Raises:
-            CircularReferenceError: If a circular reference is detected
-            VariableNotFoundError: If a referenced variable is not found
-        """
-        return expand_variables(text, self.env)
+    stack.append(var_name)
+    try:
+        return _expand_text(env[var_name], env, stack)
+    finally:
+        stack.pop()
 
 
-class EnvExpander(BaseExpander):
-    """Convenience wrapper for expanding variables using os.environ."""
+def _expand_text(value: str, env: dict[str, str], stack: list[str]) -> str:
+    current = value
 
-    def __init__(self) -> None:
-        """Initialize expander with os.environ.
+    while True:
+        curly_changed = False
 
-        Examples:
-            >>> import os
-            >>> os.environ["TEST_VAR"] = "test-value"
-            >>> expander = EnvExpander()
-            >>> expander.expand("${TEST_VAR}")
-            'test-value'
-        """
-        super().__init__()
-        self.env = dict(os.environ)
+        def replace_curly(match: re.Match[str]) -> str:
+            nonlocal curly_changed
+            curly_changed = True
+            return _resolve(match.group(1), env, stack)
 
+        next_value = INNER_CURLY_PATTERN.sub(replace_curly, current)
+        if curly_changed:
+            current = next_value
+            continue
 
-class DotEnvExpander(BaseExpander):
-    """Convenience wrapper for expanding variables from a .env file."""
+        simple_changed = False
 
-    def __init__(self, dotenv_path: Path | str = ".env") -> None:
-        """Initialize expander with .env file.
+        def replace_simple(match: re.Match[str]) -> str:
+            nonlocal simple_changed
+            simple_changed = True
+            return _resolve(match.group(1), env, stack)
 
-        Args:
-            dotenv_path: Path to the .env file (default: ".env")
-        """
-        super().__init__()
-        self.env = {
-            k: v for k, v in dotenv_values(dotenv_path).items() if v is not None
-        }
+        next_value = SIMPLE_VAR_PATTERN.sub(replace_simple, current)
+        if simple_changed:
+            current = next_value
+            continue
+
+        unresolved_curly = INNER_CURLY_PATTERN.search(current)
+        if unresolved_curly:
+            raise VariableNotFoundError(unresolved_curly.group(1))
+
+        unresolved_simple = SIMPLE_VAR_PATTERN.search(current)
+        if unresolved_simple:
+            raise VariableNotFoundError(unresolved_simple.group(1))
+
+        return current
