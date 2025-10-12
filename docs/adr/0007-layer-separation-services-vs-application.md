@@ -80,7 +80,7 @@ exceptions.py              # Domain exceptions
 - **Common terminology**: Application layer coordinates business logic with external systems
 - **Infrastructure typically means**: Lower-level concerns (database, network, logging)
 - **Expanders are use-case coordinators**: They adapt the pure expansion service to specific environments
-- **Follows CLAUDE.md**: Already defined layered architecture with application layer
+- **Consistent with common patterns**: Application layer is well-established for coordinating use cases
 
 **Why not keep in services?**
 
@@ -185,12 +185,9 @@ Move expanders to `api.py` alongside public API exports.
   - Domain-driven design with aggregates
   - More sophisticated layering (use cases, repositories, etc.)
 
-- **Document in CLAUDE.md**: Update architecture section to reflect layer boundaries and responsibilities
-
 ## References
 
 - Clean Architecture (Robert C. Martin): https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
 - Hexagonal Architecture (Alistair Cockburn): https://alistair.cockburn.us/hexagonal-architecture/
-- CLAUDE.md: Project architecture section defining layer structure
 - Implementation: `src/envresolve/application/expanders.py`, `src/envresolve/services/expansion.py`
 - Issue discussion: API redesign and layer separation
