@@ -3,7 +3,7 @@ name = "envresolve"
 description = "Resolve env vars from secret stores."
 readme = "README.md"
 dynamic = ["version"]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [{name = "osoken"}]
 dependencies = [

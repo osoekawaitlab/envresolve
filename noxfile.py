@@ -4,7 +4,7 @@ import nox
 
 nox.options.default_venv_backend = "uv"
 
-PYTHON_VERSIONS = ["3.9", "3.10", "3.11", "3.12", "3.13"]
+PYTHON_VERSIONS = ["3.10", "3.11", "3.12", "3.13"]
 
 
 @nox.session(python="3.12")
@@ -41,7 +41,7 @@ def tests(session: nox.Session) -> None:
 def tests_all_versions(session: nox.Session) -> None:
     """Run all tests across all supported Python versions."""
     session.install("-e", ".", "--group=dev")
-    session.run("uv", "run", "--active", "pytest")
+    session.run("pytest")
 
 
 @nox.session(python="3.12")
