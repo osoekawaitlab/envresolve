@@ -74,6 +74,60 @@ Decided to use a string-based API instead of data models for resolution results.
 
 ---
 
+### ADR 0006: Nested Variable Expansion Implementation
+**Status**: Accepted
+**Date**: 2025-10-13
+
+Chose a two-phase iterative algorithm for supporting nested variable expansion like `${VAR_${NESTED}}`.
+
+**Key Decision**: Expand innermost curly braces first, then simple variables, iterating until stable.
+
+**Rationale**:
+- Correct inside-out evaluation order
+- Predictable behavior for complex nesting
+- No recursion depth limits
+- Clear error detection
+
+[View Full ADR](https://github.com/osoekawaitlab/envresolve/blob/main/docs/adr/0006-nested-variable-expansion-implementation.md)
+
+---
+
+### ADR 0007: Layer Separation (Services vs Application)
+**Status**: Accepted
+**Date**: 2025-10-13
+
+Separated pure business logic (services layer) from environment integration (application layer).
+
+**Key Decision**: Move `EnvExpander` and `DotEnvExpander` from `services/expansion.py` to `application/expanders.py`.
+
+**Rationale**:
+- Single Responsibility Principle
+- Better testability (pure logic without I/O)
+- Clear dependency direction
+- Matches clean architecture patterns
+
+[View Full ADR](https://github.com/osoekawaitlab/envresolve/blob/main/docs/adr/0007-layer-separation-services-vs-application.md)
+
+---
+
+### ADR 0008: Circular Reference Chain Tracking
+**Status**: Accepted
+**Date**: 2025-10-13
+
+Extended `CircularReferenceError` to include full reference chain for better debugging.
+
+**Key Decision**: Add `chain: list[str]` attribute showing complete cycle (e.g., `["A", "B", "C", "A"]`).
+
+**Rationale**:
+- Immediate visibility of complete cycle
+- Better debugging experience
+- Programmatic access to cycle information
+- Actionable error messages
+
+[View Full ADR](https://github.com/osoekawaitlab/envresolve/blob/main/docs/adr/0008-circular-reference-chain-tracking.md)
+
+---
+
 ## ADR Template
 
 All ADRs follow a consistent template defined in [ADR 0000: ADR Template](https://github.com/osoekawaitlab/envresolve/blob/main/docs/adr/0000-adr-template.md).

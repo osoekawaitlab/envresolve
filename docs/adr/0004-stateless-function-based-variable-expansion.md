@@ -21,6 +21,7 @@ The variable expansion service needs to provide a simple API for expanding `${VA
 3. **Hybrid**: Stateless function as core, with convenience wrapper class for os.environ integration
 
 Key considerations:
+
 - Simplicity and ease of use
 - Testability
 - Flexibility for different use cases (.env files, os.environ, custom dicts)
