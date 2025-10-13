@@ -5,12 +5,13 @@ This module coordinates the resolution process:
 2. URI parsing
 3. Provider selection
 4. Secret retrieval
+5. Iterative resolution (for nested URIs and variable expansion)
 """
 
 import os
 from typing import TYPE_CHECKING
 
-from envresolve.exceptions import SecretResolutionError
+from envresolve.exceptions import CircularReferenceError, SecretResolutionError
 from envresolve.services.expansion import expand_variables
 from envresolve.services.reference import is_secret_uri, parse_secret_uri
 
@@ -31,14 +32,16 @@ class SecretResolver:
         self._providers = providers
 
     def resolve(self, uri: str, env: dict[str, str] | None = None) -> str:
-        """Resolve a URI to its secret value.
+        """Resolve a URI to its secret value with iterative resolution.
 
-        This method performs the following steps:
-        1. Expand variables in the URI using the provided environment
-        2. Check if the expanded string is a secret URI
-        3. Parse the URI if it's a secret URI
-        4. Get the appropriate provider for the scheme
-        5. Resolve the secret using the provider
+        This method performs iterative resolution to handle:
+        - URIs that resolve to other URIs
+        - Variable expansion in resolved values
+        - Multiple levels of nesting
+
+        The resolution continues until:
+        - The value no longer changes (idempotent)
+        - A circular reference is detected
 
         Args:
             uri: The URI to resolve (may contain variables)
@@ -56,20 +59,41 @@ class SecretResolver:
         if env is None:
             env = dict(os.environ)
 
-        # Step 1: Expand variables
-        expanded = expand_variables(uri, env)
+        # Track seen values to detect circular references
+        seen: set[str] = set()
+        current = uri
 
-        # Step 2: Check if it's a secret URI
-        if not is_secret_uri(expanded):
-            # Not a secret URI - return as-is (idempotent)
-            return expanded
+        while True:
+            # Check for circular reference
+            if current in seen:
+                raise CircularReferenceError(
+                    variable_name=current, chain=[*list(seen), current]
+                )
 
-        # Step 3: Parse URI
-        parsed_uri = parse_secret_uri(expanded)
+            seen.add(current)
 
-        # Step 4: Get provider and resolve
-        provider = self._get_provider(parsed_uri)
-        return provider.resolve(parsed_uri)
+            # Step 1: Expand variables
+            expanded = expand_variables(current, env)
+
+            # Step 2: Check if it's a secret URI
+            if not is_secret_uri(expanded):
+                # Not a secret URI - this is the final value
+                return expanded
+
+            # Step 3: Parse URI
+            parsed_uri = parse_secret_uri(expanded)
+
+            # Step 4: Get provider and resolve
+            provider = self._get_provider(parsed_uri)
+            resolved = provider.resolve(parsed_uri)
+
+            # Check if resolution produced a change
+            if resolved == current:
+                # No change - we've reached a stable value
+                return resolved
+
+            # Continue with the resolved value
+            current = resolved
 
     def _get_provider(self, parsed_uri: "ParsedURI") -> "SecretProvider":
         """Get provider for the given URI scheme.

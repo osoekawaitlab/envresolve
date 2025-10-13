@@ -42,8 +42,6 @@ def _skip_azure_doctests(request: pytest.FixtureRequest) -> None:
             "envresolve.api.load_env",
         ]
 
-        is_azure_test = any(
-            name in test_name for name in azure_dependent_tests
-        )
+        is_azure_test = any(name in test_name for name in azure_dependent_tests)
         if is_azure_test and not _azure_sdk_available():
             pytest.skip("Azure SDK not available")
