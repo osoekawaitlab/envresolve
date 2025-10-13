@@ -33,3 +33,39 @@ class VariableNotFoundError(EnvResolveError):
         """
         self.variable_name = variable_name
         super().__init__(f"Variable not found: {variable_name}")
+
+
+class URIParseError(EnvResolveError):
+    """Raised when a secret URI cannot be parsed."""
+
+    def __init__(self, message: str, uri: str | None = None) -> None:
+        """Initialize URIParseError.
+
+        Args:
+            message: Error message describing the parsing failure
+            uri: The URI that failed to parse (optional)
+        """
+        self.uri = uri
+        full_message = f"{message}: {uri}" if uri else message
+        super().__init__(full_message)
+
+
+class SecretResolutionError(EnvResolveError):
+    """Raised when a secret cannot be resolved from its provider."""
+
+    def __init__(
+        self, message: str, uri: str, original_error: Exception | None = None
+    ) -> None:
+        """Initialize SecretResolutionError.
+
+        Args:
+            message: Error message describing the resolution failure
+            uri: The URI that failed to resolve
+            original_error: The original exception that caused this error (optional)
+        """
+        self.uri = uri
+        self.original_error = original_error
+        full_message = f"{message}: {uri}"
+        if original_error:
+            full_message = f"{full_message} (caused by: {original_error})"
+        super().__init__(full_message)
