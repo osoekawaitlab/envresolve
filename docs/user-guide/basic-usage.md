@@ -103,6 +103,81 @@ print(db_password_uri)  # Output: akv://my-company-vault/db-password
 print(api_key_uri)      # Output: akv://my-company-vault/api-key
 ```
 
+## Secret Resolution
+
+envresolve can resolve secrets referenced with `akv://` URIs. Provider
+registration is explicit so you only pay the dependency cost when you opt in.
+
+### 1. Install the Azure extra (once per environment)
+
+```bash
+pip install envresolve[azure]
+```
+
+### 2. Register the provider
+
+```python
+import envresolve
+
+envresolve.register_azure_kv_provider()
+```
+
+`register_azure_kv_provider()` is idempotent—you can call it during application
+startup without worrying about duplicate work. If the Azure SDK is missing, the
+function raises `ImportError` with installation guidance.
+
+### 3. Resolve a secret URI
+
+```python
+import envresolve
+
+envresolve.register_azure_kv_provider()
+
+# Plain strings are returned unchanged (idempotent behaviour)
+print(envresolve.resolve_secret("db-password"))  # db-password
+
+# Secret URIs fetch values from Azure Key Vault
+password = envresolve.resolve_secret("akv://corp-vault/db-password")
+print(password)
+```
+
+### Iterative resolution
+
+`resolve_secret()` keeps resolving until the returned value is stable. This lets
+you chain indirections or mix URI results with variable expansion:
+
+```python
+import os
+import envresolve
+
+envresolve.register_azure_kv_provider()
+
+os.environ["ENVIRONMENT"] = "prod"
+
+# akv://config/service → "akv://vault-${ENVIRONMENT}/service"
+secret = envresolve.resolve_secret("akv://config/service")
+print(secret)  # Resolved value from akv://vault-prod/service
+```
+
+### Loading and exporting from `.env`
+
+```python
+import os
+import envresolve
+
+envresolve.register_azure_kv_provider()
+
+# .env may contain plain values, variable references, and akv:// URIs
+resolved = envresolve.load_env(".env", export=True)
+
+print(resolved["DB_PASSWORD"])
+print(os.environ["DB_PASSWORD"])  # Exported unless override=False and already set
+```
+
+Use `export=False` when you only need the resolved dictionary, or set
+`override=True` if you want to intentionally replace existing `os.environ`
+values.
+
 ## Error Handling
 
 ### Circular Reference Detection
@@ -188,3 +263,23 @@ print(result)  # Output: plain text with $100 price
 ```
 
 Note: A lone `$` followed by non-variable characters (like digits) is preserved.
+
+### Secret Resolution Errors
+
+Azure-specific failures (missing vaults, permission issues, network errors)
+raise `SecretResolutionError`. The exception carries the failing URI, making it
+easy to log or surface to users:
+
+```python
+import envresolve
+from envresolve.exceptions import SecretResolutionError
+
+envresolve.register_azure_kv_provider()
+
+try:
+    envresolve.resolve_secret("akv://missing-vault/api-key")
+except SecretResolutionError as exc:
+    print(exc)              # Human-readable message
+    print(exc.uri)          # akv://missing-vault/api-key
+    print(exc.original_error)  # Underlying Azure exception (if available)
+```

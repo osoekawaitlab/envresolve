@@ -5,7 +5,7 @@
 ## Features
 
 - **Variable Expansion**: Support for `${VAR}` and `$VAR` syntax with nested expansion
-- **Circular Reference Detection**: Automatically detects and prevents circular variable references
+- **Secret Resolution**: Resolve `akv://` URIs via pluggable providers with iterative cycle detection
 - **Multiple Sources**: Works with `os.environ`, `.env` files, or custom dictionaries
 - **Type Safe**: Built with strict type checking using mypy
 - **Well Tested**: 100% test coverage with comprehensive unit and E2E tests
