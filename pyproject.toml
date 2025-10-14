@@ -4,7 +4,7 @@ description = "Resolve env vars from secret stores."
 readme = "README.md"
 dynamic = ["version"]
 requires-python = ">=3.10"
-license = {text = "MIT"}
+license = "MIT"
 authors = [{name = "osoken"}]
 dependencies = [
     "python-dotenv>=1.1.1",
@@ -30,6 +30,10 @@ docs = [
     "mkdocs-material>=9.6.21",
     "mkdocstrings>=0.30.1",
     "mkdocstrings-python>=1.18.2",
+]
+release = [
+    "build>=1.2.2",
+    "twine>=6.0.1",
 ]
 [build-system]
 requires = ["setuptools>=68", "wheel"]
