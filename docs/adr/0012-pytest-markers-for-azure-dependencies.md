@@ -69,7 +69,7 @@ The explicit `--ignore` directives avoid import-time failures for modules that u
 ### Concerns
 
 - **Command verbosity**: The combination of `-m "not azure"` with multiple `--ignore` flags is easy to mistype. *Mitigation*: Provide the `tests_without_azure` Nox session and document it in the contributor guide.
-- **Synchronization**: When new Azure modules or tests are added, the ignore list must be updated. *Mitigation*: Code review checklist now includes “mark Azure tests and update Nox session”.
+- **Synchronization**: When new Azure modules or tests are added, the ignore list must be updated. *Mitigation*: Future: Add to code review checklist to mark Azure tests and update Nox session.
 - **Marker proliferation**: Future cloud providers may introduce additional markers. *Mitigation*: Document marker naming conventions and reuse the same pattern for other optional stacks if/when they arrive.
 
 ## Alternatives

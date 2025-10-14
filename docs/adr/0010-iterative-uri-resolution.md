@@ -53,8 +53,6 @@ while True:
 - **Safety**: `seen` set guarantees cycle detection without infinite loops
 - **Simplicity**: Single resolution entry point handles all cases uniformly
 
-Alternative approaches (recursive resolution, limited depth) were rejected due to stack overflow risks and arbitrary depth limits.
-
 ## Implications
 
 ### Positive Implications

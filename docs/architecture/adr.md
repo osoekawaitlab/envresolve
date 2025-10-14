@@ -128,6 +128,23 @@ Extended `CircularReferenceError` to include full reference chain for better deb
 
 ---
 
+### ADR 0015: Manage Azure Live Test Infrastructure with Terraform
+**Status**: Accepted
+**Date**: 2025-01-15
+
+Standardized live Azure Key Vault testing with Terraform-managed resources and explicit pytest gating.
+
+**Key Decision**: Use Terraform manifests in `infra/terraform` plus helper Nox sessions to provision/destroy a Key Vault and sample secret for live tests.
+
+**Rationale**:
+- Repeatable provisioning for contributors and CI
+- Clear separation between mocked and live suites via markers
+- Easier cleanup through scripted Terraform destroy
+
+[View Full ADR](https://github.com/osoekawaitlab/envresolve/blob/main/docs/adr/0015-terraform-managed-live-tests.md)
+
+---
+
 ## ADR Template
 
 All ADRs follow a consistent template defined in [ADR 0000: ADR Template](https://github.com/osoekawaitlab/envresolve/blob/main/docs/adr/0000-adr-template.md).

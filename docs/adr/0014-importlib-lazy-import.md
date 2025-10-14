@@ -35,9 +35,14 @@ def register_azure_kv_provider(self, **kwargs: Any) -> None:
         provider_class = provider_module.AzureKVProvider
     except ImportError as exc:  # Missing provider module or downstream deps
         missing: list[str] = []
-        if importlib.util.find_spec("azure.identity") is None:
+        try:
+            importlib.util.find_spec("azure.identity")
+        except (ImportError, ModuleNotFoundError):
             missing.append("azure-identity")
-        if importlib.util.find_spec("azure.keyvault.secrets") is None:
+
+        try:
+            importlib.util.find_spec("azure.keyvault.secrets")
+        except (ImportError, ModuleNotFoundError):
             missing.append("azure-keyvault-secrets")
 
         if missing:
