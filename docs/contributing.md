@@ -19,13 +19,13 @@ git clone https://github.com/osoekawaitlab/envresolve.git
 cd envresolve
 ```
 
-2. Install dependencies:
+1. Install dependencies:
 
 ```bash
 uv sync
 ```
 
-3. Run tests to verify setup:
+1. Run tests to verify setup:
 
 ```bash
 nox -s tests
@@ -34,17 +34,6 @@ nox -s tests
 ## Development Workflow
 
 envresolve follows a strict Test-Driven Development (TDD) cycle.
-
-### Quick Overview
-
-1. **Unit Test Execution** - `nox -s tests_unit`
-2. **E2E Test Execution** - `nox -s tests_e2e`
-3. **Code Quality Check** - `nox -s quality`
-4. **Refactoring Review** - Examine for improvements
-5. **ADR Compliance** - Check against existing ADRs
-6. **ADR Documentation** - Write ADRs for design decisions
-7. **Test Coverage Review** - `nox -s tests` (minimum 80%)
-8. **Acceptance Criteria Verification** - Check E2E tests
 
 ### Running Tests
 
@@ -121,6 +110,7 @@ Layer 0: External dependencies
 ```
 
 **Key Principles**:
+
 - Higher layers depend on lower layers
 - Lower layers NEVER depend on higher layers
 - Domain layer has NO internal dependencies
@@ -167,3 +157,44 @@ When reporting bugs, please include:
 ## License
 
 By contributing, you agree that your contributions will be licensed under the MIT License.
+
+## Live Azure Tests
+
+Optional integration tests against real Azure Key Vault infrastructure. Run these tests to validate changes that affect Azure SDK integration or provider implementations.
+
+**Note**: Live tests automatically skip when environment variables are not set (`ENVRESOLVE_LIVE_KEY_VAULT_NAME`, etc.), so they won't interfere with normal development.
+
+### One-Time Setup
+
+```bash
+# 1. Configure terraform (requires Azure subscription and az login)
+cd infra/terraform
+cp terraform.tfvars.example terraform.tfvars
+
+# 2. Edit terraform.tfvars with your values:
+#    - subscription_id, tenant_id, name_prefix
+#    - test_principal_object_id (get your object ID: az ad signed-in-user show --query id -o tsv)
+
+# 3. Create resources
+terraform init
+terraform apply
+
+# 4. Return to project root and set environment variables (per shell session)
+cd ../..
+source scripts/setup_live_tests.sh
+```
+
+### Running Live Tests
+
+```bash
+nox -s tests_live
+```
+
+### Cleanup
+
+Resources can be kept for reuse. Destroy only when done:
+
+```bash
+cd infra/terraform
+terraform destroy
+```

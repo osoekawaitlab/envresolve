@@ -1,0 +1,47 @@
+# Example Terraform variables for envresolve live tests
+# Copy this file to terraform.tfvars and fill in your actual values
+#
+# Usage:
+#   cp terraform.tfvars.example terraform.tfvars
+#   # Edit terraform.tfvars with your values
+#   terraform plan
+#   terraform apply
+
+# Azure subscription and tenant information
+subscription_id = "00000000-0000-0000-0000-000000000000"
+tenant_id       = "00000000-0000-0000-0000-000000000000"
+
+# Resource naming
+name_prefix = "envresolve"
+environment = "ci"
+location    = "japaneast"
+
+# Grant the live-test principal full secret permissions
+# Find via: az ad sp show --id <app-id> --query id -o tsv
+test_principal_object_id = "00000000-0000-0000-0000-000000000000"
+
+# Optional: allow interactive operators to browse the vault
+# operator_object_ids = ["00000000-0000-0000-0000-000000000000"]
+
+# Sample secret content used by the live tests
+sample_secret_name  = "envresolve-live-secret"
+sample_secret_value = "changeme"
+
+# Network ACLs: Control access to Key Vault
+# Note: default_action = "Deny" requires adding your IP to ip_rules for access
+# network_acls = {
+#   default_action = "Allow"
+#   bypass         = "AzureServices"
+#   ip_rules       = ["203.0.113.0/24"]  # Replace with your IP range
+# }
+
+# Security settings
+# enable_purge_protection = false  # Set true for production
+# soft_delete_retention_days = 7
+# public_network_access_enabled = true
+# enable_rbac_authorization = false  # Set true to use Azure RBAC instead of access policies
+
+# Optional tagging
+# tags = {
+#   "owner" = "envresolve-live-tests"
+# }

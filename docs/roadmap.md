@@ -8,14 +8,15 @@
 - ✅ Circular reference detection
 - ✅ Nested variable expansion
 - ✅ Support for `os.environ`, `.env` files, and custom dictionaries
+- ✅ Secret URI resolution with Azure Key Vault provider (`resolve_secret`, `load_env`)
 
 ## Planned Features
 
 ### v0.1.x (In Progress)
 
-- Secret URI resolution (e.g., `akv://vault-name/secret-name`)
-- Azure Key Vault provider
-- Simple API: `load_env()`, `resolve_secret()`
+- Validation helpers for string-based API (`is_resolved`, `needs_expansion`, `is_secret_uri`)
+- Optional metadata/query helpers for resolved values
+- Structured logging hooks for resolution diagnostics
 
 ### v0.2.x
 

@@ -1,0 +1,45 @@
+# Remote state backend configuration example
+#
+# This file shows how to configure remote state storage in Azure Storage.
+# Remote state is recommended for team collaboration and CI/CD pipelines.
+#
+# Setup steps:
+#   1. Create Azure Storage account and container:
+#      az group create -n envresolve-tfstate-rg -l japaneast
+#      az storage account create -n envresolvetfstate -g envresolve-tfstate-rg -l japaneast --sku Standard_LRS
+#      az storage container create -n tfstate --account-name envresolvetfstate
+#
+#   2. Copy this file to backend.tf:
+#      cp backend.tf.example backend.tf
+#
+#   3. Edit backend.tf with your values
+#
+#   4. Initialize terraform with backend migration:
+#      terraform init -migrate-state
+#
+# IMPORTANT: backend.tf should be gitignored if it contains sensitive values.
+# Consider using partial configuration with backend config file instead:
+#   terraform init -backend-config=backend.hcl
+
+terraform {
+  backend "azurerm" {
+    # Storage account for terraform state
+    resource_group_name  = "envresolve-tfstate-rg"
+    storage_account_name = "envresolvetfstate"
+    container_name       = "tfstate"
+    key                  = "envresolve-live-tests.tfstate"
+
+    # Optional: Use service principal for authentication
+    # tenant_id            = "00000000-0000-0000-0000-000000000000"
+    # subscription_id      = "00000000-0000-0000-0000-000000000000"
+    # client_id            = "00000000-0000-0000-0000-000000000000"
+    # client_secret        = "xxx"  # Better: use ARM_CLIENT_SECRET env var
+
+    # Optional: Use managed identity (recommended for CI/CD)
+    # use_msi              = true
+    # msi_endpoint         = "http://169.254.169.254/metadata/identity/oauth2/token"
+
+    # Optional: Use Azure CLI authentication (default)
+    # use_azuread_auth     = true
+  }
+}

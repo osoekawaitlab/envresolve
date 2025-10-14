@@ -10,6 +10,12 @@ dependencies = [
     "python-dotenv>=1.1.1",
 ]
 
+[project.optional-dependencies]
+azure = [
+    "azure-identity>=1.19.0",
+    "azure-keyvault-secrets>=4.9.0",
+]
+
 [dependency-groups]
 dev = [
     "mypy>=1.18.2",
@@ -88,4 +94,8 @@ addopts = [
     "--doctest-modules",
 ]
 markers = [
+    "unit: Unit tests (pure logic, no external dependencies)",
+    "e2e: End-to-end tests with mocked SDKs",
+    "live: Tests requiring real external services",
+    "azure: Azure-specific tests",
 ]

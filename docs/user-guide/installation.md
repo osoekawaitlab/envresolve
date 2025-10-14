@@ -37,16 +37,26 @@ nox -s check_all
 
 ## Optional Dependencies
 
-### Azure Key Vault Support (Coming Soon)
+### Azure Key Vault Support
+
+Install the Azure extra when you need `akv://` resolution:
 
 ```bash
 pip install envresolve[azure]
 ```
 
-This installs:
+This pulls in:
 
 - `azure-identity`
 - `azure-keyvault-secrets`
+
+After installation, register the provider before resolving secrets:
+
+```python
+import envresolve
+
+envresolve.register_azure_kv_provider()
+```
 
 ## Verify Installation
 
