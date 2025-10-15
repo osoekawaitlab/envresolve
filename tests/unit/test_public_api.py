@@ -8,7 +8,12 @@ import pytest
 from pytest_mock import MockFixture
 
 import envresolve
-from envresolve.exceptions import SecretResolutionError, URIParseError
+from envresolve.exceptions import (
+    EnvResolveError,
+    ProviderRegistrationError,
+    SecretResolutionError,
+    URIParseError,
+)
 
 
 def test_resolve_secret_exported() -> None:
@@ -39,6 +44,18 @@ def test_secret_resolution_error_exported() -> None:
     """Test that SecretResolutionError is exported."""
     assert hasattr(envresolve, "SecretResolutionError")
     assert envresolve.SecretResolutionError is SecretResolutionError
+
+
+def test_provider_registration_error_exported() -> None:
+    """Test that ProviderRegistrationError is exported."""
+    assert hasattr(envresolve, "ProviderRegistrationError")
+    assert envresolve.ProviderRegistrationError is ProviderRegistrationError
+
+
+def test_env_resolve_error_exported() -> None:
+    """Test that EnvResolveError base exception is exported."""
+    assert hasattr(envresolve, "EnvResolveError")
+    assert envresolve.EnvResolveError is EnvResolveError
 
 
 def test_resolve_secret_with_plain_string() -> None:

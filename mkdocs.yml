@@ -69,7 +69,28 @@ nav:
       - Installation: user-guide/installation.md
       - Basic Usage: user-guide/basic-usage.md
   - API Reference:
-      - Variable Expansion: api-reference/expansion.md
+      - Public API: api-reference/public_api.md
+      - Providers: api-reference/providers.md
+      - Exceptions: api-reference/exceptions.md
+  - Developer Guide:
+      - Contributing: developer-guide/contributing.md
+      - Live Tests: developer-guide/live-tests.md
   - Architecture:
-      - ADRs: architecture/adr.md
-  - Contributing: contributing.md
+      - Overview: architecture/adr.md
+      - Records:
+          - 0000-adr-template.md: adr/0000-adr-template.md
+          - 0001-variable-expansion-with-regex.md: adr/0001-variable-expansion-with-regex.md
+          - 0002-custom-exception-hierarchy.md: adr/0002-custom-exception-hierarchy.md
+          - 0003-structured-exception-design.md: adr/0003-structured-exception-design.md
+          - 0004-stateless-function-based-variable-expansion.md: adr/0004-stateless-function-based-variable-expansion.md
+          - 0005-string-based-api-with-idempotent-resolution.md: adr/0005-string-based-api-with-idempotent-resolution.md
+          - 0006-nested-variable-expansion-implementation.md: adr/0006-nested-variable-expansion-implementation.md
+          - 0007-layer-separation-services-vs-application.md: adr/0007-layer-separation-services-vs-application.md
+          - 0008-circular-reference-chain-tracking.md: adr/0008-circular-reference-chain-tracking.md
+          - 0009-manual-provider-registration-pattern.md: adr/0009-manual-provider-registration-pattern.md
+          - 0010-iterative-uri-resolution.md: adr/0010-iterative-uri-resolution.md
+          - 0011-conditional-doctest-skip.md: adr/0011-conditional-doctest-skip.md
+          - 0012-pytest-markers-for-azure-dependencies.md: adr/0012-pytest-markers-for-azure-dependencies.md
+          - 0013-class-based-api-design.md: adr/0013-class-based-api-design.md
+          - 0014-importlib-lazy-import.md: adr/0014-importlib-lazy-import.md
+          - 0015-terraform-managed-live-tests.md: adr/0015-terraform-managed-live-tests.md

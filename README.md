@@ -1,39 +1,200 @@
 # envresolve
 
-Resolve env vars from secret stores.
+Resolve environment variables from secret stores like Azure Key Vault.
 
-## Quick start
+## Features
+
+- **Variable expansion**: Expand `${VAR}` and `$VAR` syntax in strings
+- **Secret resolution**: Fetch secrets from Azure Key Vault (more providers coming)
+- **Circular reference detection**: Prevents infinite loops in variable chains
+- **Type-safe**: Full mypy type checking support
+
+## Quick Start
+
+### Variable Expansion
+
+Expand variables without connecting to external services:
 
 ```python
 from envresolve import expand_variables
 
 env = {"VAULT": "corp-kv", "SECRET": "db-password"}
-print(expand_variables("akv://${VAULT}/${SECRET}", env))
-# akv://corp-kv/db-password
+result = expand_variables("akv://${VAULT}/${SECRET}", env)
+print(result)  # akv://corp-kv/db-password
 ```
 
-Secret resolution with Azure Key Vault:
+### Load from .env File
+
+Load environment variables from a `.env` file with automatic secret resolution:
 
 ```python
 import envresolve
 
-envresolve.register_azure_kv_provider()  # requires `pip install envresolve[azure]`
-print(envresolve.resolve_secret("akv://corp-vault/db-password"))
+# .env file content:
+# VAULT_NAME=my-vault
+# DATABASE_URL=akv://${VAULT_NAME}/db-url
+# API_KEY=akv://${VAULT_NAME}/api-key
+
+# Requires: pip install envresolve[azure]
+# Requires: Azure authentication (az login, Managed Identity, etc.)
+envresolve.register_azure_kv_provider()
+
+# Load .env and resolve all secret URIs
+# By default, exports to os.environ
+resolved_vars = envresolve.load_env(".env")
+
+# Or load without exporting
+resolved_vars = envresolve.load_env(".env", export=False)
 ```
 
-More examples and API details: https://osoekawaitlab.github.io/envresolve/
+### Direct Secret Resolution
+
+Fetch individual secrets from Azure Key Vault:
+
+```python
+import envresolve
+
+# Requires: pip install envresolve[azure]
+# Requires: Azure authentication (az login, Managed Identity, etc.)
+try:
+    envresolve.register_azure_kv_provider()
+    secret_value = envresolve.resolve_secret("akv://corp-vault/db-password")
+    print(secret_value)
+except envresolve.ProviderRegistrationError as e:
+    print(f"Azure SDK not available: {e}")
+except envresolve.SecretResolutionError as e:
+    print(f"Failed to fetch secret: {e}")
+```
+
+## Installation
+
+```bash
+# Basic installation (variable expansion only)
+pip install envresolve
+
+# With Azure Key Vault support
+pip install envresolve[azure]
+```
+
+## Documentation
+
+Full documentation: https://osoekawaitlab.github.io/envresolve/
 
 ## Development
+
+### Setup
+
+This project uses `uv` for dependency management and `nox` for task automation:
+
+```bash
+# Install uv (if not already installed)
+pip install uv
+
+# Clone the repository
+git clone https://github.com/osoekawaitlab/envresolve.git
+cd envresolve
+
+# Install dependencies (including dev dependencies)
+uv pip install -e ".[azure]" --group=dev
+```
 
 ### Running Tests
 
 ```bash
-nox -s tests           # Run all tests with coverage
-nox -s quality         # Type checking and linting
+# Quick test during development
+nox -s tests_unit      # Unit tests only (fast)
+nox -s tests_e2e       # E2E tests with mocked Azure SDK
+
+# Full test suite
+nox -s tests           # All tests with coverage report (HTML in htmlcov/)
+
+# Test across Python versions
+nox -s tests_all_versions  # Test on Python 3.10-3.14
+
+# Test without Azure SDK
+nox -s tests_without_azure  # For environments without Azure dependencies
 ```
 
-See [nox documentation](https://nox.thea.codes/) for more commands.
+### Code Quality
+
+```bash
+# Run all quality checks
+nox -s quality         # Type checking (mypy) + linting (ruff)
+
+# Individual checks
+nox -s mypy            # Type checking only
+nox -s lint            # Linting only
+nox -s format_code     # Auto-format code
+
+# Run everything
+nox -s check_all       # Tests + quality checks
+```
 
 ### Live Azure Tests
 
-Optional integration tests against real Azure Key Vault. See [Contributing Guide](docs/contributing.md#live-azure-tests) for setup instructions.
+Optional integration tests against real Azure Key Vault:
+
+```bash
+# One-time setup
+cd infra/terraform
+cp terraform.tfvars.example terraform.tfvars
+# Edit terraform.tfvars with your Azure credentials
+terraform init
+terraform apply
+
+# Before running tests
+az login
+source scripts/setup_live_tests.sh
+
+# Run live tests
+nox -s tests_live
+```
+
+See [Live Azure Tests documentation](https://osoekawaitlab.github.io/envresolve/developer-guide/live-tests/) for detailed setup instructions.
+
+### Build Documentation
+
+```bash
+# Build documentation
+nox -s docs_build
+
+# Serve documentation locally (with live reload)
+nox -s docs_serve      # Open http://localhost:8000
+```
+
+### Project Structure
+
+```text
+src/envresolve/
+  ├── api.py                 # Public API (load_env, resolve_secret, etc.)
+  ├── exceptions.py          # Custom exception hierarchy
+  ├── models.py              # Pydantic data models
+  ├── services/              # Core business logic
+  │   ├── expansion.py       # Variable expansion with cycle detection
+  │   └── reference.py       # URI parsing and validation
+  ├── providers/             # Secret provider implementations
+  │   ├── base.py            # Provider protocol/ABC
+  │   └── azure_kv.py        # Azure Key Vault provider
+  └── application/           # Application orchestration
+      ├── expanders.py       # Expander implementations
+      └── resolver.py        # Resolution orchestration
+
+tests/
+  ├── unit/                  # Unit tests (fast, isolated)
+  ├── e2e/                   # E2E tests (mocked Azure SDK)
+  └── live/                  # Live tests (real Azure resources)
+
+docs/
+  ├── adr/                   # Architecture Decision Records
+  ├── user-guide/            # User documentation
+  └── developer-guide/       # Development documentation
+```
+
+### Contributing
+
+See [Contributing Guide](https://osoekawaitlab.github.io/envresolve/contributing/) for guidelines on:
+
+- Code style and conventions
+- Test-driven development workflow
+- Creating issues and pull requests
+- Architecture Decision Records (ADRs)

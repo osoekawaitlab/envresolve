@@ -1,35 +1,77 @@
-# envresolve
+# Welcome to envresolve
 
-**envresolve** is a Python library for resolving environment variables from secret stores (e.g., Azure Key Vault).
+Resolve environment variables from secret stores like Azure Key Vault.
 
 ## Features
 
-- **Variable Expansion**: Support for `${VAR}` and `$VAR` syntax with nested expansion
-- **Secret Resolution**: Resolve `akv://` URIs via pluggable providers with iterative cycle detection
-- **Multiple Sources**: Works with `os.environ`, `.env` files, or custom dictionaries
-- **Type Safe**: Built with strict type checking using mypy
-- **Well Tested**: 100% test coverage with comprehensive unit and E2E tests
+- **Variable expansion**: Expand `${VAR}` and `$VAR` syntax in strings
+- **Secret resolution**: Fetch secrets from Azure Key Vault (more providers coming)
+- **.env support**: Load variables from `.env` files and automatically resolve secrets
+- **Circular reference detection**: Prevents infinite loops in variable chains
+- **Type-safe**: Full mypy type checking support
 
-## Project Status
+## Quick Start
 
-**Current Version**: 0.1.0 (Variable Expansion - Phase 2)
+### Load from .env File
 
-envresolve is under active development. Currently implemented:
+The easiest way to use `envresolve` is by loading a `.env` file.
 
-- ✅ Variable expansion with `${VAR}` and `$VAR` syntax
-- ✅ Circular reference detection
-- ✅ Nested variable expansion
-- ⏳ URI parsing and secret provider system (coming soon)
+```python
+import envresolve
 
-See [Roadmap](roadmap.md) for full development plan.
+# .env file content:
+# VAULT_NAME=my-vault
+# DATABASE_URL=akv://${VAULT_NAME}/db-url
+# API_KEY=akv://${VAULT_NAME}/api-key
 
-## Documentation
+# Requires: pip install envresolve[azure]
+# Requires: Azure authentication (az login, Managed Identity, etc.)
+envresolve.register_azure_kv_provider()
 
-- [User Guide](user-guide/installation.md) - Installation and usage instructions
-- [API Reference](api-reference/expansion.md) - Detailed API documentation
-- [Architecture](architecture/adr.md) - Design decisions and ADRs
-- [Contributing](contributing.md) - Development guide
+# Load .env and resolve all secret URIs
+# By default, exports to os.environ
+resolved_vars = envresolve.load_env(".env")
 
-## License
+# Or load without exporting
+resolved_vars = envresolve.load_env(".env", export=False)
+```
 
-MIT
+### Direct Secret Resolution
+
+You can also fetch individual secrets directly:
+
+```python
+import envresolve
+
+# Requires: pip install envresolve[azure]
+try:
+    envresolve.register_azure_kv_provider()
+    secret_value = envresolve.resolve_secret("akv://corp-vault/db-password")
+    print(secret_value)
+except envresolve.ProviderRegistrationError as e:
+    print(f"Azure SDK not available: {e}")
+except envresolve.SecretResolutionError as e:
+    print(f"Failed to fetch secret: {e}")
+```
+
+### Simple Variable Expansion
+
+Expand variables without connecting to external services:
+
+```python
+from envresolve import expand_variables
+
+env = {"VAULT": "corp-kv", "SECRET": "db-password"}
+result = expand_variables("akv://${VAULT}/${SECRET}", env)
+print(result)  # akv://corp-kv/db-password
+```
+
+## Installation
+
+```bash
+# Basic installation (variable expansion only)
+pip install envresolve
+
+# With Azure Key Vault support
+pip install envresolve[azure]
+```

@@ -69,3 +69,17 @@ class SecretResolutionError(EnvResolveError):
         if original_error:
             full_message = f"{full_message} (caused by: {original_error})"
         super().__init__(full_message)
+
+
+class ProviderRegistrationError(EnvResolveError):
+    """Raised when a provider registration fails."""
+
+    def __init__(self, message: str, original_error: Exception | None = None) -> None:
+        """Initialize ProviderRegistrationError.
+
+        Args:
+            message: Error message describing the registration failure
+            original_error: The original exception that caused this error (optional)
+        """
+        self.original_error = original_error
+        super().__init__(message)
