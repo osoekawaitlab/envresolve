@@ -12,14 +12,22 @@ Thank you for considering contributing to envresolve!
 
 ### Setup
 
-1. Fork and clone the repository:
+1. Fork the repository on GitHub.
+
+2. Clone your fork locally:
 
 ```bash
-git clone https://github.com/osoekawaitlab/envresolve.git
+git clone https://github.com/YOUR-USERNAME/envresolve.git
 cd envresolve
 ```
 
-1. Install dependencies:
+3. Add the upstream remote to sync with the main repository:
+
+```bash
+git remote add upstream https://github.com/osoekawaitlab/envresolve.git
+```
+
+4. Install dependencies:
 
 ```bash
 uv sync
@@ -115,7 +123,7 @@ Layer 0: External dependencies
 - Lower layers NEVER depend on higher layers
 - Domain layer has NO internal dependencies
 
-See [Architecture ADRs](architecture/adr.md) for design decisions.
+See [Architecture ADRs](../architecture/adr.md) for design decisions.
 
 ## Documentation
 

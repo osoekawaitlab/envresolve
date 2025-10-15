@@ -6,7 +6,7 @@ Use String-Based API with Idempotent Resolution Instead of Data Models
 
 ## Status
 
-Accepted (ongoing implementation)
+Accepted
 
 ## Date
 

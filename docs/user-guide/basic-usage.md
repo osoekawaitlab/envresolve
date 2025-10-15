@@ -123,8 +123,7 @@ envresolve.register_azure_kv_provider()
 ```
 
 `register_azure_kv_provider()` is idempotent—you can call it during application
-startup without worrying about duplicate work. If the Azure SDK is missing, the
-function raises `ImportError` with installation guidance.
+startup without worrying about duplicate work.
 
 ### 3. Resolve a secret URI
 
@@ -179,6 +178,35 @@ Use `export=False` when you only need the resolved dictionary, or set
 values.
 
 ## Error Handling
+
+When working with external services, it's important to handle potential errors like missing dependencies, incorrect configuration, or network issues.
+
+### Provider and Resolution Errors
+
+Here is a robust example of how to handle errors during provider registration and secret resolution:
+
+```python
+import envresolve
+from envresolve.exceptions import ProviderRegistrationError, SecretResolutionError
+
+try:
+    # This might fail if 'envresolve[azure]' is not installed
+    envresolve.register_azure_kv_provider()
+
+    # This might fail due to permissions, network issues, or if the secret doesn't exist
+    secret_value = envresolve.resolve_secret("akv://corp-vault/db-password")
+    print(secret_value)
+
+except ProviderRegistrationError as e:
+    print(f"Provider setup failed: {e}")
+    # Example: Provider setup failed: Azure Key Vault provider requires: azure-identity, azure-keyvault-secrets. Install with: pip install envresolve[azure]
+
+except SecretResolutionError as e:
+    print(f"Failed to fetch secret: {e}")
+
+```
+
+This pattern ensures that your application can gracefully handle both setup-time (missing dependencies) and run-time (secret access) errors.
 
 ### Circular Reference Detection
 

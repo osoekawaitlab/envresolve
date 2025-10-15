@@ -57,12 +57,3 @@ import envresolve
 
 envresolve.register_azure_kv_provider()
 ```
-
-## Verify Installation
-
-```python
-import envresolve
-print(envresolve.__version__)
-```
-
-Expected output: `0.1.0`
