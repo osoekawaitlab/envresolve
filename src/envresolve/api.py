@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 from dotenv import dotenv_values
 
 from envresolve.application.resolver import SecretResolver
+from envresolve.exceptions import ProviderRegistrationError
 
 if TYPE_CHECKING:
     from envresolve.providers.base import SecretProvider
@@ -41,7 +42,8 @@ class EnvResolver:
         This method is safe to call multiple times (idempotent).
 
         Raises:
-            ImportError: If azure-identity or azure-keyvault-secrets is not installed
+            ProviderRegistrationError: If azure-identity or azure-keyvault-secrets
+                is not installed
         """
         try:
             # Dynamically import the provider module
@@ -49,7 +51,7 @@ class EnvResolver:
             provider_class = provider_module.AzureKVProvider
         except ImportError as e:
             # Check which dependency is missing
-            missing_deps = []
+            missing_deps: list[str] = []
             try:
                 importlib.import_module("azure.identity")
             except ImportError:
@@ -68,7 +70,7 @@ class EnvResolver:
                 )
             else:
                 msg = f"Failed to import Azure Key Vault provider. Error: {e}"
-            raise ImportError(msg) from e
+            raise ProviderRegistrationError(msg, original_error=e) from e
 
         provider = provider_class()
         self._providers["akv"] = provider

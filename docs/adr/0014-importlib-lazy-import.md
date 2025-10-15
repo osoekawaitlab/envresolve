@@ -47,13 +47,15 @@ def register_azure_kv_provider(self, **kwargs: Any) -> None:
 
         if missing:
             hint = ", ".join(missing)
-            raise ImportError(
+            raise ProviderRegistrationError(
                 f"Azure Key Vault provider requires {hint}. "
-                "Install with `pip install envresolve[azure]`."
+                "Install with `pip install envresolve[azure]`.",
+                original_error=exc
             ) from exc
 
-        raise ImportError(
-            "Failed to import Azure Key Vault provider; see chained exception for details."
+        raise ProviderRegistrationError(
+            "Failed to import Azure Key Vault provider; see chained exception for details.",
+            original_error=exc
         ) from exc
 
     provider = provider_class(**kwargs)
@@ -64,7 +66,8 @@ def register_azure_kv_provider(self, **kwargs: Any) -> None:
 
 - **Lazy optional dependencies**: Users without Azure extras can still import the package and use non-Azure features (aligns with ADR-0012).
 - **Actionable errors**: When dependencies are missing, the raised message explicitly lists the missing packages and the extras command to install.
-- **Style compliance**: Avoids Ruff’s unused-import warnings and removes the need for `noqa` comments.
+- **Custom exception hierarchy**: Uses `ProviderRegistrationError` instead of `ImportError` to align with ADR-0002 (custom exception hierarchy).
+- **Style compliance**: Avoids Ruff's unused-import warnings and removes the need for `noqa` comments.
 - **Extensibility**: Same pattern can be reused for future optional providers.
 
 ## Implications
@@ -73,6 +76,7 @@ def register_azure_kv_provider(self, **kwargs: Any) -> None:
 
 - Importing `envresolve` no longer requires the Azure SDK.
 - Developers receive clear instructions on how to enable Azure functionality.
+- Custom exception allows clients to handle provider registration errors separately from other errors (catch `ProviderRegistrationError` specifically or all envresolve errors via `EnvResolveError`).
 - Unit tests can patch `importlib.import_module` to simulate missing dependencies.
 
 ### Concerns
@@ -109,5 +113,6 @@ def register_azure_kv_provider(self, **kwargs: Any) -> None:
 ## References
 
 - Implementation: `src/envresolve/api.py::EnvResolver.register_azure_kv_provider`
-- Related ADRs: 0009 (provider registry), 0012 (pytest markers for optional providers)
+- Related ADRs: 0002 (custom exception hierarchy), 0009 (provider registry), 0012 (pytest markers for optional providers)
 - Python docs: https://docs.python.org/3/library/importlib.html
+- Issue #5: Changed from `ImportError` to `ProviderRegistrationError` to align with ADR-0002

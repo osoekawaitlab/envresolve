@@ -3,6 +3,7 @@
 from envresolve.exceptions import (
     CircularReferenceError,
     EnvResolveError,
+    ProviderRegistrationError,
     SecretResolutionError,
     URIParseError,
     VariableNotFoundError,
@@ -60,3 +61,10 @@ def test_secret_resolution_error_message_includes_uri() -> None:
         "Failed", uri="akv://vault/secret", original_error=KeyError()
     )
     assert "akv://vault/secret" in str(exc)
+
+
+def test_provider_registration_error_exists() -> None:
+    """Test that ProviderRegistrationError exists and inherits from EnvResolveError."""
+    exc = ProviderRegistrationError("Failed to register provider")
+    assert str(exc) == "Failed to register provider"
+    assert isinstance(exc, EnvResolveError)
