@@ -10,14 +10,16 @@
       
       
       
-        <link rel="canonical" href="https://github.com/osoekawaitlab/envresolve/contributing/">
+        <link rel="canonical" href="https://github.com/osoekawaitlab/envresolve/developer-guide/contributing/">
       
       
-        <link rel="prev" href="../architecture/adr/">
+        <link rel="prev" href="../../api-reference/exceptions/">
       
       
+        <link rel="next" href="../live-tests/">
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.21">
     
     
@@ -26,10 +28,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.2a3383ac.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2a3383ac.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -48,9 +50,9 @@
       
     
     
-      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -90,7 +92,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="envresolve" class="md-header__button md-logo" aria-label="envresolve" data-md-component="logo">
+    <a href="../.." title="envresolve" class="md-header__button md-logo" aria-label="envresolve" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -223,7 +225,7 @@
   
   
     <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -242,7 +244,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../roadmap/" class="md-tabs__link">
+      <a href="../../roadmap/" class="md-tabs__link">
         
   
   
@@ -263,7 +265,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../user-guide/installation/" class="md-tabs__link">
+        <a href="../../user-guide/installation/" class="md-tabs__link">
           
   
   
@@ -283,7 +285,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../api-reference/expansion/" class="md-tabs__link">
+        <a href="../../api-reference/public_api/" class="md-tabs__link">
           
   
   
@@ -299,15 +301,17 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../architecture/adr/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
           
   
   
-  Architecture
+  Developer Guide
 
         </a>
       </li>
@@ -319,20 +323,19 @@
   
   
   
-    
-  
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
-        
-  
   
     
+    
+      <li class="md-tabs__item">
+        <a href="../../architecture/adr/" class="md-tabs__link">
+          
   
-  Contributing
+  
+  Architecture
 
-      </a>
-    </li>
+        </a>
+      </li>
+    
   
 
       
@@ -358,7 +361,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="envresolve" class="md-nav__button md-logo" aria-label="envresolve" data-md-component="logo">
+    <a href="../.." title="envresolve" class="md-nav__button md-logo" aria-label="envresolve" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -388,7 +391,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -410,7 +413,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../roadmap/" class="md-nav__link">
+      <a href="../../roadmap/" class="md-nav__link">
         
   
   
@@ -477,7 +480,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../user-guide/installation/" class="md-nav__link">
+      <a href="../../user-guide/installation/" class="md-nav__link">
         
   
   
@@ -500,7 +503,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../user-guide/basic-usage/" class="md-nav__link">
+      <a href="../../user-guide/basic-usage/" class="md-nav__link">
         
   
   
@@ -575,12 +578,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../api-reference/expansion/" class="md-nav__link">
+      <a href="../../api-reference/public_api/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Variable Expansion
+    Public API
     
   </span>
   
@@ -590,58 +593,6 @@
   
 
               
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    Architecture
-    
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
-            <span class="md-nav__icon md-icon"></span>
-            Architecture
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -650,12 +601,35 @@
   
   
     <li class="md-nav__item">
-      <a href="../architecture/adr/" class="md-nav__link">
+      <a href="../../api-reference/providers/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    ADRs
+    Providers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-reference/exceptions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Exceptions
     
   </span>
   
@@ -675,6 +649,54 @@
     
       
       
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Developer Guide
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Developer Guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
   
   
     
@@ -937,6 +959,533 @@
     </li>
   
 
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../live-tests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Live Tests
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/adr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Records
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            Records
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0000-adr-template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0000-adr-template.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0001-variable-expansion-with-regex/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0001-variable-expansion-with-regex.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0002-custom-exception-hierarchy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0002-custom-exception-hierarchy.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0003-structured-exception-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0003-structured-exception-design.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0004-stateless-function-based-variable-expansion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0004-stateless-function-based-variable-expansion.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0005-string-based-api-with-idempotent-resolution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0005-string-based-api-with-idempotent-resolution.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0006-nested-variable-expansion-implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0006-nested-variable-expansion-implementation.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0007-layer-separation-services-vs-application/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0007-layer-separation-services-vs-application.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0008-circular-reference-chain-tracking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0008-circular-reference-chain-tracking.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0009-manual-provider-registration-pattern/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0009-manual-provider-registration-pattern.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0010-iterative-uri-resolution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0010-iterative-uri-resolution.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0011-conditional-doctest-skip/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0011-conditional-doctest-skip.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0012-pytest-markers-for-azure-dependencies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0012-pytest-markers-for-azure-dependencies.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0013-class-based-api-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0013-class-based-api-design.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0014-importlib-lazy-import/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0014-importlib-lazy-import.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0015-terraform-managed-live-tests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0015-terraform-managed-live-tests.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
     
   </ul>
 </nav>
@@ -1195,51 +1744,61 @@
 </ul>
 <h3 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Fork and clone the repository:</li>
+<li>
+<p>Fork the repository on GitHub.</p>
+</li>
+<li>
+<p>Clone your fork locally:</p>
+</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/osoekawaitlab/envresolve.git
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/YOUR-USERNAME/envresolve.git
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>envresolve
+</code></pre></div>
+<ol>
+<li>Add the upstream remote to sync with the main repository:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>upstream<span class="w"> </span>https://github.com/osoekawaitlab/envresolve.git
 </code></pre></div>
 <ol>
 <li>Install dependencies:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uv<span class="w"> </span>sync
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>uv<span class="w"> </span>sync
 </code></pre></div>
 <ol>
 <li>Run tests to verify setup:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>nox<span class="w"> </span>-s<span class="w"> </span>tests
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>nox<span class="w"> </span>-s<span class="w"> </span>tests
 </code></pre></div>
 <h2 id="development-workflow">Development Workflow<a class="headerlink" href="#development-workflow" title="Permanent link">&para;</a></h2>
 <p>envresolve follows a strict Test-Driven Development (TDD) cycle.</p>
 <h3 id="running-tests">Running Tests<a class="headerlink" href="#running-tests" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># All tests with coverage</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>nox<span class="w"> </span>-s<span class="w"> </span>tests
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Unit tests only</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>nox<span class="w"> </span>-s<span class="w"> </span>tests_unit
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># E2E tests only</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>nox<span class="w"> </span>-s<span class="w"> </span>tests_e2e
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># All Python versions</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>nox<span class="w"> </span>-s<span class="w"> </span>tests_all_versions
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># All tests with coverage</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>nox<span class="w"> </span>-s<span class="w"> </span>tests
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Unit tests only</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>nox<span class="w"> </span>-s<span class="w"> </span>tests_unit
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># E2E tests only</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>nox<span class="w"> </span>-s<span class="w"> </span>tests_e2e
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># All Python versions</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>nox<span class="w"> </span>-s<span class="w"> </span>tests_all_versions
 </code></pre></div>
 <h3 id="code-quality">Code Quality<a class="headerlink" href="#code-quality" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Type checking</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>nox<span class="w"> </span>-s<span class="w"> </span>mypy
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Linting</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>nox<span class="w"> </span>-s<span class="w"> </span>lint
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Format code</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>nox<span class="w"> </span>-s<span class="w"> </span>format_code
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># All quality checks</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>nox<span class="w"> </span>-s<span class="w"> </span>quality
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Everything (tests + quality)</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>nox<span class="w"> </span>-s<span class="w"> </span>check_all
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Type checking</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>nox<span class="w"> </span>-s<span class="w"> </span>mypy
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Linting</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>nox<span class="w"> </span>-s<span class="w"> </span>lint
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Format code</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>nox<span class="w"> </span>-s<span class="w"> </span>format_code
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># All quality checks</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>nox<span class="w"> </span>-s<span class="w"> </span>quality
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Everything (tests + quality)</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>nox<span class="w"> </span>-s<span class="w"> </span>check_all
 </code></pre></div>
 <h2 id="code-style">Code Style<a class="headerlink" href="#code-style" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1269,12 +1828,12 @@
 </ul>
 <h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
 <p>envresolve follows a layered architecture:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Layer 5: api.py (Public API facade)
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Layer 4: application/ (resolver, cache)
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Layer 3: providers/ (factory, registry, implementations)
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Layer 2: services/ (reference, expansion)
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Layer 1: Domain (models, exceptions) + Infrastructure (base, logging)
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Layer 0: External dependencies
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Layer 5: api.py (Public API facade)
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Layer 4: application/ (resolver, cache)
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Layer 3: providers/ (factory, registry, implementations)
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Layer 2: services/ (reference, expansion)
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Layer 1: Domain (models, exceptions) + Infrastructure (base, logging)
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>Layer 0: External dependencies
 </code></pre></div>
 <p><strong>Key Principles</strong>:</p>
 <ul>
@@ -1282,14 +1841,14 @@
 <li>Lower layers NEVER depend on higher layers</li>
 <li>Domain layer has NO internal dependencies</li>
 </ul>
-<p>See <a href="../architecture/adr/">Architecture ADRs</a> for design decisions.</p>
+<p>See <a href="../../architecture/adr/">Architecture ADRs</a> for design decisions.</p>
 <h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
 <p>Documentation is built with MkDocs Material:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Serve documentation locally</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>mkdocs<span class="w"> </span>serve
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Build documentation</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>mkdocs<span class="w"> </span>build
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Serve documentation locally</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>mkdocs<span class="w"> </span>serve
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Build documentation</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>mkdocs<span class="w"> </span>build
 </code></pre></div>
 <h3 id="documentation-structure">Documentation Structure<a class="headerlink" href="#documentation-structure" title="Permanent link">&para;</a></h3>
 <ul>
@@ -1320,29 +1879,29 @@
 <p>Optional integration tests against real Azure Key Vault infrastructure. Run these tests to validate changes that affect Azure SDK integration or provider implementations.</p>
 <p><strong>Note</strong>: Live tests automatically skip when environment variables are not set (<code>ENVRESOLVE_LIVE_KEY_VAULT_NAME</code>, etc.), so they won't interfere with normal development.</p>
 <h3 id="one-time-setup">One-Time Setup<a class="headerlink" href="#one-time-setup" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># 1. Configure terraform (requires Azure subscription and az login)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">cd</span><span class="w"> </span>infra/terraform
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>cp<span class="w"> </span>terraform.tfvars.example<span class="w"> </span>terraform.tfvars
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># 2. Edit terraform.tfvars with your values:</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1">#    - subscription_id, tenant_id, name_prefix</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1">#    - test_principal_object_id (get your object ID: az ad signed-in-user show --query id -o tsv)</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># 3. Create resources</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>terraform<span class="w"> </span>init
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>terraform<span class="w"> </span>apply
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># 4. Return to project root and set environment variables (per shell session)</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="nb">cd</span><span class="w"> </span>../..
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="nb">source</span><span class="w"> </span>scripts/setup_live_tests.sh
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># 1. Configure terraform (requires Azure subscription and az login)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">cd</span><span class="w"> </span>infra/terraform
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>cp<span class="w"> </span>terraform.tfvars.example<span class="w"> </span>terraform.tfvars
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># 2. Edit terraform.tfvars with your values:</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1">#    - subscription_id, tenant_id, name_prefix</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1">#    - test_principal_object_id (get your object ID: az ad signed-in-user show --query id -o tsv)</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># 3. Create resources</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>terraform<span class="w"> </span>init
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>terraform<span class="w"> </span>apply
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># 4. Return to project root and set environment variables (per shell session)</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="nb">cd</span><span class="w"> </span>../..
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="nb">source</span><span class="w"> </span>scripts/setup_live_tests.sh
 </code></pre></div>
 <h3 id="running-live-tests">Running Live Tests<a class="headerlink" href="#running-live-tests" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>nox<span class="w"> </span>-s<span class="w"> </span>tests_live
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>nox<span class="w"> </span>-s<span class="w"> </span>tests_live
 </code></pre></div>
 <h3 id="cleanup">Cleanup<a class="headerlink" href="#cleanup" title="Permanent link">&para;</a></h3>
 <p>Resources can be kept for reuse. Destroy only when done:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">cd</span><span class="w"> </span>infra/terraform
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>terraform<span class="w"> </span>destroy
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">cd</span><span class="w"> </span>infra/terraform
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>terraform<span class="w"> </span>destroy
 </code></pre></div>
 
 
@@ -1398,10 +1957,10 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      <script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
       
     
   </body>

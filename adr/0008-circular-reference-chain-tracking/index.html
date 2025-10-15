@@ -13,6 +13,10 @@
         <link rel="canonical" href="https://github.com/osoekawaitlab/envresolve/adr/0008-circular-reference-chain-tracking/">
       
       
+        <link rel="prev" href="../0007-layer-separation-services-vs-application/">
+      
+      
+        <link rel="next" href="../0009-manual-provider-registration-pattern/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -20,7 +24,7 @@
     
     
       
-        <title>Architecture Decision Record (ADR) - envresolve</title>
+        <title>0008-circular-reference-chain-tracking.md - envresolve</title>
       
     
     
@@ -108,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Architecture Decision Record (ADR)
+              0008-circular-reference-chain-tracking.md
             
           </span>
         </div>
@@ -281,7 +285,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../api-reference/expansion/" class="md-tabs__link">
+        <a href="../../api-reference/public_api/" class="md-tabs__link">
           
   
   
@@ -301,11 +305,11 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../architecture/adr/" class="md-tabs__link">
+        <a href="../../developer-guide/contributing/" class="md-tabs__link">
           
   
   
-  Architecture
+  Developer Guide
 
         </a>
       </li>
@@ -317,18 +321,21 @@
   
   
   
-  
-    <li class="md-tabs__item">
-      <a href="../../contributing/" class="md-tabs__link">
-        
+    
   
   
     
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../architecture/adr/" class="md-tabs__link">
+          
   
-  Contributing
+  
+  Architecture
 
-      </a>
-    </li>
+        </a>
+      </li>
+    
   
 
       
@@ -571,12 +578,58 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api-reference/expansion/" class="md-nav__link">
+      <a href="../../api-reference/public_api/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Variable Expansion
+    Public API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-reference/providers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Providers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-reference/exceptions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Exceptions
     
   </span>
   
@@ -624,7 +677,7 @@
   
   
   <span class="md-ellipsis">
-    Architecture
+    Developer Guide
     
   </span>
   
@@ -635,7 +688,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
-            Architecture
+            Developer Guide
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -646,12 +699,35 @@
   
   
     <li class="md-nav__item">
-      <a href="../../architecture/adr/" class="md-nav__link">
+      <a href="../../developer-guide/contributing/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    ADRs
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developer-guide/live-tests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Live Tests
     
   </span>
   
@@ -673,20 +749,698 @@
       
   
   
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
   
   
     <li class="md-nav__item">
-      <a href="../../contributing/" class="md-nav__link">
+      <a href="../../architecture/adr/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Contributing
+    Overview
     
   </span>
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Records
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            Records
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0000-adr-template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0000-adr-template.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0001-variable-expansion-with-regex/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0001-variable-expansion-with-regex.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0002-custom-exception-hierarchy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0002-custom-exception-hierarchy.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0003-structured-exception-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0003-structured-exception-design.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0004-stateless-function-based-variable-expansion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0004-stateless-function-based-variable-expansion.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0005-string-based-api-with-idempotent-resolution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0005-string-based-api-with-idempotent-resolution.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0006-nested-variable-expansion-implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0006-nested-variable-expansion-implementation.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0007-layer-separation-services-vs-application/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0007-layer-separation-services-vs-application.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    0008-circular-reference-chain-tracking.md
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    0008-circular-reference-chain-tracking.md
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#title" class="md-nav__link">
+    <span class="md-ellipsis">
+      Title
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      Status
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#date" class="md-nav__link">
+    <span class="md-ellipsis">
+      Date
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Decision
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rationale
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implications
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positive-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Positive Implications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Concerns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternatives
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#variable-name-only-original-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variable Name Only (Original Design)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#full-stack-trace-in-error-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      Full Stack Trace in Error Message
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lazy-chain-computation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lazy Chain Computation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-based-cycle-detection-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      Set-Based Cycle Detection Only
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-direction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Future Direction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0009-manual-provider-registration-pattern/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0009-manual-provider-registration-pattern.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0010-iterative-uri-resolution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0010-iterative-uri-resolution.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0011-conditional-doctest-skip/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0011-conditional-doctest-skip.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0012-pytest-markers-for-azure-dependencies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0012-pytest-markers-for-azure-dependencies.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0013-class-based-api-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0013-class-based-api-design.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0014-importlib-lazy-import/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0014-importlib-lazy-import.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0015-terraform-managed-live-tests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0015-terraform-managed-live-tests.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 

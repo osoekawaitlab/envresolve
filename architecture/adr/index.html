@@ -13,10 +13,10 @@
         <link rel="canonical" href="https://github.com/osoekawaitlab/envresolve/architecture/adr/">
       
       
-        <link rel="prev" href="../../api-reference/expansion/">
+        <link rel="prev" href="../../developer-guide/live-tests/">
       
       
-        <link rel="next" href="../../contributing/">
+        <link rel="next" href="../../adr/0000-adr-template/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -24,7 +24,7 @@
     
     
       
-        <title>ADRs - envresolve</title>
+        <title>Overview - envresolve</title>
       
     
     
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ADRs
+              Overview
             
           </span>
         </div>
@@ -285,11 +285,31 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../api-reference/expansion/" class="md-tabs__link">
+        <a href="../../api-reference/public_api/" class="md-tabs__link">
           
   
   
   API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../developer-guide/contributing/" class="md-tabs__link">
+          
+  
+  
+  Developer Guide
 
         </a>
       </li>
@@ -316,25 +336,6 @@
         </a>
       </li>
     
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../contributing/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Contributing
-
-      </a>
-    </li>
   
 
       
@@ -577,12 +578,156 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api-reference/expansion/" class="md-nav__link">
+      <a href="../../api-reference/public_api/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Variable Expansion
+    Public API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-reference/providers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Providers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-reference/exceptions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Exceptions
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Developer Guide
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Developer Guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developer-guide/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developer-guide/live-tests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Live Tests
     
   </span>
   
@@ -625,10 +770,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
             
   
   
@@ -641,8 +786,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             Architecture
           </label>
@@ -669,7 +814,7 @@
   
   
   <span class="md-ellipsis">
-    ADRs
+    Overview
     
   </span>
   
@@ -682,7 +827,7 @@
   
   
   <span class="md-ellipsis">
-    ADRs
+    Overview
     
   </span>
   
@@ -796,6 +941,60 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#adr-0009-manual-provider-registration-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0009: Manual Provider Registration Pattern
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0010-iterative-uri-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0010: Iterative URI Resolution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0011-conditional-doctest-skip" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0011: Conditional Doctest Skip
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0012-pytest-markers-for-azure-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0012: Pytest Markers for Azure Dependencies
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0013-class-based-api-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0013: Class-Based API Design
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0014-importlib-lazy-import" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0014: Importlib Lazy Import
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#adr-0015-manage-azure-live-test-infrastructure-with-terraform" class="md-nav__link">
     <span class="md-ellipsis">
       ADR 0015: Manage Azure Live Test Infrastructure with Terraform
@@ -836,31 +1035,433 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Records
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            Records
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0000-adr-template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0000-adr-template.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0001-variable-expansion-with-regex/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0001-variable-expansion-with-regex.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0002-custom-exception-hierarchy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0002-custom-exception-hierarchy.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0003-structured-exception-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0003-structured-exception-design.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0004-stateless-function-based-variable-expansion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0004-stateless-function-based-variable-expansion.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0005-string-based-api-with-idempotent-resolution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0005-string-based-api-with-idempotent-resolution.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0006-nested-variable-expansion-implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0006-nested-variable-expansion-implementation.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0007-layer-separation-services-vs-application/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0007-layer-separation-services-vs-application.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0008-circular-reference-chain-tracking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0008-circular-reference-chain-tracking.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0009-manual-provider-registration-pattern/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0009-manual-provider-registration-pattern.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0010-iterative-uri-resolution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0010-iterative-uri-resolution.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0011-conditional-doctest-skip/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0011-conditional-doctest-skip.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0012-pytest-markers-for-azure-dependencies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0012-pytest-markers-for-azure-dependencies.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0013-class-based-api-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0013-class-based-api-design.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0014-importlib-lazy-import/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0014-importlib-lazy-import.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0015-terraform-managed-live-tests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0015-terraform-managed-live-tests.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
     </li>
   
 
-    
+              
+            
+          </ul>
+        </nav>
       
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../contributing/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Contributing
-    
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -983,6 +1584,60 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#adr-0009-manual-provider-registration-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0009: Manual Provider Registration Pattern
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0010-iterative-uri-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0010: Iterative URI Resolution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0011-conditional-doctest-skip" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0011: Conditional Doctest Skip
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0012-pytest-markers-for-azure-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0012: Pytest Markers for Azure Dependencies
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0013-class-based-api-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0013: Class-Based API Design
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0014-importlib-lazy-import" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0014: Importlib Lazy Import
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#adr-0015-manage-azure-live-test-infrastructure-with-terraform" class="md-nav__link">
     <span class="md-ellipsis">
       ADR 0015: Manage Azure Live Test Infrastructure with Terraform
@@ -1042,93 +1697,189 @@
 <p><strong>Status</strong>: Accepted
 <strong>Date</strong>: 2025-10-11</p>
 <p>Decided to use regular expressions for variable expansion instead of manual string parsing.</p>
-<p><a href="https://github.com/osoekawaitlab/envresolve/blob/main/docs/adr/0001-variable-expansion-with-regex.md">View Full ADR</a></p>
+<p><a href="../../adr/0001-variable-expansion-with-regex/">View Full ADR</a></p>
 <hr />
 <h3 id="adr-0002-custom-exception-hierarchy">ADR 0002: Custom Exception Hierarchy<a class="headerlink" href="#adr-0002-custom-exception-hierarchy" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted
 <strong>Date</strong>: 2025-10-11</p>
 <p>Established a custom exception hierarchy with base exceptions for better error handling.</p>
-<p><a href="https://github.com/osoekawaitlab/envresolve/blob/main/docs/adr/0002-custom-exception-hierarchy.md">View Full ADR</a></p>
+<p><a href="../../adr/0002-custom-exception-hierarchy/">View Full ADR</a></p>
 <hr />
 <h3 id="adr-0003-structured-exception-design">ADR 0003: Structured Exception Design<a class="headerlink" href="#adr-0003-structured-exception-design" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted
 <strong>Date</strong>: 2025-10-11</p>
 <p>Defined structured exception design for variable expansion errors.</p>
-<p><a href="https://github.com/osoekawaitlab/envresolve/blob/main/docs/adr/0003-structured-exception-design.md">View Full ADR</a></p>
+<p><a href="../../adr/0003-structured-exception-design/">View Full ADR</a></p>
 <hr />
 <h3 id="adr-0004-stateless-function-based-variable-expansion">ADR 0004: Stateless Function-Based Variable Expansion<a class="headerlink" href="#adr-0004-stateless-function-based-variable-expansion" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted
 <strong>Date</strong>: 2025-10-11</p>
 <p>Chose a stateless function (<code>expand_variables()</code>) as the core API with convenience wrapper classes.</p>
 <p><strong>Key Decision</strong>: Use <code>expand_variables(text, env)</code> instead of a stateful <code>VariableExpander(env)</code> class.</p>
-<p><strong>Rationale</strong>:
-- Simpler and more explicit
-- No hidden state
-- Better for testing
-- More Pythonic for stateless operations</p>
-<p><a href="https://github.com/osoekawaitlab/envresolve/blob/main/docs/adr/0004-stateless-function-based-variable-expansion.md">View Full ADR</a></p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Simpler and more explicit</li>
+<li>No hidden state</li>
+<li>Better for testing</li>
+<li>More Pythonic for stateless operations</li>
+</ul>
+<p><a href="../../adr/0004-stateless-function-based-variable-expansion/">View Full ADR</a></p>
 <hr />
 <h3 id="adr-0005-string-based-api-with-idempotent-resolution">ADR 0005: String-Based API with Idempotent Resolution<a class="headerlink" href="#adr-0005-string-based-api-with-idempotent-resolution" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted
 <strong>Date</strong>: 2025-10-12</p>
 <p>Decided to use a string-based API instead of data models for resolution results.</p>
 <p><strong>Key Decision</strong>: Return <code>str</code> directly instead of <code>ResolutionResult</code> models.</p>
-<p><strong>Rationale</strong>:
-- Users ultimately need strings for <code>os.environ</code>
-- Zero conversion overhead
-- Infrastructure utilities should be transparent
-- Idempotent resolution is safer and more composable</p>
-<p><a href="https://github.com/osoekawaitlab/envresolve/blob/main/docs/adr/0005-string-based-api-with-idempotent-resolution.md">View Full ADR</a></p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Users ultimately need strings for <code>os.environ</code></li>
+<li>Zero conversion overhead</li>
+<li>Infrastructure utilities should be transparent</li>
+<li>Idempotent resolution is safer and more composable</li>
+</ul>
+<p><a href="../../adr/0005-string-based-api-with-idempotent-resolution/">View Full ADR</a></p>
 <hr />
 <h3 id="adr-0006-nested-variable-expansion-implementation">ADR 0006: Nested Variable Expansion Implementation<a class="headerlink" href="#adr-0006-nested-variable-expansion-implementation" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted
 <strong>Date</strong>: 2025-10-13</p>
 <p>Chose a two-phase iterative algorithm for supporting nested variable expansion like <code>${VAR_${NESTED}}</code>.</p>
 <p><strong>Key Decision</strong>: Expand innermost curly braces first, then simple variables, iterating until stable.</p>
-<p><strong>Rationale</strong>:
-- Correct inside-out evaluation order
-- Predictable behavior for complex nesting
-- No recursion depth limits
-- Clear error detection</p>
-<p><a href="https://github.com/osoekawaitlab/envresolve/blob/main/docs/adr/0006-nested-variable-expansion-implementation.md">View Full ADR</a></p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Correct inside-out evaluation order</li>
+<li>Predictable behavior for complex nesting</li>
+<li>No recursion depth limits</li>
+<li>Clear error detection</li>
+</ul>
+<p><a href="../../adr/0006-nested-variable-expansion-implementation/">View Full ADR</a></p>
 <hr />
 <h3 id="adr-0007-layer-separation-services-vs-application">ADR 0007: Layer Separation (Services vs Application)<a class="headerlink" href="#adr-0007-layer-separation-services-vs-application" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted
 <strong>Date</strong>: 2025-10-13</p>
 <p>Separated pure business logic (services layer) from environment integration (application layer).</p>
 <p><strong>Key Decision</strong>: Move <code>EnvExpander</code> and <code>DotEnvExpander</code> from <code>services/expansion.py</code> to <code>application/expanders.py</code>.</p>
-<p><strong>Rationale</strong>:
-- Single Responsibility Principle
-- Better testability (pure logic without I/O)
-- Clear dependency direction
-- Matches clean architecture patterns</p>
-<p><a href="https://github.com/osoekawaitlab/envresolve/blob/main/docs/adr/0007-layer-separation-services-vs-application.md">View Full ADR</a></p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Single Responsibility Principle</li>
+<li>Better testability (pure logic without I/O)</li>
+<li>Clear dependency direction</li>
+<li>Matches clean architecture patterns</li>
+</ul>
+<p><a href="../../adr/0007-layer-separation-services-vs-application/">View Full ADR</a></p>
 <hr />
 <h3 id="adr-0008-circular-reference-chain-tracking">ADR 0008: Circular Reference Chain Tracking<a class="headerlink" href="#adr-0008-circular-reference-chain-tracking" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted
 <strong>Date</strong>: 2025-10-13</p>
 <p>Extended <code>CircularReferenceError</code> to include full reference chain for better debugging.</p>
 <p><strong>Key Decision</strong>: Add <code>chain: list[str]</code> attribute showing complete cycle (e.g., <code>["A", "B", "C", "A"]</code>).</p>
-<p><strong>Rationale</strong>:
-- Immediate visibility of complete cycle
-- Better debugging experience
-- Programmatic access to cycle information
-- Actionable error messages</p>
-<p><a href="https://github.com/osoekawaitlab/envresolve/blob/main/docs/adr/0008-circular-reference-chain-tracking.md">View Full ADR</a></p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Immediate visibility of complete cycle</li>
+<li>Better debugging experience</li>
+<li>Programmatic access to cycle information</li>
+<li>Actionable error messages</li>
+</ul>
+<p><a href="../../adr/0008-circular-reference-chain-tracking/">View Full ADR</a></p>
+<hr />
+<h3 id="adr-0009-manual-provider-registration-pattern">ADR 0009: Manual Provider Registration Pattern<a class="headerlink" href="#adr-0009-manual-provider-registration-pattern" title="Permanent link">&para;</a></h3>
+<p><strong>Status</strong>: Accepted
+<strong>Date</strong>: 2025-10-13</p>
+<p>Established manual provider registration with a global registry instead of auto-discovery or dependency injection.</p>
+<p><strong>Key Decision</strong>: Users explicitly call <code>register_azure_kv_provider()</code> before resolving secrets. Providers are stored in a module-level singleton registry.</p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Opt-in dependencies (only load what you need)</li>
+<li>Explicit control over initialization timing</li>
+<li>Resource efficiency through singleton providers</li>
+<li>Clear API surface</li>
+</ul>
+<p><a href="../../adr/0009-manual-provider-registration-pattern/">View Full ADR</a></p>
+<hr />
+<h3 id="adr-0010-iterative-uri-resolution">ADR 0010: Iterative URI Resolution<a class="headerlink" href="#adr-0010-iterative-uri-resolution" title="Permanent link">&para;</a></h3>
+<p><strong>Status</strong>: Accepted
+<strong>Date</strong>: 2025-10-13</p>
+<p>Implemented iterative resolution with cycle detection to support URI-to-URI resolution chains.</p>
+<p><strong>Key Decision</strong>: Use a <code>while</code> loop with a <code>seen</code> set to resolve URIs iteratively until a stable value is reached or a cycle is detected.</p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Supports arbitrary nesting depth</li>
+<li>Maintains idempotency (plain strings pass through)</li>
+<li>Safe cycle detection without infinite loops</li>
+<li>Flexible for mixed variable/URI resolution</li>
+</ul>
+<p><a href="../../adr/0010-iterative-uri-resolution/">View Full ADR</a></p>
+<hr />
+<h3 id="adr-0011-conditional-doctest-skip">ADR 0011: Conditional Doctest Skip<a class="headerlink" href="#adr-0011-conditional-doctest-skip" title="Permanent link">&para;</a></h3>
+<p><strong>Status</strong>: Accepted
+<strong>Date</strong>: 2025-10-13</p>
+<p>Implemented pytest fixture-based conditional skipping for doctests that require optional dependencies.</p>
+<p><strong>Key Decision</strong>: Use autouse fixture in <code>conftest.py</code> to detect Azure SDK availability and skip Azure-related doctests when dependencies are missing.</p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Doctests validate documentation when dependencies are present</li>
+<li>Graceful degradation without Azure SDK</li>
+<li>Consistent with pytest marker strategy</li>
+<li>Avoids manual <code>+SKIP</code> directives</li>
+</ul>
+<p><a href="../../adr/0011-conditional-doctest-skip/">View Full ADR</a></p>
+<hr />
+<h3 id="adr-0012-pytest-markers-for-azure-dependencies">ADR 0012: Pytest Markers for Azure Dependencies<a class="headerlink" href="#adr-0012-pytest-markers-for-azure-dependencies" title="Permanent link">&para;</a></h3>
+<p><strong>Status</strong>: Accepted
+<strong>Date</strong>: 2025-10-13</p>
+<p>Introduced dedicated pytest marker (<code>azure</code>) to isolate tests requiring optional Azure SDK dependencies.</p>
+<p><strong>Key Decision</strong>: Mark Azure-dependent tests with <code>@pytest.mark.azure</code> and provide <code>tests_without_azure</code> Nox session that excludes them.</p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Core test suite runs without optional dependencies</li>
+<li>Clear signal for which tests require Azure</li>
+<li>CI can run lightweight and full test suites separately</li>
+<li>Minimal disruption for contributors</li>
+</ul>
+<p><a href="../../adr/0012-pytest-markers-for-azure-dependencies/">View Full ADR</a></p>
+<hr />
+<h3 id="adr-0013-class-based-api-design">ADR 0013: Class-Based API Design<a class="headerlink" href="#adr-0013-class-based-api-design" title="Permanent link">&para;</a></h3>
+<p><strong>Status</strong>: Accepted
+<strong>Date</strong>: 2025-10-14</p>
+<p>Encapsulated resolution state in <code>EnvResolver</code> class with module-level facade for backward compatibility.</p>
+<p><strong>Key Decision</strong>: Introduce <code>EnvResolver</code> class that encapsulates provider registry and resolver instance, expose singleton instance through module-level functions.</p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Eliminates <code>global</code> keyword usage</li>
+<li>Better testability (tests can instantiate isolated resolvers)</li>
+<li>Maintains simple module-level API</li>
+<li>Supports multiple resolver instances if needed</li>
+</ul>
+<p><a href="../../adr/0013-class-based-api-design/">View Full ADR</a></p>
+<hr />
+<h3 id="adr-0014-importlib-lazy-import">ADR 0014: Importlib Lazy Import<a class="headerlink" href="#adr-0014-importlib-lazy-import" title="Permanent link">&para;</a></h3>
+<p><strong>Status</strong>: Accepted
+<strong>Date</strong>: 2025-10-14</p>
+<p>Used <code>importlib.import_module</code> for lazy loading of optional Azure SDK dependencies with rich error messages.</p>
+<p><strong>Key Decision</strong>: Defer Azure SDK imports until <code>register_azure_kv_provider()</code> is called, and raise <code>ProviderRegistrationError</code> (not <code>ImportError</code>) with helpful installation instructions when dependencies are missing.</p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Users can import envresolve without Azure SDK</li>
+<li>Clear, actionable error messages</li>
+<li>Aligns with custom exception hierarchy (ADR-0002)</li>
+<li>Extensible pattern for future optional providers</li>
+</ul>
+<p><a href="../../adr/0014-importlib-lazy-import/">View Full ADR</a></p>
 <hr />
 <h3 id="adr-0015-manage-azure-live-test-infrastructure-with-terraform">ADR 0015: Manage Azure Live Test Infrastructure with Terraform<a class="headerlink" href="#adr-0015-manage-azure-live-test-infrastructure-with-terraform" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted
-<strong>Date</strong>: 2025-01-15</p>
+<strong>Date</strong>: 2025-10-15</p>
 <p>Standardized live Azure Key Vault testing with Terraform-managed resources and explicit pytest gating.</p>
 <p><strong>Key Decision</strong>: Use Terraform manifests in <code>infra/terraform</code> plus helper Nox sessions to provision/destroy a Key Vault and sample secret for live tests.</p>
-<p><strong>Rationale</strong>:
-- Repeatable provisioning for contributors and CI
-- Clear separation between mocked and live suites via markers
-- Easier cleanup through scripted Terraform destroy</p>
-<p><a href="https://github.com/osoekawaitlab/envresolve/blob/main/docs/adr/0015-terraform-managed-live-tests.md">View Full ADR</a></p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Repeatable provisioning for contributors and CI</li>
+<li>Clear separation between mocked and live suites via markers</li>
+<li>Easier cleanup through scripted Terraform destroy</li>
+</ul>
+<p><a href="../../adr/0015-terraform-managed-live-tests/">View Full ADR</a></p>
 <hr />
 <h2 id="adr-template">ADR Template<a class="headerlink" href="#adr-template" title="Permanent link">&para;</a></h2>
-<p>All ADRs follow a consistent template defined in <a href="https://github.com/osoekawaitlab/envresolve/blob/main/docs/adr/0000-adr-template.md">ADR 0000: ADR Template</a>.</p>
+<p>All ADRs follow a consistent template defined in <a href="../../adr/0000-adr-template/">ADR 0000: ADR Template</a>.</p>
 <h2 id="contributing">Contributing<a class="headerlink" href="#contributing" title="Permanent link">&para;</a></h2>
 <p>When making significant architectural decisions, please:</p>
 <ol>

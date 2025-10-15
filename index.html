@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#envresolve" class="md-skip">
+        <a href="#welcome-to-envresolve" class="md-skip">
           Skip to content
         </a>
       
@@ -285,11 +285,31 @@
     
     
       <li class="md-tabs__item">
-        <a href="api-reference/expansion/" class="md-tabs__link">
+        <a href="api-reference/public_api/" class="md-tabs__link">
           
   
   
   API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="developer-guide/contributing/" class="md-tabs__link">
+          
+  
+  
+  Developer Guide
 
         </a>
       </li>
@@ -314,25 +334,6 @@
         </a>
       </li>
     
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="contributing/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Contributing
-
-      </a>
-    </li>
   
 
       
@@ -447,27 +448,51 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#project-status" class="md-nav__link">
+  <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
-      Project Status
+      Quick Start
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#load-from-env-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      Load from .env File
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#documentation" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#direct-secret-resolution" class="md-nav__link">
     <span class="md-ellipsis">
-      Documentation
+      Direct Secret Resolution
     </span>
   </a>
   
 </li>
+        
+          <li class="md-nav__item">
+  <a href="#simple-variable-expansion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Simple Variable Expansion
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#license" class="md-nav__link">
+  <a href="#installation" class="md-nav__link">
     <span class="md-ellipsis">
-      License
+      Installation
     </span>
   </a>
   
@@ -653,12 +678,58 @@
   
   
     <li class="md-nav__item">
-      <a href="api-reference/expansion/" class="md-nav__link">
+      <a href="api-reference/public_api/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Variable Expansion
+    Public API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api-reference/providers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Providers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api-reference/exceptions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Exceptions
     
   </span>
   
@@ -706,7 +777,7 @@
   
   
   <span class="md-ellipsis">
-    Architecture
+    Developer Guide
     
   </span>
   
@@ -717,7 +788,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
-            Architecture
+            Developer Guide
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -728,12 +799,35 @@
   
   
     <li class="md-nav__item">
-      <a href="architecture/adr/" class="md-nav__link">
+      <a href="developer-guide/contributing/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    ADRs
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="developer-guide/live-tests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Live Tests
     
   </span>
   
@@ -757,18 +851,492 @@
   
   
   
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
     <li class="md-nav__item">
-      <a href="contributing/" class="md-nav__link">
+      <a href="architecture/adr/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Contributing
+    Overview
     
   </span>
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Records
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            Records
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adr/0000-adr-template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0000-adr-template.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adr/0001-variable-expansion-with-regex/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0001-variable-expansion-with-regex.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adr/0002-custom-exception-hierarchy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0002-custom-exception-hierarchy.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adr/0003-structured-exception-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0003-structured-exception-design.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adr/0004-stateless-function-based-variable-expansion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0004-stateless-function-based-variable-expansion.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adr/0005-string-based-api-with-idempotent-resolution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0005-string-based-api-with-idempotent-resolution.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adr/0006-nested-variable-expansion-implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0006-nested-variable-expansion-implementation.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adr/0007-layer-separation-services-vs-application/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0007-layer-separation-services-vs-application.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adr/0008-circular-reference-chain-tracking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0008-circular-reference-chain-tracking.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adr/0009-manual-provider-registration-pattern/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0009-manual-provider-registration-pattern.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adr/0010-iterative-uri-resolution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0010-iterative-uri-resolution.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adr/0011-conditional-doctest-skip/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0011-conditional-doctest-skip.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adr/0012-pytest-markers-for-azure-dependencies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0012-pytest-markers-for-azure-dependencies.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adr/0013-class-based-api-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0013-class-based-api-design.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adr/0014-importlib-lazy-import/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0014-importlib-lazy-import.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adr/0015-terraform-managed-live-tests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0015-terraform-managed-live-tests.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -809,27 +1377,51 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#project-status" class="md-nav__link">
+  <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
-      Project Status
+      Quick Start
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#load-from-env-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      Load from .env File
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#documentation" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#direct-secret-resolution" class="md-nav__link">
     <span class="md-ellipsis">
-      Documentation
+      Direct Secret Resolution
     </span>
   </a>
   
 </li>
+        
+          <li class="md-nav__item">
+  <a href="#simple-variable-expansion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Simple Variable Expansion
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#license" class="md-nav__link">
+  <a href="#installation" class="md-nav__link">
     <span class="md-ellipsis">
-      License
+      Installation
     </span>
   </a>
   
@@ -854,35 +1446,66 @@
   
 
 
-<h1 id="envresolve">envresolve<a class="headerlink" href="#envresolve" title="Permanent link">&para;</a></h1>
-<p><strong>envresolve</strong> is a Python library for resolving environment variables from secret stores (e.g., Azure Key Vault).</p>
+<h1 id="welcome-to-envresolve">Welcome to envresolve<a class="headerlink" href="#welcome-to-envresolve" title="Permanent link">&para;</a></h1>
+<p>Resolve environment variables from secret stores like Azure Key Vault.</p>
 <h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Variable Expansion</strong>: Support for <code>${VAR}</code> and <code>$VAR</code> syntax with nested expansion</li>
-<li><strong>Secret Resolution</strong>: Resolve <code>akv://</code> URIs via pluggable providers with iterative cycle detection</li>
-<li><strong>Multiple Sources</strong>: Works with <code>os.environ</code>, <code>.env</code> files, or custom dictionaries</li>
-<li><strong>Type Safe</strong>: Built with strict type checking using mypy</li>
-<li><strong>Well Tested</strong>: 100% test coverage with comprehensive unit and E2E tests</li>
+<li><strong>Variable expansion</strong>: Expand <code>${VAR}</code> and <code>$VAR</code> syntax in strings</li>
+<li><strong>Secret resolution</strong>: Fetch secrets from Azure Key Vault (more providers coming)</li>
+<li><strong>.env support</strong>: Load variables from <code>.env</code> files and automatically resolve secrets</li>
+<li><strong>Circular reference detection</strong>: Prevents infinite loops in variable chains</li>
+<li><strong>Type-safe</strong>: Full mypy type checking support</li>
 </ul>
-<h2 id="project-status">Project Status<a class="headerlink" href="#project-status" title="Permanent link">&para;</a></h2>
-<p><strong>Current Version</strong>: 0.1.0 (Variable Expansion - Phase 2)</p>
-<p>envresolve is under active development. Currently implemented:</p>
-<ul>
-<li>✅ Variable expansion with <code>${VAR}</code> and <code>$VAR</code> syntax</li>
-<li>✅ Circular reference detection</li>
-<li>✅ Nested variable expansion</li>
-<li>⏳ URI parsing and secret provider system (coming soon)</li>
-</ul>
-<p>See <a href="roadmap/">Roadmap</a> for full development plan.</p>
-<h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="user-guide/installation/">User Guide</a> - Installation and usage instructions</li>
-<li><a href="api-reference/expansion/">API Reference</a> - Detailed API documentation</li>
-<li><a href="architecture/adr/">Architecture</a> - Design decisions and ADRs</li>
-<li><a href="contributing/">Contributing</a> - Development guide</li>
-</ul>
-<h2 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h2>
-<p>MIT</p>
+<h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
+<h3 id="load-from-env-file">Load from .env File<a class="headerlink" href="#load-from-env-file" title="Permanent link">&para;</a></h3>
+<p>The easiest way to use <code>envresolve</code> is by loading a <code>.env</code> file.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">envresolve</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># .env file content:</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># VAULT_NAME=my-vault</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># DATABASE_URL=akv://${VAULT_NAME}/db-url</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># API_KEY=akv://${VAULT_NAME}/api-key</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Requires: pip install envresolve[azure]</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Requires: Azure authentication (az login, Managed Identity, etc.)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">envresolve</span><span class="o">.</span><span class="n">register_azure_kv_provider</span><span class="p">()</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Load .env and resolve all secret URIs</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># By default, exports to os.environ</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">resolved_vars</span> <span class="o">=</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">load_env</span><span class="p">(</span><span class="s2">&quot;.env&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Or load without exporting</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">resolved_vars</span> <span class="o">=</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">load_env</span><span class="p">(</span><span class="s2">&quot;.env&quot;</span><span class="p">,</span> <span class="n">export</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="direct-secret-resolution">Direct Secret Resolution<a class="headerlink" href="#direct-secret-resolution" title="Permanent link">&para;</a></h3>
+<p>You can also fetch individual secrets directly:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">envresolve</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Requires: pip install envresolve[azure]</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">envresolve</span><span class="o">.</span><span class="n">register_azure_kv_provider</span><span class="p">()</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">secret_value</span> <span class="o">=</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">resolve_secret</span><span class="p">(</span><span class="s2">&quot;akv://corp-vault/db-password&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">secret_value</span><span class="p">)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="k">except</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">ProviderRegistrationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Azure SDK not available: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="k">except</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">SecretResolutionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to fetch secret: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="simple-variable-expansion">Simple Variable Expansion<a class="headerlink" href="#simple-variable-expansion" title="Permanent link">&para;</a></h3>
+<p>Expand variables without connecting to external services:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">envresolve</span><span class="w"> </span><span class="kn">import</span> <span class="n">expand_variables</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">env</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;VAULT&quot;</span><span class="p">:</span> <span class="s2">&quot;corp-kv&quot;</span><span class="p">,</span> <span class="s2">&quot;SECRET&quot;</span><span class="p">:</span> <span class="s2">&quot;db-password&quot;</span><span class="p">}</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">result</span> <span class="o">=</span> <span class="n">expand_variables</span><span class="p">(</span><span class="s2">&quot;akv://$</span><span class="si">{VAULT}</span><span class="s2">/$</span><span class="si">{SECRET}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># akv://corp-kv/db-password</span>
+</code></pre></div>
+<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Basic installation (variable expansion only)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>pip<span class="w"> </span>install<span class="w"> </span>envresolve
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># With Azure Key Vault support</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>pip<span class="w"> </span>install<span class="w"> </span>envresolve<span class="o">[</span>azure<span class="o">]</span>
+</code></pre></div>
 
 
 

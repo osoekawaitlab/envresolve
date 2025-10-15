@@ -13,6 +13,10 @@
         <link rel="canonical" href="https://github.com/osoekawaitlab/envresolve/adr/0014-importlib-lazy-import/">
       
       
+        <link rel="prev" href="../0013-class-based-api-design/">
+      
+      
+        <link rel="next" href="../0015-terraform-managed-live-tests/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -20,7 +24,7 @@
     
     
       
-        <title>Architecture Decision Record (ADR) - envresolve</title>
+        <title>0014-importlib-lazy-import.md - envresolve</title>
       
     
     
@@ -108,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Architecture Decision Record (ADR)
+              0014-importlib-lazy-import.md
             
           </span>
         </div>
@@ -281,7 +285,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../api-reference/expansion/" class="md-tabs__link">
+        <a href="../../api-reference/public_api/" class="md-tabs__link">
           
   
   
@@ -301,11 +305,11 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../architecture/adr/" class="md-tabs__link">
+        <a href="../../developer-guide/contributing/" class="md-tabs__link">
           
   
   
-  Architecture
+  Developer Guide
 
         </a>
       </li>
@@ -317,18 +321,21 @@
   
   
   
-  
-    <li class="md-tabs__item">
-      <a href="../../contributing/" class="md-tabs__link">
-        
+    
   
   
     
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../architecture/adr/" class="md-tabs__link">
+          
   
-  Contributing
+  
+  Architecture
 
-      </a>
-    </li>
+        </a>
+      </li>
+    
   
 
       
@@ -571,12 +578,58 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api-reference/expansion/" class="md-nav__link">
+      <a href="../../api-reference/public_api/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Variable Expansion
+    Public API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-reference/providers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Providers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-reference/exceptions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Exceptions
     
   </span>
   
@@ -624,7 +677,7 @@
   
   
   <span class="md-ellipsis">
-    Architecture
+    Developer Guide
     
   </span>
   
@@ -635,7 +688,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
-            Architecture
+            Developer Guide
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -646,12 +699,35 @@
   
   
     <li class="md-nav__item">
-      <a href="../../architecture/adr/" class="md-nav__link">
+      <a href="../../developer-guide/contributing/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    ADRs
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developer-guide/live-tests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Live Tests
     
   </span>
   
@@ -673,20 +749,689 @@
       
   
   
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
   
   
     <li class="md-nav__item">
-      <a href="../../contributing/" class="md-nav__link">
+      <a href="../../architecture/adr/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Contributing
+    Overview
     
   </span>
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Records
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            Records
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0000-adr-template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0000-adr-template.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0001-variable-expansion-with-regex/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0001-variable-expansion-with-regex.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0002-custom-exception-hierarchy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0002-custom-exception-hierarchy.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0003-structured-exception-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0003-structured-exception-design.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0004-stateless-function-based-variable-expansion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0004-stateless-function-based-variable-expansion.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0005-string-based-api-with-idempotent-resolution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0005-string-based-api-with-idempotent-resolution.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0006-nested-variable-expansion-implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0006-nested-variable-expansion-implementation.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0007-layer-separation-services-vs-application/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0007-layer-separation-services-vs-application.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0008-circular-reference-chain-tracking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0008-circular-reference-chain-tracking.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0009-manual-provider-registration-pattern/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0009-manual-provider-registration-pattern.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0010-iterative-uri-resolution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0010-iterative-uri-resolution.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0011-conditional-doctest-skip/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0011-conditional-doctest-skip.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0012-pytest-markers-for-azure-dependencies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0012-pytest-markers-for-azure-dependencies.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0013-class-based-api-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0013-class-based-api-design.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    0014-importlib-lazy-import.md
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    0014-importlib-lazy-import.md
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#title" class="md-nav__link">
+    <span class="md-ellipsis">
+      Title
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      Status
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#date" class="md-nav__link">
+    <span class="md-ellipsis">
+      Date
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Decision
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rationale
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implications
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positive-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Positive Implications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Concerns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternatives
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#traditional-tryexcept-around-direct-import" class="md-nav__link">
+    <span class="md-ellipsis">
+      Traditional try/except around Direct Import
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type_checking-guards" class="md-nav__link">
+    <span class="md-ellipsis">
+      TYPE_CHECKING Guards
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entry-point-based-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      Entry-Point Based Discovery
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-direction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Future Direction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0015-terraform-managed-live-tests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0015-terraform-managed-live-tests.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -889,7 +1634,7 @@
 <h2 id="status">Status<a class="headerlink" href="#status" title="Permanent link">&para;</a></h2>
 <p>Accepted</p>
 <h2 id="date">Date<a class="headerlink" href="#date" title="Permanent link">&para;</a></h2>
-<p>2025-01-14</p>
+<p>2025-10-14</p>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
 <p>The Azure Key Vault provider depends on optional packages (<code>azure-identity</code>, <code>azure-keyvault-secrets</code>). Direct imports at module load time cause two problems:</p>
 <ol>
@@ -920,23 +1665,26 @@
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>        <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>            <span class="n">hint</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>            <span class="k">raise</span> <span class="n">ProviderRegistrationError</span><span class="p">(</span>
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>                <span class="sa">f</span><span class="s2">&quot;Azure Key Vault provider requires </span><span class="si">{</span><span class="n">hint</span><span class="si">}</span><span class="s2">. &quot;</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>                <span class="s2">&quot;Install with `pip install envresolve[azure]`.&quot;</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>            <span class="s2">&quot;Failed to import Azure Key Vault provider; see chained exception for details.&quot;</span>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    <span class="n">provider</span> <span class="o">=</span> <span class="n">provider_class</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_providers</span><span class="p">[</span><span class="s2">&quot;akv&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">provider</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>                <span class="s2">&quot;Install with `pip install envresolve[azure]`.&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>                <span class="n">original_error</span><span class="o">=</span><span class="n">exc</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>        <span class="k">raise</span> <span class="n">ProviderRegistrationError</span><span class="p">(</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>            <span class="s2">&quot;Failed to import Azure Key Vault provider; see chained exception for details.&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>            <span class="n">original_error</span><span class="o">=</span><span class="n">exc</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>    <span class="n">provider</span> <span class="o">=</span> <span class="n">provider_class</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_providers</span><span class="p">[</span><span class="s2">&quot;akv&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">provider</span>
 </code></pre></div>
 <h2 id="rationale">Rationale<a class="headerlink" href="#rationale" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Lazy optional dependencies</strong>: Users without Azure extras can still import the package and use non-Azure features (aligns with ADR-0012).</li>
 <li><strong>Actionable errors</strong>: When dependencies are missing, the raised message explicitly lists the missing packages and the extras command to install.</li>
-<li><strong>Style compliance</strong>: Avoids Ruff’s unused-import warnings and removes the need for <code>noqa</code> comments.</li>
+<li><strong>Custom exception hierarchy</strong>: Uses <code>ProviderRegistrationError</code> instead of <code>ImportError</code> to align with ADR-0002 (custom exception hierarchy).</li>
+<li><strong>Style compliance</strong>: Avoids Ruff's unused-import warnings and removes the need for <code>noqa</code> comments.</li>
 <li><strong>Extensibility</strong>: Same pattern can be reused for future optional providers.</li>
 </ul>
 <h2 id="implications">Implications<a class="headerlink" href="#implications" title="Permanent link">&para;</a></h2>
@@ -944,6 +1692,7 @@
 <ul>
 <li>Importing <code>envresolve</code> no longer requires the Azure SDK.</li>
 <li>Developers receive clear instructions on how to enable Azure functionality.</li>
+<li>Custom exception allows clients to handle provider registration errors separately from other errors (catch <code>ProviderRegistrationError</code> specifically or all envresolve errors via <code>EnvResolveError</code>).</li>
 <li>Unit tests can patch <code>importlib.import_module</code> to simulate missing dependencies.</li>
 </ul>
 <h3 id="concerns">Concerns<a class="headerlink" href="#concerns" title="Permanent link">&para;</a></h3>
@@ -979,8 +1728,9 @@
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Implementation: <code>src/envresolve/api.py::EnvResolver.register_azure_kv_provider</code></li>
-<li>Related ADRs: 0009 (provider registry), 0012 (pytest markers for optional providers)</li>
+<li>Related ADRs: 0002 (custom exception hierarchy), 0009 (provider registry), 0012 (pytest markers for optional providers)</li>
 <li>Python docs: https://docs.python.org/3/library/importlib.html</li>
+<li>Issue #5: Changed from <code>ImportError</code> to <code>ProviderRegistrationError</code> to align with ADR-0002</li>
 </ul>
 
 
