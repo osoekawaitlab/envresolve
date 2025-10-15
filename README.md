@@ -109,7 +109,7 @@ nox -s tests_e2e       # E2E tests with mocked Azure SDK
 nox -s tests           # All tests with coverage report (HTML in htmlcov/)
 
 # Test across Python versions
-nox -s tests_all_versions  # Test on Python 3.10-3.13
+nox -s tests_all_versions  # Test on Python 3.10-3.14
 
 # Test without Azure SDK
 nox -s tests_without_azure  # For environments without Azure dependencies
