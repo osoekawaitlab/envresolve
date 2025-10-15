@@ -23,9 +23,33 @@ result = expand_variables("akv://${VAULT}/${SECRET}", env)
 print(result)  # akv://corp-kv/db-password
 ```
 
-### Secret Resolution with Azure Key Vault
+### Load from .env File
 
-Fetch actual secrets from Azure Key Vault:
+Load environment variables from a `.env` file with automatic secret resolution:
+
+```python
+import envresolve
+
+# .env file content:
+# VAULT_NAME=my-vault
+# DATABASE_URL=akv://${VAULT_NAME}/db-url
+# API_KEY=akv://${VAULT_NAME}/api-key
+
+# Requires: pip install envresolve[azure]
+# Requires: Azure authentication (az login, Managed Identity, etc.)
+envresolve.register_azure_kv_provider()
+
+# Load .env and resolve all secret URIs
+# By default, exports to os.environ
+resolved_vars = envresolve.load_env(".env")
+
+# Or load without exporting
+resolved_vars = envresolve.load_env(".env", export=False)
+```
+
+### Direct Secret Resolution
+
+Fetch individual secrets from Azure Key Vault:
 
 ```python
 import envresolve
