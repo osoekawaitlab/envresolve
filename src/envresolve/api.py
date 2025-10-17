@@ -178,7 +178,9 @@ class EnvResolver:
 
         Args:
             keys: List of specific keys to resolve. If None, scan all keys.
+                Mutually exclusive with prefix.
             prefix: Only process keys with this prefix, strip prefix from output.
+                Mutually exclusive with keys.
             overwrite: If True, update os.environ with resolved values.
             stop_on_error: If False, continue on resolution errors.
 
@@ -346,7 +348,9 @@ def resolve_os_environ(
 
     Args:
         keys: List of specific keys to resolve. If None, scan all keys.
+            Mutually exclusive with prefix.
         prefix: Only process keys with this prefix, strip prefix from output.
+            Mutually exclusive with keys.
         overwrite: If True, update os.environ with resolved values (default: True).
         stop_on_error: If False, continue on resolution errors (default: True).
 

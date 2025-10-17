@@ -127,5 +127,5 @@ def check_all(session: nox.Session) -> None:
 @nox.session(python="3.12")
 def docs_build(session: nox.Session) -> None:
     """Build documentation."""
-    session.install("-e", ".", "--group=docs")
+    session.install("-e", ".", "--group=docs", "--group=dev")
     session.run("mkdocs", "build", "--strict")

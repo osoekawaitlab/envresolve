@@ -94,3 +94,4 @@ nav:
           - 0013-class-based-api-design.md: adr/0013-class-based-api-design.md
           - 0014-importlib-lazy-import.md: adr/0014-importlib-lazy-import.md
           - 0015-terraform-managed-live-tests.md: adr/0015-terraform-managed-live-tests.md
+          - 0016-mutually-exclusive-parameters-with-typeerror.md: adr/0016-mutually-exclusive-parameters-with-typeerror.md
