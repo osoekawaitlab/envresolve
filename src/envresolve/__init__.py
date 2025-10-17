@@ -1,6 +1,11 @@
 """Resolve env vars from secret stores."""
 
-from envresolve.api import load_env, register_azure_kv_provider, resolve_secret
+from envresolve.api import (
+    load_env,
+    register_azure_kv_provider,
+    resolve_os_environ,
+    resolve_secret,
+)
 from envresolve.application.expanders import DotEnvExpander, EnvExpander
 from envresolve.exceptions import (
     CircularReferenceError,
@@ -26,5 +31,6 @@ __all__ = [
     "expand_variables",
     "load_env",
     "register_azure_kv_provider",
+    "resolve_os_environ",
     "resolve_secret",
 ]

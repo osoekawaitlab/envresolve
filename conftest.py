@@ -40,6 +40,7 @@ def _skip_azure_doctests(request: pytest.FixtureRequest) -> None:
         azure_dependent_tests = [
             "envresolve.api.register_azure_kv_provider",
             "envresolve.api.load_env",
+            "envresolve.api.resolve_os_environ",
         ]
 
         is_azure_test = any(name in test_name for name in azure_dependent_tests)
