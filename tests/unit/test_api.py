@@ -125,6 +125,169 @@ def test_resolve_os_environ_keys_and_prefix_both_specified(
         assert "mutually exclusive" in str(exc_info.value).lower()
 
 
+def test_resolve_os_environ_with_prefix_filter(
+    resolver_with_mock: EnvResolver,
+) -> None:
+    """Test resolve_os_environ with prefix parameter strips prefix."""
+    with patch.dict(
+        os.environ,
+        {
+            "DEV_API_KEY": "akv://vault/api-key",
+            "DEV_DB_URL": "akv://vault/db-url",
+            "PROD_SECRET": "akv://vault/secret",
+        },
+        clear=True,
+    ):
+        result = resolver_with_mock.resolve_os_environ(prefix="DEV_")
+
+        # Should only process DEV_ prefixed keys and strip prefix
+        assert "API_KEY" in result
+        assert "DB_URL" in result
+        assert result["API_KEY"] == "resolved-api-key"
+        assert result["DB_URL"] == "resolved-db-url"
+        assert "PROD_SECRET" not in result
+        assert "DEV_API_KEY" not in result
+
+        # os.environ should have stripped keys (new keys added)
+        assert os.environ["API_KEY"] == "resolved-api-key"
+        assert os.environ["DB_URL"] == "resolved-db-url"
+        # Original prefixed keys should be deleted when prefix stripping occurred
+        assert "DEV_API_KEY" not in os.environ
+        assert "DEV_DB_URL" not in os.environ
+        # Non-prefixed keys should be unchanged
+        assert os.environ["PROD_SECRET"] == "akv://vault/secret"  # noqa: S105
+
+
+def test_resolve_os_environ_with_overwrite_false(
+    resolver_with_mock: EnvResolver,
+) -> None:
+    """Test resolve_os_environ with overwrite=False doesn't modify os.environ."""
+    with patch.dict(
+        os.environ,
+        {"API_KEY": "akv://vault/api-key", "PLAIN": "plain-value"},
+        clear=True,
+    ):
+        result = resolver_with_mock.resolve_os_environ(overwrite=False)
+
+        # Result should contain resolved values
+        assert result["API_KEY"] == "resolved-api-key"
+        assert result["PLAIN"] == "plain-value"
+
+        # But os.environ should be unchanged
+        assert os.environ["API_KEY"] == "akv://vault/api-key"
+        assert os.environ["PLAIN"] == "plain-value"
+
+
+def test_resolve_os_environ_with_stop_on_error_false() -> None:
+    """Test resolve_os_environ with stop_on_error=False continues on errors."""
+    # Create a provider that fails for specific secrets
+    class FailingProvider:
+        def resolve(self, parsed_uri: ParsedURI) -> str:
+            if parsed_uri["secret"] == "failing-secret":  # noqa: S105
+                uri = f"akv://{parsed_uri['vault']}/{parsed_uri['secret']}"
+                msg = "Simulated resolution failure"
+                raise SecretResolutionError(msg, uri)
+            return f"resolved-{parsed_uri['secret']}"
+
+    resolver = EnvResolver()
+    resolver._providers["akv"] = FailingProvider()  # noqa: SLF001
+
+    with patch.dict(
+        os.environ,
+        {
+            "API_KEY": "akv://vault/api-key",
+            "FAILING": "akv://vault/failing-secret",
+            "DB_URL": "akv://vault/db-url",
+        },
+        clear=True,
+    ):
+        result = resolver.resolve_os_environ(stop_on_error=False)
+
+        # Should have resolved successful keys
+        assert result["API_KEY"] == "resolved-api-key"
+        assert result["DB_URL"] == "resolved-db-url"
+
+        # Failing key should not be in result (skipped on error)
+        assert "FAILING" not in result
+
+        # os.environ should reflect the same
+        assert os.environ["API_KEY"] == "resolved-api-key"
+        assert os.environ["DB_URL"] == "resolved-db-url"
+        # Failing key remains unchanged (not overwritten)
+        assert os.environ["FAILING"] == "akv://vault/failing-secret"
+
+
+def test_resolve_os_environ_with_stop_on_error_true() -> None:
+    """Test resolve_os_environ with stop_on_error=True raises on errors."""
+    # Create a provider that fails for specific secrets
+    class FailingProvider:
+        def resolve(self, parsed_uri: ParsedURI) -> str:
+            if parsed_uri["secret"] == "failing-secret":  # noqa: S105
+                uri = f"akv://{parsed_uri['vault']}/{parsed_uri['secret']}"
+                msg = "Simulated resolution failure"
+                raise SecretResolutionError(msg, uri)
+            return f"resolved-{parsed_uri['secret']}"
+
+    resolver = EnvResolver()
+    resolver._providers["akv"] = FailingProvider()  # noqa: SLF001
+
+    with (
+        patch.dict(
+            os.environ,
+            {
+                "API_KEY": "akv://vault/api-key",
+                "FAILING": "akv://vault/failing-secret",
+            },
+            clear=True,
+        ),
+        pytest.raises(SecretResolutionError),
+    ):
+        resolver.resolve_os_environ(stop_on_error=True)
+
+
+def test_resolve_os_environ_with_empty_environ(
+    resolver_with_mock: EnvResolver,
+) -> None:
+    """Test resolve_os_environ with empty os.environ."""
+    with patch.dict(os.environ, {}, clear=True):
+        result = resolver_with_mock.resolve_os_environ()
+
+        assert result == {}
+
+
+def test_resolve_os_environ_with_nonexistent_keys(
+    resolver_with_mock: EnvResolver,
+) -> None:
+    """Test resolve_os_environ with keys that don't exist in os.environ."""
+    with patch.dict(
+        os.environ,
+        {"API_KEY": "akv://vault/api-key"},
+        clear=True,
+    ):
+        # Request keys that don't exist
+        result = resolver_with_mock.resolve_os_environ(
+            keys=["NONEXISTENT1", "NONEXISTENT2"]
+        )
+
+        # Should return empty result
+        assert result == {}
+
+
+def test_resolve_os_environ_with_empty_keys_list(
+    resolver_with_mock: EnvResolver,
+) -> None:
+    """Test resolve_os_environ with empty keys list."""
+    with patch.dict(
+        os.environ,
+        {"API_KEY": "akv://vault/api-key", "DB_URL": "akv://vault/db-url"},
+        clear=True,
+    ):
+        result = resolver_with_mock.resolve_os_environ(keys=[])
+
+        # Should return empty result (no keys specified)
+        assert result == {}
+
+
 def test_resolve_secret_exported() -> None:
     """Test that resolve_secret is exported."""
     assert hasattr(envresolve, "resolve_secret")
