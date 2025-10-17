@@ -11,6 +11,7 @@ import envresolve
 from envresolve.api import EnvResolver
 from envresolve.exceptions import (
     EnvResolveError,
+    MutuallyExclusiveArgumentsError,
     ProviderRegistrationError,
     SecretResolutionError,
     URIParseError,
@@ -99,6 +100,29 @@ def test_resolve_os_environ_with_keys_filter(
         assert "OTHER" not in result
         assert os.environ["API_KEY"] == "resolved-api-key"
         assert os.environ["DB_URL"] == "akv://vault/db-url"  # Unchanged
+
+
+def test_resolve_os_environ_keys_and_prefix_both_specified(
+    resolver_with_mock: EnvResolver,
+) -> None:
+    """Test that specifying both keys and prefix raises an error."""
+    with patch.dict(
+        os.environ,
+        {
+            "DEV_API_KEY": "akv://vault/api-key",
+            "DEV_DB_URL": "akv://vault/db-url",
+            "PROD_SECRET": "akv://vault/secret",
+        },
+        clear=True,
+    ):
+        # When both keys and prefix are specified, should raise error
+        with pytest.raises(MutuallyExclusiveArgumentsError) as exc_info:
+            resolver_with_mock.resolve_os_environ(keys=["PROD_SECRET"], prefix="DEV_")
+
+        # Check exception attributes
+        assert exc_info.value.arg1 == "keys"
+        assert exc_info.value.arg2 == "prefix"
+        assert "mutually exclusive" in str(exc_info.value).lower()
 
 
 def test_resolve_secret_exported() -> None:

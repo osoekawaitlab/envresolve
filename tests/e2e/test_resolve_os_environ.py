@@ -284,3 +284,39 @@ def test_resolve_os_environ_with_stop_on_error_false(
     assert result["GOOD_KEY"] == "resolved-good-secret"
     assert "BAD_KEY" not in result  # Skipped due to error
     assert result["PLAIN"] == "plain-value"
+
+
+@pytest.mark.e2e
+def test_resolve_os_environ_keys_and_prefix_both_specified(
+    resolve_mocks: ResolveOsEnvironMocks, mocker: MockFixture
+) -> None:
+    """Test that specifying both keys and prefix raises an error.
+
+    Acceptance criteria:
+    - When both keys and prefix are specified, raise MutuallyExclusiveArgumentsError
+    """
+
+    def get_secret_by_name(name: str, version: str | None = None) -> MagicMock:
+        mock = MagicMock()
+        mock.value = f"resolved-{name}" + (f"-{version}" if version else "")
+        return mock
+
+    resolve_mocks.set_secret_getter(get_secret_by_name)
+    mocker.patch.dict(
+        os.environ,
+        {
+            "DEV_API_KEY": "akv://test-vault/api-key",
+            "DEV_DB_URL": "akv://test-vault/db-url",
+            "PROD_SECRET": "akv://test-vault/secret",
+        },
+        clear=True,
+    )
+
+    # When both keys and prefix are specified, should raise error
+    with pytest.raises(envresolve.MutuallyExclusiveArgumentsError) as exc_info:
+        envresolve.resolve_os_environ(keys=["PROD_SECRET"], prefix="DEV_")
+
+    # Check exception attributes
+    assert exc_info.value.arg1 == "keys"
+    assert exc_info.value.arg2 == "prefix"
+    assert "mutually exclusive" in str(exc_info.value).lower()

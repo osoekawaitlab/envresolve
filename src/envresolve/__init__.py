@@ -10,6 +10,7 @@ from envresolve.application.expanders import DotEnvExpander, EnvExpander
 from envresolve.exceptions import (
     CircularReferenceError,
     EnvResolveError,
+    MutuallyExclusiveArgumentsError,
     ProviderRegistrationError,
     SecretResolutionError,
     URIParseError,
@@ -24,6 +25,7 @@ __all__ = [
     "DotEnvExpander",
     "EnvExpander",
     "EnvResolveError",
+    "MutuallyExclusiveArgumentsError",
     "ProviderRegistrationError",
     "SecretResolutionError",
     "URIParseError",

@@ -8,7 +8,10 @@ from typing import TYPE_CHECKING
 from dotenv import dotenv_values
 
 from envresolve.application.resolver import SecretResolver
-from envresolve.exceptions import ProviderRegistrationError
+from envresolve.exceptions import (
+    MutuallyExclusiveArgumentsError,
+    ProviderRegistrationError,
+)
 
 if TYPE_CHECKING:
     from envresolve.providers.base import SecretProvider
@@ -181,7 +184,16 @@ class EnvResolver:
 
         Returns:
             Dictionary of resolved values
+
+        Raises:
+            MutuallyExclusiveArgumentsError: If both keys and prefix are specified
         """
+        # Check mutually exclusive arguments
+        if keys is not None and prefix is not None:
+            arg1 = "keys"
+            arg2 = "prefix"
+            raise MutuallyExclusiveArgumentsError(arg1, arg2)
+
         # Determine which keys to process
         if keys is not None:
             keys_to_process = keys
@@ -342,6 +354,7 @@ def resolve_os_environ(
         Dictionary of resolved values
 
     Raises:
+        MutuallyExclusiveArgumentsError: If both keys and prefix are specified
         URIParseError: If the URI format is invalid
         SecretResolutionError: If secret resolution fails (when stop_on_error=True)
         VariableNotFoundError: If a referenced variable is not found
