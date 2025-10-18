@@ -1003,6 +1003,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#adr-0016-typeerror-based-custom-exception-for-mutually-exclusive-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0016: TypeError-based Custom Exception for Mutually Exclusive Parameters
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1451,6 +1460,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0016-mutually-exclusive-parameters-with-typeerror/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0016-mutually-exclusive-parameters-with-typeerror.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1641,6 +1673,15 @@
   <a href="#adr-0015-manage-azure-live-test-infrastructure-with-terraform" class="md-nav__link">
     <span class="md-ellipsis">
       ADR 0015: Manage Azure Live Test Infrastructure with Terraform
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0016-typeerror-based-custom-exception-for-mutually-exclusive-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0016: TypeError-based Custom Exception for Mutually Exclusive Parameters
     </span>
   </a>
   
@@ -1877,6 +1918,19 @@
 <li>Easier cleanup through scripted Terraform destroy</li>
 </ul>
 <p><a href="../../adr/0015-terraform-managed-live-tests/">View Full ADR</a></p>
+<hr />
+<h3 id="adr-0016-typeerror-based-custom-exception-for-mutually-exclusive-parameters">ADR 0016: TypeError-based Custom Exception for Mutually Exclusive Parameters<a class="headerlink" href="#adr-0016-typeerror-based-custom-exception-for-mutually-exclusive-parameters" title="Permanent link">&para;</a></h3>
+<p><strong>Status</strong>: Accepted
+<strong>Date</strong>: 2025-10-18</p>
+<p>Created <code>MutuallyExclusiveArgumentsError</code> inheriting from both <code>EnvResolveError</code> and <code>TypeError</code> following pandas exception patterns.</p>
+<p><strong>Key Decision</strong>: Raise <code>MutuallyExclusiveArgumentsError</code> when both <code>keys</code> and <code>prefix</code> are specified in <code>resolve_os_environ()</code>.</p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Aligns with Python ecosystem standards (pandas, argparse use <code>TypeError</code>)</li>
+<li>Maintains domain exception hierarchy while providing standard semantics</li>
+<li>Fail-fast approach with structured exception data (<code>arg1</code>, <code>arg2</code> attributes)</li>
+</ul>
+<p><a href="../../adr/0016-mutually-exclusive-parameters-with-typeerror/">View Full ADR</a></p>
 <hr />
 <h2 id="adr-template">ADR Template<a class="headerlink" href="#adr-template" title="Permanent link">&para;</a></h2>
 <p>All ADRs follow a consistent template defined in <a href="../../adr/0000-adr-template/">ADR 0000: ADR Template</a>.</p>
