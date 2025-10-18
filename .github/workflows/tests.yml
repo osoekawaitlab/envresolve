@@ -34,7 +34,7 @@ jobs:
         run: uv sync --extra azure --group dev
 
       - name: Run Unit Tests
-        run: nox -s tests_unit
+        run: uv run nox -s tests_unit
 
   e2e-tests:
     name: E2E Tests (Python ${{ matrix.python-version }})
@@ -58,7 +58,7 @@ jobs:
         run: uv sync --extra azure --group dev
 
       - name: Run E2E Tests
-        run: nox -s tests_e2e
+        run: uv run nox -s tests_e2e
 
   quality:
     name: Quality Checks
@@ -79,4 +79,4 @@ jobs:
         run: uv sync --extra azure --group dev
 
       - name: Run Quality Checks
-        run: nox -s quality
+        run: uv run nox -s quality
