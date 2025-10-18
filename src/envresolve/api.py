@@ -9,6 +9,7 @@ from dotenv import dotenv_values
 
 from envresolve.application.resolver import SecretResolver
 from envresolve.exceptions import (
+    EnvResolveError,
     MutuallyExclusiveArgumentsError,
     ProviderRegistrationError,
 )
@@ -182,7 +183,9 @@ class EnvResolver:
             prefix: Only process keys with this prefix, strip prefix from output.
                 Mutually exclusive with keys.
             overwrite: If True, update os.environ with resolved values.
-            stop_on_error: If False, continue on resolution errors.
+            stop_on_error: If False, continue on secret resolution errors
+                (e.g., SecretResolutionError), skipping the failed key. Other
+                unexpected errors will still be raised.
 
         Returns:
             Dictionary of resolved values
@@ -215,7 +218,7 @@ class EnvResolver:
             # Resolve the value
             try:
                 resolved_value = self.resolve_with_env(value, dict(os.environ))
-            except Exception:
+            except EnvResolveError:
                 if stop_on_error:
                     raise
                 # Skip this key on error
@@ -352,7 +355,9 @@ def resolve_os_environ(
         prefix: Only process keys with this prefix, strip prefix from output.
             Mutually exclusive with keys.
         overwrite: If True, update os.environ with resolved values (default: True).
-        stop_on_error: If False, continue on resolution errors (default: True).
+        stop_on_error: If False, continue on secret resolution errors
+            (e.g., SecretResolutionError), skipping the failed key. Other
+            unexpected errors will still be raised (default: True).
 
     Returns:
         Dictionary of resolved values

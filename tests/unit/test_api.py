@@ -180,6 +180,7 @@ def test_resolve_os_environ_with_overwrite_false(
 
 def test_resolve_os_environ_with_stop_on_error_false() -> None:
     """Test resolve_os_environ with stop_on_error=False continues on errors."""
+
     # Create a provider that fails for specific secrets
     class FailingProvider:
         def resolve(self, parsed_uri: ParsedURI) -> str:
@@ -219,6 +220,7 @@ def test_resolve_os_environ_with_stop_on_error_false() -> None:
 
 def test_resolve_os_environ_with_stop_on_error_true() -> None:
     """Test resolve_os_environ with stop_on_error=True raises on errors."""
+
     # Create a provider that fails for specific secrets
     class FailingProvider:
         def resolve(self, parsed_uri: ParsedURI) -> str:
@@ -271,6 +273,30 @@ def test_resolve_os_environ_with_nonexistent_keys(
 
         # Should return empty result
         assert result == {}
+
+
+def test_resolve_os_environ_propagates_unexpected_errors() -> None:
+    """Test that unexpected errors are always raised regardless of stop_on_error."""
+
+    # Create a provider that raises a non-domain error
+    class UnexpectedErrorProvider:
+        def resolve(self, parsed_uri: ParsedURI) -> str:
+            mesg = "Unexpected internal error for {}".format(parsed_uri["secret"])
+            raise ValueError(mesg)
+
+    resolver = EnvResolver()
+    resolver._providers["akv"] = UnexpectedErrorProvider()  # noqa: SLF001
+
+    with (
+        patch.dict(
+            os.environ,
+            {"API_KEY": "akv://vault/api-key"},
+            clear=True,
+        ),
+        pytest.raises(ValueError, match="Unexpected internal error"),
+    ):
+        # stop_on_error=False should not suppress non-EnvResolveError exceptions
+        resolver.resolve_os_environ(stop_on_error=False)
 
 
 def test_resolve_os_environ_with_empty_keys_list(

@@ -272,7 +272,9 @@ Use `overwrite=False` to get resolved values without modifying `os.environ`:
 
 #### Continuing on Errors
 
-Use `stop_on_error=False` to continue resolving other variables even if some fail:
+Use `stop_on_error=False` to continue resolving other variables even if a **secret resolution error** occurs. This allows the function to skip over individual secrets that might be misconfigured or inaccessible, without halting the entire process.
+
+    Note that this only applies to expected resolution errors (like `SecretResolutionError`); other unexpected errors (like programming mistakes) will still stop the process regardless of this flag.
 
     ```python
     import os

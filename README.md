@@ -190,34 +190,6 @@ nox -s docs_build
 nox -s docs_serve      # Open http://localhost:8000
 ```
 
-### Project Structure
-
-```text
-src/envresolve/
-  ├── api.py                 # Public API (load_env, resolve_secret, etc.)
-  ├── exceptions.py          # Custom exception hierarchy
-  ├── models.py              # Pydantic data models
-  ├── services/              # Core business logic
-  │   ├── expansion.py       # Variable expansion with cycle detection
-  │   └── reference.py       # URI parsing and validation
-  ├── providers/             # Secret provider implementations
-  │   ├── base.py            # Provider protocol/ABC
-  │   └── azure_kv.py        # Azure Key Vault provider
-  └── application/           # Application orchestration
-      ├── expanders.py       # Expander implementations
-      └── resolver.py        # Resolution orchestration
-
-tests/
-  ├── unit/                  # Unit tests (fast, isolated)
-  ├── e2e/                   # E2E tests (mocked Azure SDK)
-  └── live/                  # Live tests (real Azure resources)
-
-docs/
-  ├── adr/                   # Architecture Decision Records
-  ├── user-guide/            # User documentation
-  └── developer-guide/       # Development documentation
-```
-
 ### Contributing
 
 See [Contributing Guide](https://osoekawaitlab.github.io/envresolve/contributing/) for guidelines on:

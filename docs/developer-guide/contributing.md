@@ -14,20 +14,20 @@ Thank you for considering contributing to envresolve!
 
 1. Fork the repository on GitHub.
 
-1. Clone your fork locally:
+2. Clone your fork locally:
 
     ```bash
     git clone https://github.com/YOUR-USERNAME/envresolve.git
     cd envresolve
     ```
 
-1. Add the upstream remote to sync with the main repository:
+3. Add the upstream remote to sync with the main repository:
 
     ```bash
     git remote add upstream https://github.com/osoekawaitlab/envresolve.git
     ```
 
-1. Install dependencies:
+4. Install dependencies:
 
     ```bash
     uv sync
