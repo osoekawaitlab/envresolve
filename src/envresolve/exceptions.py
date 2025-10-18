@@ -83,3 +83,22 @@ class ProviderRegistrationError(EnvResolveError):
         """
         self.original_error = original_error
         super().__init__(message)
+
+
+class MutuallyExclusiveArgumentsError(EnvResolveError, TypeError):
+    """Raised when mutually exclusive arguments are specified together."""
+
+    def __init__(self, arg1: str, arg2: str) -> None:
+        """Initialize MutuallyExclusiveArgumentsError.
+
+        Args:
+            arg1: First mutually exclusive argument name
+            arg2: Second mutually exclusive argument name
+        """
+        self.arg1 = arg1
+        self.arg2 = arg2
+        msg = (
+            f"Arguments '{arg1}' and '{arg2}' are mutually exclusive. "
+            f"Specify either '{arg1}' or '{arg2}', but not both."
+        )
+        super().__init__(msg)

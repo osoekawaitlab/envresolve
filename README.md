@@ -66,6 +66,34 @@ except envresolve.SecretResolutionError as e:
     print(f"Failed to fetch secret: {e}")
 ```
 
+### Resolve Existing Environment Variables
+
+Resolve secret URIs already set in `os.environ` (useful for containerized applications):
+
+```python
+import os
+import envresolve
+
+# Environment variables set by container orchestrator or parent process
+os.environ["API_KEY"] = "akv://prod-vault/api-key"
+os.environ["DB_PASSWORD"] = "akv://prod-vault/db-password"
+
+# Requires: pip install envresolve[azure]
+envresolve.register_azure_kv_provider()
+
+# Resolve all environment variables containing secret URIs
+resolved = envresolve.resolve_os_environ()
+
+# Resolve only specific keys
+resolved = envresolve.resolve_os_environ(keys=["API_KEY"])
+
+# Resolve variables with prefix and strip the prefix
+# DEV_API_KEY -> API_KEY, DEV_DB_URL -> DB_URL
+os.environ["DEV_API_KEY"] = "akv://dev-vault/api-key"
+os.environ["DEV_DB_URL"] = "akv://dev-vault/db-url"
+resolved = envresolve.resolve_os_environ(prefix="DEV_")
+```
+
 ## Installation
 
 ```bash
@@ -160,34 +188,6 @@ nox -s docs_build
 
 # Serve documentation locally (with live reload)
 nox -s docs_serve      # Open http://localhost:8000
-```
-
-### Project Structure
-
-```text
-src/envresolve/
-  ├── api.py                 # Public API (load_env, resolve_secret, etc.)
-  ├── exceptions.py          # Custom exception hierarchy
-  ├── models.py              # Pydantic data models
-  ├── services/              # Core business logic
-  │   ├── expansion.py       # Variable expansion with cycle detection
-  │   └── reference.py       # URI parsing and validation
-  ├── providers/             # Secret provider implementations
-  │   ├── base.py            # Provider protocol/ABC
-  │   └── azure_kv.py        # Azure Key Vault provider
-  └── application/           # Application orchestration
-      ├── expanders.py       # Expander implementations
-      └── resolver.py        # Resolution orchestration
-
-tests/
-  ├── unit/                  # Unit tests (fast, isolated)
-  ├── e2e/                   # E2E tests (mocked Azure SDK)
-  └── live/                  # Live tests (real Azure resources)
-
-docs/
-  ├── adr/                   # Architecture Decision Records
-  ├── user-guide/            # User documentation
-  └── developer-guide/       # Development documentation
 ```
 
 ### Contributing

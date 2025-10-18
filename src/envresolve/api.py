@@ -8,7 +8,11 @@ from typing import TYPE_CHECKING
 from dotenv import dotenv_values
 
 from envresolve.application.resolver import SecretResolver
-from envresolve.exceptions import ProviderRegistrationError
+from envresolve.exceptions import (
+    EnvResolveError,
+    MutuallyExclusiveArgumentsError,
+    ProviderRegistrationError,
+)
 
 if TYPE_CHECKING:
     from envresolve.providers.base import SecretProvider
@@ -163,6 +167,79 @@ class EnvResolver:
 
         return resolved
 
+    def resolve_os_environ(
+        self,
+        keys: list[str] | None = None,
+        prefix: str | None = None,
+        *,
+        overwrite: bool = True,
+        stop_on_error: bool = True,
+    ) -> dict[str, str]:
+        """Resolve secret URIs in os.environ.
+
+        Args:
+            keys: List of specific keys to resolve. If None, scan all keys.
+                Mutually exclusive with prefix.
+            prefix: Only process keys with this prefix, strip prefix from output.
+                Mutually exclusive with keys.
+            overwrite: If True, update os.environ with resolved values.
+            stop_on_error: If False, continue on secret resolution errors
+                (e.g., SecretResolutionError), skipping the failed key. Other
+                unexpected errors will still be raised.
+
+        Returns:
+            Dictionary of resolved values
+
+        Raises:
+            MutuallyExclusiveArgumentsError: If both keys and prefix are specified
+        """
+        # Check mutually exclusive arguments
+        if keys is not None and prefix is not None:
+            arg1 = "keys"
+            arg2 = "prefix"
+            raise MutuallyExclusiveArgumentsError(arg1, arg2)
+
+        # Determine which keys to process
+        if keys is not None:
+            keys_to_process = keys
+        elif prefix is not None:
+            keys_to_process = [k for k in os.environ if k.startswith(prefix)]
+        else:
+            keys_to_process = list(os.environ)
+
+        # Resolve each key
+        resolved: dict[str, str] = {}
+        for key in keys_to_process:
+            if key not in os.environ:
+                continue
+
+            value = os.environ[key]
+
+            # Resolve the value
+            try:
+                resolved_value = self.resolve_with_env(value, dict(os.environ))
+            except EnvResolveError:
+                if stop_on_error:
+                    raise
+                # Skip this key on error
+                continue
+
+            # Determine output key (strip prefix if specified)
+            output_key = (
+                key[len(prefix) :] if prefix and key.startswith(prefix) else key
+            )
+
+            resolved[output_key] = resolved_value
+
+            # Update os.environ if requested
+            if overwrite:
+                os.environ[output_key] = resolved_value
+                # If prefix stripping occurred, remove the old key
+                if prefix and key.startswith(prefix) and output_key != key:
+                    del os.environ[key]
+
+        return resolved
+
 
 # Default instance for module-level API
 _default_resolver = EnvResolver()
@@ -258,3 +335,52 @@ def load_env(
         >>> resolved = envresolve.load_env(".env", export=False)  # doctest: +SKIP
     """
     return _default_resolver.load_env(path, export=export, override=override)
+
+
+def resolve_os_environ(
+    keys: list[str] | None = None,
+    prefix: str | None = None,
+    *,
+    overwrite: bool = True,
+    stop_on_error: bool = True,
+) -> dict[str, str]:
+    """Resolve secret URIs in os.environ.
+
+    This function resolves secret URIs that are already set in environment variables,
+    useful when values are passed from parent shells or container orchestrators.
+
+    Args:
+        keys: List of specific keys to resolve. If None, scan all keys.
+            Mutually exclusive with prefix.
+        prefix: Only process keys with this prefix, strip prefix from output.
+            Mutually exclusive with keys.
+        overwrite: If True, update os.environ with resolved values (default: True).
+        stop_on_error: If False, continue on secret resolution errors
+            (e.g., SecretResolutionError), skipping the failed key. Other
+            unexpected errors will still be raised (default: True).
+
+    Returns:
+        Dictionary of resolved values
+
+    Raises:
+        MutuallyExclusiveArgumentsError: If both keys and prefix are specified
+        URIParseError: If the URI format is invalid
+        SecretResolutionError: If secret resolution fails (when stop_on_error=True)
+        VariableNotFoundError: If a referenced variable is not found
+        CircularReferenceError: If a circular variable reference is detected
+
+    Examples:
+        >>> import envresolve
+        >>> import os
+        >>> envresolve.register_azure_kv_provider()
+        >>> # Resolve all environment variables
+        >>> resolved = envresolve.resolve_os_environ()  # doctest: +SKIP
+        >>> # Resolve specific keys only
+        >>> resolved = envresolve.resolve_os_environ(keys=["API_KEY"])  # doctest: +SKIP
+    """
+    return _default_resolver.resolve_os_environ(
+        keys=keys,
+        prefix=prefix,
+        overwrite=overwrite,
+        stop_on_error=stop_on_error,
+    )

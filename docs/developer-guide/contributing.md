@@ -16,28 +16,28 @@ Thank you for considering contributing to envresolve!
 
 2. Clone your fork locally:
 
-```bash
-git clone https://github.com/YOUR-USERNAME/envresolve.git
-cd envresolve
-```
+    ```bash
+    git clone https://github.com/YOUR-USERNAME/envresolve.git
+    cd envresolve
+    ```
 
 3. Add the upstream remote to sync with the main repository:
 
-```bash
-git remote add upstream https://github.com/osoekawaitlab/envresolve.git
-```
+    ```bash
+    git remote add upstream https://github.com/osoekawaitlab/envresolve.git
+    ```
 
 4. Install dependencies:
 
-```bash
-uv sync
-```
+    ```bash
+    uv sync
+    ```
 
 1. Run tests to verify setup:
 
-```bash
-nox -s tests
-```
+    ```bash
+    nox -s tests
+    ```
 
 ## Development Workflow
 
@@ -108,7 +108,7 @@ nox -s check_all
 
 envresolve follows a layered architecture:
 
-```
+```text
 Layer 5: api.py (Public API facade)
 Layer 4: application/ (resolver, cache)
 Layer 3: providers/ (factory, registry, implementations)

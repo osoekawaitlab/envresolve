@@ -280,6 +280,25 @@ Standardized live Azure Key Vault testing with Terraform-managed resources and e
 
 ---
 
+### ADR 0016: TypeError-based Custom Exception for Mutually Exclusive Parameters
+
+**Status**: Accepted
+**Date**: 2025-10-18
+
+Created `MutuallyExclusiveArgumentsError` inheriting from both `EnvResolveError` and `TypeError` following pandas exception patterns.
+
+**Key Decision**: Raise `MutuallyExclusiveArgumentsError` when both `keys` and `prefix` are specified in `resolve_os_environ()`.
+
+**Rationale**:
+
+- Aligns with Python ecosystem standards (pandas, argparse use `TypeError`)
+- Maintains domain exception hierarchy while providing standard semantics
+- Fail-fast approach with structured exception data (`arg1`, `arg2` attributes)
+
+[View Full ADR](../adr/0016-mutually-exclusive-parameters-with-typeerror.md)
+
+---
+
 ## ADR Template
 
 All ADRs follow a consistent template defined in [ADR 0000: ADR Template](../adr/0000-adr-template.md).

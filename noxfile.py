@@ -52,7 +52,7 @@ def tests_without_azure(session: nox.Session) -> None:
         "pytest",
         "-m",
         "not azure",
-        "--ignore=tests/unit/test_azure_kv_provider.py",
+        "--ignore=tests/unit/providers/test_azure_kv_provider.py",
         "--ignore=tests/e2e/test_azure_kv_resolution.py",
         "--ignore=tests/live/test_azure_kv_live.py",
         "--ignore=src/envresolve/providers/azure_kv.py",
@@ -127,5 +127,5 @@ def check_all(session: nox.Session) -> None:
 @nox.session(python="3.12")
 def docs_build(session: nox.Session) -> None:
     """Build documentation."""
-    session.install("-e", ".", "--group=docs")
+    session.install("-e", ".", "--group=docs", "--group=dev")
     session.run("mkdocs", "build", "--strict")
