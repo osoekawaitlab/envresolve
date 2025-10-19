@@ -40,43 +40,52 @@ class EnvResolver:
             self._resolver = SecretResolver(self._providers)
         return self._resolver
 
-    def register_azure_kv_provider(self) -> None:
+    def register_azure_kv_provider(
+        self, provider: "SecretProvider | None" = None
+    ) -> None:
         """Register Azure Key Vault provider for akv:// scheme.
 
         This method is safe to call multiple times (idempotent).
 
+        Args:
+            provider: Optional custom provider. If None, uses default AzureKVProvider.
+
         Raises:
             ProviderRegistrationError: If azure-identity or azure-keyvault-secrets
-                is not installed
+                is not installed (only when provider is None)
         """
-        try:
-            # Dynamically import the provider module
-            provider_module = importlib.import_module("envresolve.providers.azure_kv")
-            provider_class = provider_module.AzureKVProvider
-        except ImportError as e:
-            # Check which dependency is missing
-            missing_deps: list[str] = []
+        if provider is None:
             try:
-                importlib.import_module("azure.identity")
-            except ImportError:
-                missing_deps.append("azure-identity")
-
-            try:
-                importlib.import_module("azure.keyvault.secrets")
-            except ImportError:
-                missing_deps.append("azure-keyvault-secrets")
-
-            if missing_deps:
-                deps_str = ", ".join(missing_deps)
-                msg = (
-                    f"Azure Key Vault provider requires: {deps_str}. "
-                    "Install with: pip install envresolve[azure]"
+                # Dynamically import the provider module
+                provider_module = importlib.import_module(
+                    "envresolve.providers.azure_kv"
                 )
-            else:
-                msg = f"Failed to import Azure Key Vault provider. Error: {e}"
-            raise ProviderRegistrationError(msg, original_error=e) from e
+                provider_class = provider_module.AzureKVProvider
+            except ImportError as e:
+                # Check which dependency is missing
+                missing_deps: list[str] = []
+                try:
+                    importlib.import_module("azure.identity")
+                except ImportError:
+                    missing_deps.append("azure-identity")
 
-        provider = provider_class()
+                try:
+                    importlib.import_module("azure.keyvault.secrets")
+                except ImportError:
+                    missing_deps.append("azure-keyvault-secrets")
+
+                if missing_deps:
+                    deps_str = ", ".join(missing_deps)
+                    msg = (
+                        f"Azure Key Vault provider requires: {deps_str}. "
+                        "Install with: pip install envresolve[azure]"
+                    )
+                else:
+                    msg = f"Failed to import Azure Key Vault provider. Error: {e}"
+                raise ProviderRegistrationError(msg, original_error=e) from e
+
+            provider = provider_class()
+
         self._providers["akv"] = provider
         # Reset resolver to pick up new providers
         self._resolver = None
@@ -245,19 +254,32 @@ class EnvResolver:
 _default_resolver = EnvResolver()
 
 
-def register_azure_kv_provider() -> None:
+def register_azure_kv_provider(provider: "SecretProvider | None" = None) -> None:
     """Register Azure Key Vault provider for akv:// scheme.
 
     This function should be called before attempting to resolve secrets
     from Azure Key Vault. It is safe to call multiple times (idempotent).
 
-    Example:
+    Args:
+        provider: Optional custom provider. If None, uses default AzureKVProvider.
+
+    Raises:
+        ProviderRegistrationError: If azure-identity or azure-keyvault-secrets
+            is not installed (only when provider is None)
+
+    Examples:
         >>> import envresolve
+        >>> # Default behavior
         >>> envresolve.register_azure_kv_provider()
+        >>> # Custom provider (requires Azure SDK imports)
+        >>> # from envresolve.providers.azure_kv import AzureKVProvider
+        >>> # from azure.identity import ManagedIdentityCredential
+        >>> # custom = AzureKVProvider(credential=ManagedIdentityCredential())
+        >>> # envresolve.register_azure_kv_provider(provider=custom)
         >>> # Now you can resolve secrets (requires Azure authentication)
         >>> # secret = envresolve.resolve_secret("akv://my-vault/db-password")
     """
-    _default_resolver.register_azure_kv_provider()
+    _default_resolver.register_azure_kv_provider(provider=provider)
 
 
 def resolve_secret(uri: str) -> str:
