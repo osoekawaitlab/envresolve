@@ -27,7 +27,7 @@ jobs:
         uses: astral-sh/setup-uv@v3
 
       - name: Install Dependencies
-        run: uv sync --extra azure --group dev
+        run: uv sync --all-extras --group dev --group docs
 
       - name: Configure Git
         run: |
