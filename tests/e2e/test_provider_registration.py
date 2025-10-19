@@ -1,12 +1,31 @@
 """E2E tests for provider registration error handling."""
 
+from collections.abc import Iterator
 from unittest.mock import MagicMock, patch
 
 import pytest
 
 import envresolve
+import envresolve.api
 from envresolve.models import ParsedURI
 from envresolve.providers.base import SecretProvider
+
+
+@pytest.fixture(autouse=True)
+def reset_default_resolver() -> Iterator[None]:
+    """Fixture to automatically reset the global default resolver's state.
+
+    This ensures test isolation.
+    """
+    # Save the original state before the test runs
+    original_providers = envresolve.api._default_resolver._providers.copy()  # noqa: SLF001
+    original_resolver = envresolve.api._default_resolver._resolver  # noqa: SLF001
+
+    yield  # Test runs here
+
+    # Restore the original state after the test completes
+    envresolve.api._default_resolver._providers = original_providers  # noqa: SLF001
+    envresolve.api._default_resolver._resolver = original_resolver  # noqa: SLF001
 
 
 def test_register_azure_kv_provider_with_custom_provider() -> None:
