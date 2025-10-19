@@ -88,7 +88,7 @@ secret = envresolve.resolve_secret("akv://vault/secret")
 ```
 
 This is particularly useful for:
-- **Testing**: Inject mock providers without patching internals
+- **Testing**: Inject mock providers without patching internal implementation details
 - **Custom authentication**: Use specific Azure credentials (service principal, managed identity, etc.)
 - **Provider configuration**: Pre-configure providers with custom settings
 
