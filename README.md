@@ -66,6 +66,32 @@ except envresolve.SecretResolutionError as e:
     print(f"Failed to fetch secret: {e}")
 ```
 
+### Custom Provider Configuration
+
+Inject custom provider instances for advanced scenarios (testing, custom credentials, etc.):
+
+```python
+import envresolve
+from envresolve.providers.azure_kv import AzureKVProvider
+from azure.identity import ManagedIdentityCredential
+
+# Create custom provider with specific credential
+custom_provider = AzureKVProvider(
+    credential=ManagedIdentityCredential(client_id="your-client-id")
+)
+
+# Register the custom provider
+envresolve.register_azure_kv_provider(provider=custom_provider)
+
+# Now use envresolve as normal
+secret = envresolve.resolve_secret("akv://vault/secret")
+```
+
+This is particularly useful for:
+- **Testing**: Inject mock providers without patching internals
+- **Custom authentication**: Use specific Azure credentials (service principal, managed identity, etc.)
+- **Provider configuration**: Pre-configure providers with custom settings
+
 ### Resolve Existing Environment Variables
 
 Resolve secret URIs already set in `os.environ` (useful for containerized applications):

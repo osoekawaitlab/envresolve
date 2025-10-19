@@ -1,11 +1,39 @@
 """Unit tests for provider registration error handling."""
 
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
 from envresolve.api import EnvResolver
 from envresolve.exceptions import ProviderRegistrationError
+from envresolve.models import ParsedURI
+from envresolve.providers.base import SecretProvider
+
+
+def test_register_azure_kv_provider_with_custom_provider() -> None:
+    """Test EnvResolver.register_azure_kv_provider accepts custom provider."""
+    resolver = EnvResolver()
+
+    # Create a mock provider
+    mock_provider = MagicMock(spec=SecretProvider)
+    mock_provider.resolve.return_value = "custom-secret-value"
+
+    # Register custom provider
+    resolver.register_azure_kv_provider(provider=mock_provider)
+
+    # Verify the provider is used for resolution via public API
+    result = resolver.resolve_secret("akv://test-vault/test-secret")
+
+    # Verify the custom provider was called correctly
+    assert result == "custom-secret-value"
+    mock_provider.resolve.assert_called_once_with(
+        ParsedURI(
+            scheme="akv",
+            vault="test-vault",
+            secret="test-secret",  # noqa: S106
+            version=None,
+        )
+    )
 
 
 def test_register_azure_kv_provider_raises_on_import_error() -> None:

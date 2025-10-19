@@ -1,10 +1,41 @@
 """E2E tests for provider registration error handling."""
 
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
 import envresolve
+from envresolve.models import ParsedURI
+from envresolve.providers.base import SecretProvider
+
+
+def test_register_azure_kv_provider_with_custom_provider() -> None:
+    """Test custom provider injection via register_azure_kv_provider.
+
+    Acceptance criteria:
+    - register_azure_kv_provider() accepts optional provider parameter
+    - Custom provider injection works end-to-end
+    """
+    # Create a mock custom provider with SecretProvider spec
+    mock_provider = MagicMock(spec=SecretProvider)
+    mock_provider.resolve.return_value = "custom-test-value"
+
+    # Register custom provider via public API
+    envresolve.register_azure_kv_provider(provider=mock_provider)
+
+    # Resolve a secret - should use custom provider
+    result = envresolve.resolve_secret("akv://test-vault/test-secret")
+
+    # Verify custom provider was called with correct parsed URI
+    assert result == "custom-test-value"
+    mock_provider.resolve.assert_called_once_with(
+        ParsedURI(
+            scheme="akv",
+            vault="test-vault",
+            secret="test-secret",  # noqa: S106
+            version=None,
+        )
+    )
 
 
 def test_register_azure_kv_provider_raises_on_missing_deps() -> None:
