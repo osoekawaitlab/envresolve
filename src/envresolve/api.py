@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from dotenv import dotenv_values
+from dotenv import dotenv_values, find_dotenv
 
 from envresolve.application.resolver import SecretResolver
 from envresolve.exceptions import (
@@ -128,7 +128,7 @@ class EnvResolver:
 
     def load_env(
         self,
-        path: str | Path = ".env",
+        dotenv_path: str | Path | None = None,
         *,
         export: bool = True,
         override: bool = False,
@@ -142,7 +142,9 @@ class EnvResolver:
         4. Optionally exports to os.environ
 
         Args:
-            path: Path to .env file (default: ".env")
+            dotenv_path: Path to .env file. If None, searches for .env in
+                current directory. Mimics python-dotenv's load_dotenv() behavior.
+                (default: None)
             export: If True, export resolved variables to os.environ
             override: If True, override existing os.environ variables
 
@@ -150,14 +152,18 @@ class EnvResolver:
             Dictionary of resolved environment variables
 
         Raises:
-            FileNotFoundError: If the .env file doesn't exist
             URIParseError: If a URI format is invalid
             SecretResolutionError: If secret resolution fails
             VariableNotFoundError: If a referenced variable is not found
             CircularReferenceError: If a circular variable reference is detected
         """
         # Load .env file
-        env_dict = {k: v for k, v in dotenv_values(path).items() if v is not None}
+        # When dotenv_path is None, use find_dotenv with usecwd=True
+        if dotenv_path is None:
+            dotenv_path = find_dotenv(usecwd=True)
+        env_dict = {
+            k: v for k, v in dotenv_values(dotenv_path).items() if v is not None
+        }
 
         # Build complete environment (for variable expansion)
         complete_env = dict(os.environ)
@@ -320,7 +326,7 @@ def resolve_secret(uri: str) -> str:
 
 
 def load_env(
-    path: str | Path = ".env",
+    dotenv_path: str | Path | None = None,
     *,
     export: bool = True,
     override: bool = False,
@@ -334,7 +340,8 @@ def load_env(
     4. Optionally exports to os.environ
 
     Args:
-        path: Path to .env file (default: ".env")
+        dotenv_path: Path to .env file. If None, searches for .env in current directory.
+            Mimics python-dotenv's load_dotenv() behavior. (default: None)
         export: If True, export resolved variables to os.environ (default: True)
         override: If True, override existing os.environ variables (default: False)
 
@@ -342,7 +349,6 @@ def load_env(
         Dictionary of resolved environment variables
 
     Raises:
-        FileNotFoundError: If the .env file doesn't exist
         URIParseError: If a URI format is invalid
         SecretResolutionError: If secret resolution fails
         VariableNotFoundError: If a referenced variable is not found
@@ -351,12 +357,12 @@ def load_env(
     Examples:
         >>> import envresolve
         >>> envresolve.register_azure_kv_provider()
-        >>> # Load and export to os.environ
-        >>> resolved = envresolve.load_env(".env", export=True)  # doctest: +SKIP
-        >>> # Load without exporting
-        >>> resolved = envresolve.load_env(".env", export=False)  # doctest: +SKIP
+        >>> # Load and export to os.environ (searches for .env in cwd)
+        >>> resolved = envresolve.load_env(export=True)  # doctest: +SKIP
+        >>> # Load specific file without exporting
+        >>> resolved = envresolve.load_env("custom.env", export=False)  # doctest: +SKIP
     """
-    return _default_resolver.load_env(path, export=export, override=override)
+    return _default_resolver.load_env(dotenv_path, export=export, override=override)
 
 
 def resolve_os_environ(

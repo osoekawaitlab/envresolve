@@ -194,7 +194,8 @@ import envresolve
 envresolve.register_azure_kv_provider()
 
 # .env may contain plain values, variable references, and akv:// URIs
-resolved = envresolve.load_env(".env", export=True)
+# By default, searches for .env in current directory and exports to os.environ
+resolved = envresolve.load_env()
 
 print(resolved["DB_PASSWORD"])
 print(os.environ["DB_PASSWORD"])  # Exported unless override=False and already set
@@ -203,6 +204,23 @@ print(os.environ["DB_PASSWORD"])  # Exported unless override=False and already s
 Use `export=False` when you only need the resolved dictionary, or set
 `override=True` if you want to intentionally replace existing `os.environ`
 values.
+
+!!! tip "Complete python-dotenv compatibility"
+    For exact python-dotenv search behavior (searching from calling script location instead of current working directory), use this pattern:
+
+    ```python
+    from dotenv import load_dotenv
+    import envresolve
+
+    # Use python-dotenv's search behavior
+    load_dotenv()
+
+    # Resolve secrets in os.environ
+    envresolve.register_azure_kv_provider()
+    envresolve.resolve_os_environ()
+    ```
+
+    This preserves python-dotenv's exact search semantics while adding secret resolution capabilities.
 
 ### Resolving Existing Environment Variables
 
