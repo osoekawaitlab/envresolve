@@ -12,14 +12,12 @@ from envresolve.providers.base import SecretProvider
 
 
 @pytest.fixture
-def temp_env_dir(tmp_path: Path, mocker: MockerFixture) -> Path:
-    """Create a temporary directory and change cwd to it.
+def temp_env_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """Create a temporary directory and change cwd to it for the test.
 
     Returns the temporary directory path.
     """
-    # Change to temp directory
-    mocker.patch("os.getcwd", return_value=str(tmp_path))
-    mocker.patch("pathlib.Path.cwd", return_value=tmp_path)
+    monkeypatch.chdir(tmp_path)
     return tmp_path
 
 
