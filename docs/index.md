@@ -29,11 +29,11 @@ import envresolve
 envresolve.register_azure_kv_provider()
 
 # Load .env and resolve all secret URIs
-# By default, exports to os.environ
-resolved_vars = envresolve.load_env(".env")
+# By default, searches for .env in current directory and exports to os.environ
+resolved_vars = envresolve.load_env()
 
-# Or load without exporting
-resolved_vars = envresolve.load_env(".env", export=False)
+# Or specify explicit path and disable export
+resolved_vars = envresolve.load_env(dotenv_path=".env", export=False)
 ```
 
 ### Direct Secret Resolution

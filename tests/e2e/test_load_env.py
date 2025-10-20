@@ -1,0 +1,235 @@
+"""E2E tests for load_env function."""
+
+import os
+from pathlib import Path
+from unittest.mock import MagicMock
+
+import pytest
+from pytest_mock import MockerFixture
+
+import envresolve
+from envresolve.providers.base import SecretProvider
+
+
+@pytest.fixture
+def temp_env_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """Create a temporary directory and change cwd to it for the test.
+
+    Returns the temporary directory path.
+    """
+    monkeypatch.chdir(tmp_path)
+    return tmp_path
+
+
+def test_load_env_with_dotenv_path_none_finds_dotenv_in_cwd(
+    temp_env_dir: Path,
+) -> None:
+    """Test load_env() with dotenv_path=None finds .env in current directory.
+
+    This mimics python-dotenv's load_dotenv() behavior where None means
+    search for .env file.
+    """
+    env_file = temp_env_dir / ".env"
+    env_file.write_text("TEST_VAR=test_value\nANOTHER_VAR=another_value\n")
+
+    result = envresolve.load_env(dotenv_path=None, export=False)
+
+    assert result == {"TEST_VAR": "test_value", "ANOTHER_VAR": "another_value"}
+
+
+def test_load_env_with_no_args_finds_dotenv_in_cwd(temp_env_dir: Path) -> None:
+    """Test load_env() with no arguments finds .env in current directory.
+
+    Default behavior should match python-dotenv's load_dotenv().
+    """
+    env_file = temp_env_dir / ".env"
+    env_file.write_text("HELLO=world\n")
+
+    result = envresolve.load_env(export=False)
+
+    assert result == {"HELLO": "world"}
+
+
+@pytest.mark.usefixtures("temp_env_dir")
+def test_load_env_with_dotenv_path_none_returns_empty_when_no_file() -> None:
+    """Test load_env() returns empty dict when .env doesn't exist."""
+    result = envresolve.load_env(dotenv_path=None, export=False)
+
+    assert result == {}
+
+
+def test_load_env_with_explicit_path(tmp_path: Path) -> None:
+    """Test load_env() with explicit dotenv_path parameter."""
+    env_file = tmp_path / "custom.env"
+    env_file.write_text("CUSTOM=value\n")
+
+    result = envresolve.load_env(dotenv_path=str(env_file), export=False)
+
+    assert result == {"CUSTOM": "value"}
+
+
+def test_load_env_with_explicit_path_as_pathlike(tmp_path: Path) -> None:
+    """Test load_env() accepts Path objects."""
+    env_file = tmp_path / "path.env"
+    env_file.write_text("PATHLIKE=works\n")
+
+    result = envresolve.load_env(dotenv_path=env_file, export=False)
+
+    assert result == {"PATHLIKE": "works"}
+
+
+def test_load_env_export_to_os_environ(
+    temp_env_dir: Path, mocker: MockerFixture
+) -> None:
+    """Test load_env() exports variables to os.environ when export=True."""
+    env_file = temp_env_dir / ".env"
+    env_file.write_text("EXPORT_TEST=exported\n")
+
+    # Mock os.environ as empty dict
+    mocker.patch.dict("os.environ", {}, clear=True)
+
+    result = envresolve.load_env(export=True)
+
+    assert result == {"EXPORT_TEST": "exported"}
+    assert os.environ["EXPORT_TEST"] == "exported"
+
+
+def test_load_env_export_respects_override_false(
+    temp_env_dir: Path, mocker: MockerFixture
+) -> None:
+    """Test load_env() doesn't override existing env vars when override=False."""
+    env_file = temp_env_dir / ".env"
+    env_file.write_text("EXISTING_VAR=new_value\n")
+
+    # Mock os.environ with existing value
+    mocker.patch.dict("os.environ", {"EXISTING_VAR": "old_value"}, clear=True)
+
+    result = envresolve.load_env(export=True, override=False)
+
+    assert result == {"EXISTING_VAR": "new_value"}
+    # Should NOT override existing value
+    assert os.environ["EXISTING_VAR"] == "old_value"
+
+
+def test_load_env_export_respects_override_true(
+    temp_env_dir: Path, mocker: MockerFixture
+) -> None:
+    """Test load_env() overrides existing env vars when override=True."""
+    env_file = temp_env_dir / ".env"
+    env_file.write_text("OVERRIDE_VAR=new_value\n")
+
+    # Mock os.environ with existing value
+    mocker.patch.dict("os.environ", {"OVERRIDE_VAR": "old_value"}, clear=True)
+
+    result = envresolve.load_env(export=True, override=True)
+
+    assert result == {"OVERRIDE_VAR": "new_value"}
+    # Should override existing value
+    assert os.environ["OVERRIDE_VAR"] == "new_value"
+
+
+def test_load_env_with_variable_expansion(temp_env_dir: Path) -> None:
+    """Test load_env() expands variable references."""
+    env_file = temp_env_dir / ".env"
+    env_file.write_text("BASE=hello\nDERIVED=${BASE}_world\n")
+
+    result = envresolve.load_env(export=False)
+
+    assert result == {"BASE": "hello", "DERIVED": "hello_world"}
+
+
+def test_load_env_with_os_environ_variable_expansion(
+    temp_env_dir: Path, mocker: MockerFixture
+) -> None:
+    """Test load_env() can expand variables from os.environ."""
+    env_file = temp_env_dir / ".env"
+    env_file.write_text("EXPANDED=${OS_VAR}_suffix\n")
+
+    # Mock os.environ with OS_VAR
+    mocker.patch.dict("os.environ", {"OS_VAR": "prefix"}, clear=True)
+
+    result = envresolve.load_env(export=False)
+
+    assert result == {"EXPANDED": "prefix_suffix"}
+
+
+@pytest.mark.azure
+def test_load_env_with_akv_uri_resolution(temp_env_dir: Path) -> None:
+    """Test load_env() resolves Azure Key Vault URIs.
+
+    This test requires Azure SDK to be installed.
+    """
+    env_file = temp_env_dir / ".env"
+    env_file.write_text("SECRET=akv://test-vault/test-secret\n")
+
+    # Mock the Azure provider
+    mock_provider = MagicMock(spec=SecretProvider)
+    mock_provider.resolve.return_value = "secret-value"
+
+    envresolve.register_azure_kv_provider(provider=mock_provider)
+
+    result = envresolve.load_env(export=False)
+
+    assert result == {"SECRET": "secret-value"}
+
+
+def test_load_env_with_complex_scenario(temp_env_dir: Path) -> None:
+    """Test load_env() with variable expansion and multiple variables.
+
+    Complex real-world scenario with:
+    - Plain values
+    - Variable references
+    - Nested variable expansion
+    """
+    env_file = temp_env_dir / ".env"
+    env_file.write_text(
+        """
+# Configuration
+ENVIRONMENT=production
+REGION=us-east-1
+
+# Derived values
+VAULT_NAME=${ENVIRONMENT}-${REGION}-vault
+APP_NAME=myapp
+
+# Complex references
+DATABASE_URL=postgres://${APP_NAME}:secret@${VAULT_NAME}.db
+API_ENDPOINT=https://api.${ENVIRONMENT}.example.com
+"""
+    )
+
+    result = envresolve.load_env(export=False)
+
+    assert result == {
+        "ENVIRONMENT": "production",
+        "REGION": "us-east-1",
+        "VAULT_NAME": "production-us-east-1-vault",
+        "APP_NAME": "myapp",
+        "DATABASE_URL": "postgres://myapp:secret@production-us-east-1-vault.db",
+        "API_ENDPOINT": "https://api.production.example.com",
+    }
+
+
+def test_load_env_empty_file_returns_empty_dict(temp_env_dir: Path) -> None:
+    """Test load_env() returns empty dict for empty .env file."""
+    env_file = temp_env_dir / ".env"
+    env_file.write_text("")
+
+    result = envresolve.load_env(export=False)
+
+    assert result == {}
+
+
+def test_load_env_filters_none_values(temp_env_dir: Path) -> None:
+    """Test load_env() filters out None values from dotenv parsing.
+
+    python-dotenv returns None for lines without values.
+    """
+    env_file = temp_env_dir / ".env"
+    # Lines with comments or no value should not appear in result
+    env_file.write_text("# Comment\nVALID=value\n# COMMENTED=out\n")
+
+    result = envresolve.load_env(export=False)
+
+    assert result == {"VALID": "value"}
+    assert "COMMENTED" not in result

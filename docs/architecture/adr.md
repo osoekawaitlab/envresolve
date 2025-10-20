@@ -299,6 +299,26 @@ Created `MutuallyExclusiveArgumentsError` inheriting from both `EnvResolveError`
 
 ---
 
+### ADR 0017: Align load_env() Parameter with python-dotenv
+
+**Status**: Accepted
+**Date**: 2025-10-20
+
+Changed `load_env()` signature to match python-dotenv's `load_dotenv()` for zero-friction migration.
+
+**Key Decision**: Rename parameter from `path` to `dotenv_path` and change default from `".env"` to `None`. When `None`, explicitly use `find_dotenv(usecwd=True)` to search from current working directory.
+
+**Rationale**:
+
+- Drop-in replacement for python-dotenv users
+- Explicit control over search behavior (from cwd, not from `__file__`)
+- More intuitive default (search from current directory)
+- Better alignment with python-dotenv ecosystem
+
+[View Full ADR](../adr/0017-load-env-dotenv-path-parameter.md)
+
+---
+
 ## ADR Template
 
 All ADRs follow a consistent template defined in [ADR 0000: ADR Template](../adr/0000-adr-template.md).
