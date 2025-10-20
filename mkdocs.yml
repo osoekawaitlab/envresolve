@@ -95,4 +95,4 @@ nav:
           - 0014-importlib-lazy-import.md: adr/0014-importlib-lazy-import.md
           - 0015-terraform-managed-live-tests.md: adr/0015-terraform-managed-live-tests.md
           - 0016-mutually-exclusive-parameters-with-typeerror.md: adr/0016-mutually-exclusive-parameters-with-typeerror.md
-          - 0017-load-env-dotenv-path-parameter.md: a0017-load-env-dotenv-path-parameter.md
+          - 0017-load-env-dotenv-path-parameter.md: adr/0017-load-env-dotenv-path-parameter.md
