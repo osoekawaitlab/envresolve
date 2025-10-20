@@ -1349,6 +1349,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="adr/0017-load-env-dotenv-path-parameter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0017-load-env-dotenv-path-parameter.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1494,11 +1517,11 @@
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">envresolve</span><span class="o">.</span><span class="n">register_azure_kv_provider</span><span class="p">()</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Load .env and resolve all secret URIs</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># By default, exports to os.environ</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">resolved_vars</span> <span class="o">=</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">load_env</span><span class="p">(</span><span class="s2">&quot;.env&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># By default, searches for .env in current directory and exports to os.environ</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">resolved_vars</span> <span class="o">=</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">load_env</span><span class="p">()</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Or load without exporting</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">resolved_vars</span> <span class="o">=</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">load_env</span><span class="p">(</span><span class="s2">&quot;.env&quot;</span><span class="p">,</span> <span class="n">export</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Or specify explicit path and disable export</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">resolved_vars</span> <span class="o">=</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">load_env</span><span class="p">(</span><span class="n">dotenv_path</span><span class="o">=</span><span class="s2">&quot;.env&quot;</span><span class="p">,</span> <span class="n">export</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="direct-secret-resolution">Direct Secret Resolution<a class="headerlink" href="#direct-secret-resolution" title="Permanent link">&para;</a></h3>
 <p>You can also fetch individual secrets directly:</p>

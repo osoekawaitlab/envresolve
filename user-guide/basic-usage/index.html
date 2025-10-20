@@ -1582,6 +1582,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0017-load-env-dotenv-path-parameter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0017-load-env-dotenv-path-parameter.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2084,71 +2107,87 @@ you chain indirections or mix URI results with variable expansion:</p>
 <a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="n">envresolve</span><span class="o">.</span><span class="n">register_azure_kv_provider</span><span class="p">()</span>
 <a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
 <a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># .env may contain plain values, variable references, and akv:// URIs</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="n">resolved</span> <span class="o">=</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">load_env</span><span class="p">(</span><span class="s2">&quot;.env&quot;</span><span class="p">,</span> <span class="n">export</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="nb">print</span><span class="p">(</span><span class="n">resolved</span><span class="p">[</span><span class="s2">&quot;DB_PASSWORD&quot;</span><span class="p">])</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DB_PASSWORD&quot;</span><span class="p">])</span>  <span class="c1"># Exported unless override=False and already set</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># By default, searches for .env in current directory and exports to os.environ</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="n">resolved</span> <span class="o">=</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">load_env</span><span class="p">()</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="nb">print</span><span class="p">(</span><span class="n">resolved</span><span class="p">[</span><span class="s2">&quot;DB_PASSWORD&quot;</span><span class="p">])</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DB_PASSWORD&quot;</span><span class="p">])</span>  <span class="c1"># Exported unless override=False and already set</span>
 </code></pre></div>
 <p>Use <code>export=False</code> when you only need the resolved dictionary, or set
 <code>override=True</code> if you want to intentionally replace existing <code>os.environ</code>
 values.</p>
-<h3 id="resolving-existing-environment-variables">Resolving Existing Environment Variables<a class="headerlink" href="#resolving-existing-environment-variables" title="Permanent link">&para;</a></h3>
-<p>Use <code>resolve_os_environ()</code> to resolve secret URIs that are already set in <code>os.environ</code>. This is useful when environment variables are passed from parent shells or container orchestrators:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<div class="admonition tip">
+<p class="admonition-title">Complete python-dotenv compatibility</p>
+<p>For exact python-dotenv search behavior (searching from calling script location instead of current working directory), use this pattern:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">envresolve</span>
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="n">envresolve</span><span class="o">.</span><span class="n">register_azure_kv_provider</span><span class="p">()</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># Environment variables set by parent process or container</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;akv://prod-vault/api-key&quot;</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DB_PASSWORD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;akv://prod-vault/db-password&quot;</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Resolve all environment variables containing secret URIs</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="n">resolved</span> <span class="o">=</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">resolve_os_environ</span><span class="p">()</span>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="nb">print</span><span class="p">(</span><span class="n">resolved</span><span class="p">[</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">])</span>      <span class="c1"># Resolved secret value</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">])</span>    <span class="c1"># os.environ is updated by default</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Use python-dotenv&#39;s search behavior</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="n">load_dotenv</span><span class="p">()</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Resolve secrets in os.environ</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="n">envresolve</span><span class="o">.</span><span class="n">register_azure_kv_provider</span><span class="p">()</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="n">envresolve</span><span class="o">.</span><span class="n">resolve_os_environ</span><span class="p">()</span>
 </code></pre></div>
-<h4 id="filtering-by-specific-keys">Filtering by Specific Keys<a class="headerlink" href="#filtering-by-specific-keys" title="Permanent link">&para;</a></h4>
-<p>Resolve only specific environment variables:</p>
+<p>This preserves python-dotenv's exact search semantics while adding secret resolution capabilities.</p>
+</div>
+<h3 id="resolving-existing-environment-variables">Resolving Existing Environment Variables<a class="headerlink" href="#resolving-existing-environment-variables" title="Permanent link">&para;</a></h3>
+<p>Use <code>resolve_os_environ()</code> to resolve secret URIs that are already set in <code>os.environ</code>. This is useful when environment variables are passed from parent shells or container orchestrators:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">envresolve</span>
 <a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
 <a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="n">envresolve</span><span class="o">.</span><span class="n">register_azure_kv_provider</span><span class="p">()</span>
 <a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;akv://prod-vault/api-key&quot;</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DB_PASSWORD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;akv://prod-vault/db-password&quot;</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PLAIN_CONFIG&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;some-value&quot;</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1"># Environment variables set by parent process or container</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;akv://prod-vault/api-key&quot;</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DB_PASSWORD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;akv://prod-vault/db-password&quot;</span>
 <a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># Resolve only API_KEY and DB_PASSWORD</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="n">resolved</span> <span class="o">=</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">resolve_os_environ</span><span class="p">(</span><span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">,</span> <span class="s2">&quot;DB_PASSWORD&quot;</span><span class="p">])</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># Resolve all environment variables containing secret URIs</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="n">resolved</span> <span class="o">=</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">resolve_os_environ</span><span class="p">()</span>
 <a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="c1"># PLAIN_CONFIG is not processed</span>
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="k">assert</span> <span class="s2">&quot;PLAIN_CONFIG&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">resolved</span>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="nb">print</span><span class="p">(</span><span class="n">resolved</span><span class="p">[</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">])</span>      <span class="c1"># Resolved secret value</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">])</span>    <span class="c1"># os.environ is updated by default</span>
 </code></pre></div>
-<h4 id="filtering-by-prefix">Filtering by Prefix<a class="headerlink" href="#filtering-by-prefix" title="Permanent link">&para;</a></h4>
-<p>Resolve variables with a specific prefix and strip the prefix from output:</p>
+<h4 id="filtering-by-specific-keys">Filtering by Specific Keys<a class="headerlink" href="#filtering-by-specific-keys" title="Permanent link">&para;</a></h4>
+<p>Resolve only specific environment variables:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">envresolve</span>
 <a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
 <a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="n">envresolve</span><span class="o">.</span><span class="n">register_azure_kv_provider</span><span class="p">()</span>
 <a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="c1"># Different environments using prefixes</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DEV_API_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;akv://dev-vault/api-key&quot;</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DEV_DB_URL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;akv://dev-vault/db-url&quot;</span>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PROD_API_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;akv://prod-vault/api-key&quot;</span>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PROD_DB_URL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;akv://prod-vault/db-url&quot;</span>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="c1"># Resolve only DEV_ variables and strip the prefix</span>
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="n">resolved</span> <span class="o">=</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">resolve_os_environ</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;DEV_&quot;</span><span class="p">)</span>
-<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>
-<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="c1"># Results have prefix stripped</span>
-<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="nb">print</span><span class="p">(</span><span class="n">resolved</span><span class="p">[</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">])</span>      <span class="c1"># Resolved from DEV_API_KEY</span>
-<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="nb">print</span><span class="p">(</span><span class="n">resolved</span><span class="p">[</span><span class="s2">&quot;DB_URL&quot;</span><span class="p">])</span>       <span class="c1"># Resolved from DEV_DB_URL</span>
-<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>
-<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="c1"># os.environ is updated with stripped keys</span>
-<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">])</span>    <span class="c1"># Resolved value</span>
-<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a><span class="k">assert</span> <span class="s2">&quot;DEV_API_KEY&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span>  <span class="c1"># Old key removed</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;akv://prod-vault/api-key&quot;</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DB_PASSWORD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;akv://prod-vault/db-password&quot;</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PLAIN_CONFIG&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;some-value&quot;</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Resolve only API_KEY and DB_PASSWORD</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="n">resolved</span> <span class="o">=</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">resolve_os_environ</span><span class="p">(</span><span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">,</span> <span class="s2">&quot;DB_PASSWORD&quot;</span><span class="p">])</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="c1"># PLAIN_CONFIG is not processed</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="k">assert</span> <span class="s2">&quot;PLAIN_CONFIG&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">resolved</span>
+</code></pre></div>
+<h4 id="filtering-by-prefix">Filtering by Prefix<a class="headerlink" href="#filtering-by-prefix" title="Permanent link">&para;</a></h4>
+<p>Resolve variables with a specific prefix and strip the prefix from output:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">envresolve</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="n">envresolve</span><span class="o">.</span><span class="n">register_azure_kv_provider</span><span class="p">()</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="c1"># Different environments using prefixes</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DEV_API_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;akv://dev-vault/api-key&quot;</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DEV_DB_URL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;akv://dev-vault/db-url&quot;</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PROD_API_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;akv://prod-vault/api-key&quot;</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PROD_DB_URL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;akv://prod-vault/db-url&quot;</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="c1"># Resolve only DEV_ variables and strip the prefix</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="n">resolved</span> <span class="o">=</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">resolve_os_environ</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;DEV_&quot;</span><span class="p">)</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="c1"># Results have prefix stripped</span>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="nb">print</span><span class="p">(</span><span class="n">resolved</span><span class="p">[</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">])</span>      <span class="c1"># Resolved from DEV_API_KEY</span>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="nb">print</span><span class="p">(</span><span class="n">resolved</span><span class="p">[</span><span class="s2">&quot;DB_URL&quot;</span><span class="p">])</span>       <span class="c1"># Resolved from DEV_DB_URL</span>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="c1"># os.environ is updated with stripped keys</span>
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a><span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">])</span>    <span class="c1"># Resolved value</span>
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a><span class="k">assert</span> <span class="s2">&quot;DEV_API_KEY&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span>  <span class="c1"># Old key removed</span>
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Prefix Stripping Behavior</p>
@@ -2156,177 +2195,177 @@ values.</p>
 </div>
 <h4 id="without-updating-osenviron">Without Updating os.environ<a class="headerlink" href="#without-updating-osenviron" title="Permanent link">&para;</a></h4>
 <p>Use <code>overwrite=False</code> to get resolved values without modifying <code>os.environ</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">envresolve</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="n">envresolve</span><span class="o">.</span><span class="n">register_azure_kv_provider</span><span class="p">()</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;akv://prod-vault/api-key&quot;</span>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="c1"># Get resolved values without updating os.environ</span>
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="n">resolved</span> <span class="o">=</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">resolve_os_environ</span><span class="p">(</span><span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="nb">print</span><span class="p">(</span><span class="n">resolved</span><span class="p">[</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">])</span>              <span class="c1"># Resolved secret value</span>
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">])</span>            <span class="c1"># Still the original URI</span>
-<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;akv://prod-vault/api-key&quot;</span>
-</code></pre></div>
-<h4 id="continuing-on-errors">Continuing on Errors<a class="headerlink" href="#continuing-on-errors" title="Permanent link">&para;</a></h4>
-<p>Use <code>stop_on_error=False</code> to continue resolving other variables even if a <strong>secret resolution error</strong> occurs. This allows the function to skip over individual secrets that might be misconfigured or inaccessible, without halting the entire process.</p>
-<div class="highlight"><pre><span></span><code>Note that this only applies to expected resolution errors (like `SecretResolutionError`); other unexpected errors (like programming mistakes) will still stop the process regardless of this flag.
-</code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">envresolve</span>
 <a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
 <a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="n">envresolve</span><span class="o">.</span><span class="n">register_azure_kv_provider</span><span class="p">()</span>
 <a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;GOOD_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;akv://prod-vault/valid-secret&quot;</span>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;BAD_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;akv://prod-vault/missing-secret&quot;</span>  <span class="c1"># Doesn&#39;t exist</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PLAIN&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;plain-value&quot;</span>
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Continue on errors instead of raising</span>
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="n">resolved</span> <span class="o">=</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">resolve_os_environ</span><span class="p">(</span><span class="n">stop_on_error</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>
-<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="c1"># Successfully resolved variables are in the result</span>
-<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="nb">print</span><span class="p">(</span><span class="n">resolved</span><span class="p">[</span><span class="s2">&quot;GOOD_KEY&quot;</span><span class="p">])</span>    <span class="c1"># Resolved value</span>
-<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="nb">print</span><span class="p">(</span><span class="n">resolved</span><span class="p">[</span><span class="s2">&quot;PLAIN&quot;</span><span class="p">])</span>       <span class="c1"># plain-value</span>
-<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="k">assert</span> <span class="s2">&quot;BAD_KEY&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">resolved</span>  <span class="c1"># Skipped due to error</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;akv://prod-vault/api-key&quot;</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="c1"># Get resolved values without updating os.environ</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="n">resolved</span> <span class="o">=</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">resolve_os_environ</span><span class="p">(</span><span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="nb">print</span><span class="p">(</span><span class="n">resolved</span><span class="p">[</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">])</span>              <span class="c1"># Resolved secret value</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">])</span>            <span class="c1"># Still the original URI</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;akv://prod-vault/api-key&quot;</span>
+</code></pre></div>
+<h4 id="continuing-on-errors">Continuing on Errors<a class="headerlink" href="#continuing-on-errors" title="Permanent link">&para;</a></h4>
+<p>Use <code>stop_on_error=False</code> to continue resolving other variables even if a <strong>secret resolution error</strong> occurs. This allows the function to skip over individual secrets that might be misconfigured or inaccessible, without halting the entire process.</p>
+<div class="highlight"><pre><span></span><code>Note that this only applies to expected resolution errors (like `SecretResolutionError`); other unexpected errors (like programming mistakes) will still stop the process regardless of this flag.
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">envresolve</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="n">envresolve</span><span class="o">.</span><span class="n">register_azure_kv_provider</span><span class="p">()</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;GOOD_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;akv://prod-vault/valid-secret&quot;</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;BAD_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;akv://prod-vault/missing-secret&quot;</span>  <span class="c1"># Doesn&#39;t exist</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PLAIN&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;plain-value&quot;</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="c1"># Continue on errors instead of raising</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="n">resolved</span> <span class="o">=</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">resolve_os_environ</span><span class="p">(</span><span class="n">stop_on_error</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="c1"># Successfully resolved variables are in the result</span>
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="nb">print</span><span class="p">(</span><span class="n">resolved</span><span class="p">[</span><span class="s2">&quot;GOOD_KEY&quot;</span><span class="p">])</span>    <span class="c1"># Resolved value</span>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a><span class="nb">print</span><span class="p">(</span><span class="n">resolved</span><span class="p">[</span><span class="s2">&quot;PLAIN&quot;</span><span class="p">])</span>       <span class="c1"># plain-value</span>
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="k">assert</span> <span class="s2">&quot;BAD_KEY&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">resolved</span>  <span class="c1"># Skipped due to error</span>
 </code></pre></div>
 <h2 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
 <p>When working with external services, it's important to handle potential errors like missing dependencies, incorrect configuration, or network issues.</p>
 <h3 id="provider-and-resolution-errors">Provider and Resolution Errors<a class="headerlink" href="#provider-and-resolution-errors" title="Permanent link">&para;</a></h3>
 <p>Here is a robust example of how to handle errors during provider registration and secret resolution:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">envresolve</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">envresolve.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProviderRegistrationError</span><span class="p">,</span> <span class="n">SecretResolutionError</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    <span class="c1"># This might fail if &#39;envresolve[azure]&#39; is not installed</span>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    <span class="n">envresolve</span><span class="o">.</span><span class="n">register_azure_kv_provider</span><span class="p">()</span>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>    <span class="c1"># This might fail due to permissions, network issues, or if the secret doesn&#39;t exist</span>
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>    <span class="n">secret_value</span> <span class="o">=</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">resolve_secret</span><span class="p">(</span><span class="s2">&quot;akv://corp-vault/db-password&quot;</span><span class="p">)</span>
-<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">secret_value</span><span class="p">)</span>
-<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>
-<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="k">except</span> <span class="n">ProviderRegistrationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Provider setup failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>    <span class="c1"># Example: Provider setup failed: Azure Key Vault provider requires: azure-identity, azure-keyvault-secrets. Install with: pip install envresolve[azure]</span>
-<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>
-<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="k">except</span> <span class="n">SecretResolutionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to fetch secret: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">envresolve</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">envresolve.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProviderRegistrationError</span><span class="p">,</span> <span class="n">SecretResolutionError</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>    <span class="c1"># This might fail if &#39;envresolve[azure]&#39; is not installed</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>    <span class="n">envresolve</span><span class="o">.</span><span class="n">register_azure_kv_provider</span><span class="p">()</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>    <span class="c1"># This might fail due to permissions, network issues, or if the secret doesn&#39;t exist</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>    <span class="n">secret_value</span> <span class="o">=</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">resolve_secret</span><span class="p">(</span><span class="s2">&quot;akv://corp-vault/db-password&quot;</span><span class="p">)</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">secret_value</span><span class="p">)</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="k">except</span> <span class="n">ProviderRegistrationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Provider setup failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>    <span class="c1"># Example: Provider setup failed: Azure Key Vault provider requires: azure-identity, azure-keyvault-secrets. Install with: pip install envresolve[azure]</span>
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a><span class="k">except</span> <span class="n">SecretResolutionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to fetch secret: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>This pattern ensures that your application can gracefully handle both setup-time (missing dependencies) and run-time (secret access) errors.</p>
 <h3 id="circular-reference-detection">Circular Reference Detection<a class="headerlink" href="#circular-reference-detection" title="Permanent link">&para;</a></h3>
 <p>envresolve automatically detects circular references and raises a clear error:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">envresolve</span><span class="w"> </span><span class="kn">import</span> <span class="n">expand_variables</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">envresolve.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">CircularReferenceError</span>
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="n">env</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>    <span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="s2">&quot;$</span><span class="si">{B}</span><span class="s2">&quot;</span><span class="p">,</span>
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>    <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="s2">&quot;$</span><span class="si">{A}</span><span class="s2">&quot;</span>
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="p">}</span>
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">expand_variables</span><span class="p">(</span><span class="n">env</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">],</span> <span class="n">env</span><span class="p">)</span>
-<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="k">except</span> <span class="n">CircularReferenceError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>    <span class="c1"># Error: Circular reference detected: B -&gt; A -&gt; B</span>
-<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>
-<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>    <span class="c1"># Inspect the exact cycle if you need more detail</span>
-<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">chain</span><span class="p">)</span>  <span class="c1"># [&#39;B&#39;, &#39;A&#39;, &#39;B&#39;]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">envresolve</span><span class="w"> </span><span class="kn">import</span> <span class="n">expand_variables</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">envresolve.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">CircularReferenceError</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="n">env</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>    <span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="s2">&quot;$</span><span class="si">{B}</span><span class="s2">&quot;</span><span class="p">,</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>    <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="s2">&quot;$</span><span class="si">{A}</span><span class="s2">&quot;</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="p">}</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">expand_variables</span><span class="p">(</span><span class="n">env</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">],</span> <span class="n">env</span><span class="p">)</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="k">except</span> <span class="n">CircularReferenceError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>    <span class="c1"># Error: Circular reference detected: B -&gt; A -&gt; B</span>
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>    <span class="c1"># Inspect the exact cycle if you need more detail</span>
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">chain</span><span class="p">)</span>  <span class="c1"># [&#39;B&#39;, &#39;A&#39;, &#39;B&#39;]</span>
 </code></pre></div>
 <h3 id="missing-variable-error">Missing Variable Error<a class="headerlink" href="#missing-variable-error" title="Permanent link">&para;</a></h3>
 <p>If a referenced variable doesn't exist, <code>VariableNotFoundError</code> is raised:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">envresolve</span><span class="w"> </span><span class="kn">import</span> <span class="n">expand_variables</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">envresolve.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">VariableNotFoundError</span>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="n">env</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="s2">&quot;value&quot;</span><span class="p">}</span>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">expand_variables</span><span class="p">(</span><span class="s2">&quot;$</span><span class="si">{MISSING}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="k">except</span> <span class="n">VariableNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>    <span class="c1"># Error: Variable &#39;MISSING&#39; not found</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">envresolve</span><span class="w"> </span><span class="kn">import</span> <span class="n">expand_variables</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">envresolve.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">VariableNotFoundError</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="n">env</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="s2">&quot;value&quot;</span><span class="p">}</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">expand_variables</span><span class="p">(</span><span class="s2">&quot;$</span><span class="si">{MISSING}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="k">except</span> <span class="n">VariableNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>    <span class="c1"># Error: Variable &#39;MISSING&#39; not found</span>
 </code></pre></div>
 <h3 id="mutually-exclusive-arguments">Mutually Exclusive Arguments<a class="headerlink" href="#mutually-exclusive-arguments" title="Permanent link">&para;</a></h3>
 <p>Some API functions have mutually exclusive parameters. For example, <code>resolve_os_environ()</code> cannot accept both <code>keys</code> and <code>prefix</code> parameters:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">envresolve</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">envresolve.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">MutuallyExclusiveArgumentsError</span>
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="n">envresolve</span><span class="o">.</span><span class="n">register_azure_kv_provider</span><span class="p">()</span>
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>
-<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>    <span class="c1"># This will raise an error - cannot specify both</span>
-<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>    <span class="n">envresolve</span><span class="o">.</span><span class="n">resolve_os_environ</span><span class="p">(</span>
-<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>        <span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">],</span>
-<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>        <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;DEV_&quot;</span>
-<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>    <span class="p">)</span>
-<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="k">except</span> <span class="n">MutuallyExclusiveArgumentsError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>    <span class="c1"># Error: Arguments &#39;keys&#39; and &#39;prefix&#39; are mutually exclusive.</span>
-<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>    <span class="c1">#        Specify either &#39;keys&#39; or &#39;prefix&#39;, but not both.</span>
-<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>
-<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>    <span class="c1"># Access argument names programmatically</span>
-<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Conflicting arguments: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">arg1</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">arg2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>    <span class="c1"># Conflicting arguments: keys and prefix</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">envresolve</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">envresolve.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">MutuallyExclusiveArgumentsError</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="n">envresolve</span><span class="o">.</span><span class="n">register_azure_kv_provider</span><span class="p">()</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>    <span class="c1"># This will raise an error - cannot specify both</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>    <span class="n">envresolve</span><span class="o">.</span><span class="n">resolve_os_environ</span><span class="p">(</span>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>        <span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">],</span>
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>        <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;DEV_&quot;</span>
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>    <span class="p">)</span>
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="k">except</span> <span class="n">MutuallyExclusiveArgumentsError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>    <span class="c1"># Error: Arguments &#39;keys&#39; and &#39;prefix&#39; are mutually exclusive.</span>
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>    <span class="c1">#        Specify either &#39;keys&#39; or &#39;prefix&#39;, but not both.</span>
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>    <span class="c1"># Access argument names programmatically</span>
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Conflicting arguments: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">arg1</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">arg2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>    <span class="c1"># Conflicting arguments: keys and prefix</span>
 </code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">TypeError Compatibility</p>
 <p><code>MutuallyExclusiveArgumentsError</code> also inherits from <code>TypeError</code>, so you can catch it with standard exception handling:</p>
 </div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>    <span class="n">envresolve</span><span class="o">.</span><span class="n">resolve_os_environ</span><span class="p">(</span><span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">],</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;DEV_&quot;</span><span class="p">)</span>
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid argument combination: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>    <span class="n">envresolve</span><span class="o">.</span><span class="n">resolve_os_environ</span><span class="p">(</span><span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">],</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;DEV_&quot;</span><span class="p">)</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid argument combination: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="advanced-use-cases">Advanced Use Cases<a class="headerlink" href="#advanced-use-cases" title="Permanent link">&para;</a></h2>
 <h3 id="building-secret-uris-dynamically">Building Secret URIs Dynamically<a class="headerlink" href="#building-secret-uris-dynamically" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">envresolve</span><span class="w"> </span><span class="kn">import</span> <span class="n">expand_variables</span>
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="c1"># Define vault and environment once</span>
-<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="n">env</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>    <span class="s2">&quot;ENVIRONMENT&quot;</span><span class="p">:</span> <span class="s2">&quot;production&quot;</span><span class="p">,</span>
-<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>    <span class="s2">&quot;VAULT&quot;</span><span class="p">:</span> <span class="s2">&quot;$</span><span class="si">{ENVIRONMENT}</span><span class="s2">-keyvault&quot;</span><span class="p">,</span>
-<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>
-<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>    <span class="c1"># Define all secrets using the vault</span>
-<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>    <span class="s2">&quot;DB_HOST_URI&quot;</span><span class="p">:</span> <span class="s2">&quot;akv://$</span><span class="si">{VAULT}</span><span class="s2">/db-host&quot;</span><span class="p">,</span>
-<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>    <span class="s2">&quot;DB_USER_URI&quot;</span><span class="p">:</span> <span class="s2">&quot;akv://$</span><span class="si">{VAULT}</span><span class="s2">/db-user&quot;</span><span class="p">,</span>
-<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>    <span class="s2">&quot;DB_PASS_URI&quot;</span><span class="p">:</span> <span class="s2">&quot;akv://$</span><span class="si">{VAULT}</span><span class="s2">/db-password&quot;</span><span class="p">,</span>
-<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>    <span class="s2">&quot;API_KEY_URI&quot;</span><span class="p">:</span> <span class="s2">&quot;akv://$</span><span class="si">{VAULT}</span><span class="s2">/api-key&quot;</span><span class="p">,</span>
-<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a><span class="p">}</span>
-<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>
-<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a><span class="c1"># Expand each URI</span>
-<a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a><span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;DB_HOST_URI&quot;</span><span class="p">,</span> <span class="s2">&quot;DB_USER_URI&quot;</span><span class="p">,</span> <span class="s2">&quot;DB_PASS_URI&quot;</span><span class="p">,</span> <span class="s2">&quot;API_KEY_URI&quot;</span><span class="p">]:</span>
-<a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a>    <span class="n">expanded</span> <span class="o">=</span> <span class="n">expand_variables</span><span class="p">(</span><span class="n">env</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">env</span><span class="p">)</span>
-<a id="__codelineno-22-18" name="__codelineno-22-18" href="#__codelineno-22-18"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">expanded</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-22-19" name="__codelineno-22-19" href="#__codelineno-22-19"></a>
-<a id="__codelineno-22-20" name="__codelineno-22-20" href="#__codelineno-22-20"></a><span class="c1"># Output:</span>
-<a id="__codelineno-22-21" name="__codelineno-22-21" href="#__codelineno-22-21"></a><span class="c1"># DB_HOST_URI: akv://production-keyvault/db-host</span>
-<a id="__codelineno-22-22" name="__codelineno-22-22" href="#__codelineno-22-22"></a><span class="c1"># DB_USER_URI: akv://production-keyvault/db-user</span>
-<a id="__codelineno-22-23" name="__codelineno-22-23" href="#__codelineno-22-23"></a><span class="c1"># DB_PASS_URI: akv://production-keyvault/db-password</span>
-<a id="__codelineno-22-24" name="__codelineno-22-24" href="#__codelineno-22-24"></a><span class="c1"># API_KEY_URI: akv://production-keyvault/api-key</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">envresolve</span><span class="w"> </span><span class="kn">import</span> <span class="n">expand_variables</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="c1"># Define vault and environment once</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="n">env</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>    <span class="s2">&quot;ENVIRONMENT&quot;</span><span class="p">:</span> <span class="s2">&quot;production&quot;</span><span class="p">,</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>    <span class="s2">&quot;VAULT&quot;</span><span class="p">:</span> <span class="s2">&quot;$</span><span class="si">{ENVIRONMENT}</span><span class="s2">-keyvault&quot;</span><span class="p">,</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>    <span class="c1"># Define all secrets using the vault</span>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>    <span class="s2">&quot;DB_HOST_URI&quot;</span><span class="p">:</span> <span class="s2">&quot;akv://$</span><span class="si">{VAULT}</span><span class="s2">/db-host&quot;</span><span class="p">,</span>
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>    <span class="s2">&quot;DB_USER_URI&quot;</span><span class="p">:</span> <span class="s2">&quot;akv://$</span><span class="si">{VAULT}</span><span class="s2">/db-user&quot;</span><span class="p">,</span>
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>    <span class="s2">&quot;DB_PASS_URI&quot;</span><span class="p">:</span> <span class="s2">&quot;akv://$</span><span class="si">{VAULT}</span><span class="s2">/db-password&quot;</span><span class="p">,</span>
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>    <span class="s2">&quot;API_KEY_URI&quot;</span><span class="p">:</span> <span class="s2">&quot;akv://$</span><span class="si">{VAULT}</span><span class="s2">/api-key&quot;</span><span class="p">,</span>
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a><span class="p">}</span>
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>
+<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a><span class="c1"># Expand each URI</span>
+<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a><span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;DB_HOST_URI&quot;</span><span class="p">,</span> <span class="s2">&quot;DB_USER_URI&quot;</span><span class="p">,</span> <span class="s2">&quot;DB_PASS_URI&quot;</span><span class="p">,</span> <span class="s2">&quot;API_KEY_URI&quot;</span><span class="p">]:</span>
+<a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a>    <span class="n">expanded</span> <span class="o">=</span> <span class="n">expand_variables</span><span class="p">(</span><span class="n">env</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">env</span><span class="p">)</span>
+<a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">expanded</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a>
+<a id="__codelineno-23-20" name="__codelineno-23-20" href="#__codelineno-23-20"></a><span class="c1"># Output:</span>
+<a id="__codelineno-23-21" name="__codelineno-23-21" href="#__codelineno-23-21"></a><span class="c1"># DB_HOST_URI: akv://production-keyvault/db-host</span>
+<a id="__codelineno-23-22" name="__codelineno-23-22" href="#__codelineno-23-22"></a><span class="c1"># DB_USER_URI: akv://production-keyvault/db-user</span>
+<a id="__codelineno-23-23" name="__codelineno-23-23" href="#__codelineno-23-23"></a><span class="c1"># DB_PASS_URI: akv://production-keyvault/db-password</span>
+<a id="__codelineno-23-24" name="__codelineno-23-24" href="#__codelineno-23-24"></a><span class="c1"># API_KEY_URI: akv://production-keyvault/api-key</span>
 </code></pre></div>
 <h3 id="plain-text-pass-through">Plain Text Pass-Through<a class="headerlink" href="#plain-text-pass-through" title="Permanent link">&para;</a></h3>
 <p>Text without variable references is returned unchanged:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">envresolve</span><span class="w"> </span><span class="kn">import</span> <span class="n">expand_variables</span>
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>
-<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="n">result</span> <span class="o">=</span> <span class="n">expand_variables</span><span class="p">(</span><span class="s2">&quot;plain text with $100 price&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;VAR&quot;</span><span class="p">:</span> <span class="s2">&quot;value&quot;</span><span class="p">})</span>
-<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># Output: plain text with $100 price</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">envresolve</span><span class="w"> </span><span class="kn">import</span> <span class="n">expand_variables</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="n">result</span> <span class="o">=</span> <span class="n">expand_variables</span><span class="p">(</span><span class="s2">&quot;plain text with $100 price&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;VAR&quot;</span><span class="p">:</span> <span class="s2">&quot;value&quot;</span><span class="p">})</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># Output: plain text with $100 price</span>
 </code></pre></div>
 <p>Note: A lone <code>$</code> followed by non-variable characters (like digits) is preserved.</p>
 <h3 id="secret-resolution-errors">Secret Resolution Errors<a class="headerlink" href="#secret-resolution-errors" title="Permanent link">&para;</a></h3>
 <p>Azure-specific failures (missing vaults, permission issues, network errors)
 raise <code>SecretResolutionError</code>. The exception carries the failing URI, making it
 easy to log or surface to users:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">envresolve</span>
-<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">envresolve.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">SecretResolutionError</span>
-<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
-<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="n">envresolve</span><span class="o">.</span><span class="n">register_azure_kv_provider</span><span class="p">()</span>
-<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>
-<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>    <span class="n">envresolve</span><span class="o">.</span><span class="n">resolve_secret</span><span class="p">(</span><span class="s2">&quot;akv://missing-vault/api-key&quot;</span><span class="p">)</span>
-<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="k">except</span> <span class="n">SecretResolutionError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>              <span class="c1"># Human-readable message</span>
-<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">uri</span><span class="p">)</span>          <span class="c1"># akv://missing-vault/api-key</span>
-<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">original_error</span><span class="p">)</span>  <span class="c1"># Underlying Azure exception (if available)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">envresolve</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">envresolve.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">SecretResolutionError</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="n">envresolve</span><span class="o">.</span><span class="n">register_azure_kv_provider</span><span class="p">()</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>    <span class="n">envresolve</span><span class="o">.</span><span class="n">resolve_secret</span><span class="p">(</span><span class="s2">&quot;akv://missing-vault/api-key&quot;</span><span class="p">)</span>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a><span class="k">except</span> <span class="n">SecretResolutionError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>              <span class="c1"># Human-readable message</span>
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">uri</span><span class="p">)</span>          <span class="c1"># akv://missing-vault/api-key</span>
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">original_error</span><span class="p">)</span>  <span class="c1"># Underlying Azure exception (if available)</span>
 </code></pre></div>
 
 

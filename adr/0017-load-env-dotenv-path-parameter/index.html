@@ -10,13 +10,11 @@
       
       
       
-        <link rel="canonical" href="https://github.com/osoekawaitlab/envresolve/adr/0011-conditional-doctest-skip/">
+        <link rel="canonical" href="https://github.com/osoekawaitlab/envresolve/adr/0017-load-env-dotenv-path-parameter/">
       
       
-        <link rel="prev" href="../0010-iterative-uri-resolution/">
+        <link rel="prev" href="../0016-mutually-exclusive-parameters-with-typeerror/">
       
-      
-        <link rel="next" href="../0012-pytest-markers-for-azure-dependencies/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -24,7 +22,7 @@
     
     
       
-        <title>0011-conditional-doctest-skip.md - envresolve</title>
+        <title>0017-load-env-dotenv-path-parameter.md - envresolve</title>
       
     
     
@@ -112,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0011-conditional-doctest-skip.md
+              0017-load-env-dotenv-path-parameter.md
             
           </span>
         </div>
@@ -1121,32 +1119,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    0011-conditional-doctest-skip.md
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0011-conditional-doctest-skip/" class="md-nav__link">
         
   
   
@@ -1157,173 +1133,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#title" class="md-nav__link">
-    <span class="md-ellipsis">
-      Title
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#status" class="md-nav__link">
-    <span class="md-ellipsis">
-      Status
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#date" class="md-nav__link">
-    <span class="md-ellipsis">
-      Date
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
-    <span class="md-ellipsis">
-      Context
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      Decision
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rationale" class="md-nav__link">
-    <span class="md-ellipsis">
-      Rationale
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#implications" class="md-nav__link">
-    <span class="md-ellipsis">
-      Implications
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Implications">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#positive-implications" class="md-nav__link">
-    <span class="md-ellipsis">
-      Positive Implications
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#concerns" class="md-nav__link">
-    <span class="md-ellipsis">
-      Concerns
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#alternatives" class="md-nav__link">
-    <span class="md-ellipsis">
-      Alternatives
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Alternatives">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-unconditional-doctest-skip" class="md-nav__link">
-    <span class="md-ellipsis">
-      1. Unconditional # doctest: +SKIP
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-custom-doctest-directive-eg-skip_if_no_azure" class="md-nav__link">
-    <span class="md-ellipsis">
-      2. Custom doctest directive (e.g., +SKIP_IF_NO_AZURE)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-separate-doctest-files-for-optional-features" class="md-nav__link">
-    <span class="md-ellipsis">
-      3. Separate doctest files for optional features
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#future-direction" class="md-nav__link">
-    <span class="md-ellipsis">
-      Future Direction
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#references" class="md-nav__link">
-    <span class="md-ellipsis">
-      References
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1448,10 +1257,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0017-load-env-dotenv-path-parameter/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    0017-load-env-dotenv-path-parameter.md
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1462,6 +1293,221 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#title" class="md-nav__link">
+    <span class="md-ellipsis">
+      Title
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      Status
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#date" class="md-nav__link">
+    <span class="md-ellipsis">
+      Date
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Decision
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Decision">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#implementation-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Details
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rationale
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Rationale">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      For Users
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-maintainability" class="md-nav__link">
+    <span class="md-ellipsis">
+      For Maintainability
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implications
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positive-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Positive Implications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Changes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#search-behavior-differences-from-python-dotenv" class="md-nav__link">
+    <span class="md-ellipsis">
+      Search Behavior Differences from python-dotenv
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternatives
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#keep-path-parameter-only-change-default-to-none" class="md-nav__link">
+    <span class="md-ellipsis">
+      Keep path parameter, only change default to None
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-dotenv_path-as-alias-deprecate-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      Add dotenv_path as alias, deprecate path
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keep-original-signature-add-searchfalse-flag" class="md-nav__link">
+    <span class="md-ellipsis">
+      Keep original signature, add search=False flag
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-direction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Future Direction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1551,6 +1597,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Decision">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#implementation-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Details
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1559,6 +1620,30 @@
       Rationale
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Rationale">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      For Users
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-maintainability" class="md-nav__link">
+    <span class="md-ellipsis">
+      For Maintainability
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1582,9 +1667,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#concerns" class="md-nav__link">
+  <a href="#api-changes" class="md-nav__link">
     <span class="md-ellipsis">
-      Concerns
+      API Changes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#search-behavior-differences-from-python-dotenv" class="md-nav__link">
+    <span class="md-ellipsis">
+      Search Behavior Differences from python-dotenv
     </span>
   </a>
   
@@ -1606,27 +1700,27 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-unconditional-doctest-skip" class="md-nav__link">
+  <a href="#keep-path-parameter-only-change-default-to-none" class="md-nav__link">
     <span class="md-ellipsis">
-      1. Unconditional # doctest: +SKIP
+      Keep path parameter, only change default to None
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-custom-doctest-directive-eg-skip_if_no_azure" class="md-nav__link">
+  <a href="#add-dotenv_path-as-alias-deprecate-path" class="md-nav__link">
     <span class="md-ellipsis">
-      2. Custom doctest directive (e.g., +SKIP_IF_NO_AZURE)
+      Add dotenv_path as alias, deprecate path
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-separate-doctest-files-for-optional-features" class="md-nav__link">
+  <a href="#keep-original-signature-add-searchfalse-flag" class="md-nav__link">
     <span class="md-ellipsis">
-      3. Separate doctest files for optional features
+      Keep original signature, add search=False flag
     </span>
   </a>
   
@@ -1676,91 +1770,154 @@
 
 <h1 id="architecture-decision-record-adr">Architecture Decision Record (ADR)<a class="headerlink" href="#architecture-decision-record-adr" title="Permanent link">&para;</a></h1>
 <h2 id="title">Title<a class="headerlink" href="#title" title="Permanent link">&para;</a></h2>
-<p>Conditional Doctest Skip Based on Optional Dependencies</p>
+<p>Align <code>load_env()</code> Parameter Signature with python-dotenv's <code>load_dotenv()</code></p>
 <h2 id="status">Status<a class="headerlink" href="#status" title="Permanent link">&para;</a></h2>
 <p>Accepted</p>
 <h2 id="date">Date<a class="headerlink" href="#date" title="Permanent link">&para;</a></h2>
-<p>2025-10-13</p>
+<p>2025-10-20</p>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p>Doctests in <code>api.py</code> demonstrate Azure Key Vault usage, but fail when <code>azure-identity</code> and <code>azure-keyvault-secrets</code> are not installed. Using <code># doctest: +SKIP</code> unconditionally skips these examples even when Azure SDK is available, preventing validation of documentation examples.</p>
-<p>We need doctests to:</p>
-<ul>
-<li>Run and validate when Azure SDK is installed</li>
-<li>Skip gracefully when Azure SDK is absent</li>
-<li>Work consistently across local development and CI environments</li>
-</ul>
-<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p>Implement pytest fixture-based conditional skipping in root <code>conftest.py</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">_azure_sdk_available</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        <span class="k">return</span> <span class="p">(</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>            <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="s2">&quot;azure.identity&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>            <span class="ow">and</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="s2">&quot;azure.keyvault.secrets&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        <span class="p">)</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">ModuleNotFoundError</span><span class="p">):</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        <span class="k">return</span> <span class="kc">False</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">autouse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="k">def</span><span class="w"> </span><span class="nf">_skip_azure_doctests</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">pytest</span><span class="o">.</span><span class="n">FixtureRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">node</span><span class="p">,</span> <span class="n">pytest</span><span class="o">.</span><span class="n">DoctestItem</span><span class="p">):</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        <span class="k">return</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="k">if</span> <span class="s2">&quot;api.py&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">fspath</span><span class="p">):</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        <span class="n">azure_tests</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;register_azure_kv_provider&quot;</span><span class="p">,</span> <span class="s2">&quot;load_env&quot;</span><span class="p">]</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>        <span class="n">is_azure</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="n">name</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">azure_tests</span><span class="p">)</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>        <span class="k">if</span> <span class="n">is_azure</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">_azure_sdk_available</span><span class="p">():</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>            <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="s2">&quot;Azure SDK not available&quot;</span><span class="p">)</span>
+<p>The original <code>load_env()</code> function signature used <code>path: str | Path = ".env"</code> as its parameter:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">load_env</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">=</span> <span class="s2">&quot;.env&quot;</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">export</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">override</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="o">...</span>
 </code></pre></div>
-<p>Place in root <code>conftest.py</code> to apply to both <code>tests/</code> and <code>src/</code> (per <code>testpaths = ["tests", "src"]</code>).</p>
+<p>This created migration friction for users switching from python-dotenv's <code>load_dotenv()</code>, which uses <code>dotenv_path: str | Path | None = None</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">load_dotenv</span><span class="p">(</span><span class="n">dotenv_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="o">...</span>
+</code></pre></div>
+<p>The differences:
+1. <strong>Parameter name</strong>: <code>path</code> vs. <code>dotenv_path</code>
+2. <strong>Default value</strong>: <code>.env</code> (explicit path) vs. <code>None</code> (search behavior)
+3. <strong>Search semantics</strong>: When <code>None</code>, python-dotenv searches for <code>.env</code> starting from the current working directory</p>
+<p>Users migrating from python-dotenv had to:
+- Rename parameter: <code>load_dotenv()</code> → <code>load_env(path=...)</code>
+- Change default behavior: <code>load_dotenv()</code> → <code>load_env(path=".env")</code></p>
+<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
+<p>Change <code>load_env()</code> signature to match python-dotenv's <code>load_dotenv()</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">load_env</span><span class="p">(</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">dotenv_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="o">*</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">export</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">override</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Load environment variables from a .env file and resolve secret URIs.</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="sd">    Args:</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="sd">        dotenv_path: Path to .env file. If None, searches for .env in</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="sd">            current directory. Mimics python-dotenv&#39;s load_dotenv() behavior.</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="sd">            (default: None)</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="sd">    ...</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    <span class="c1"># When dotenv_path is None, use find_dotenv with usecwd=True</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    <span class="k">if</span> <span class="n">dotenv_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>        <span class="n">dotenv_path</span> <span class="o">=</span> <span class="n">find_dotenv</span><span class="p">(</span><span class="n">usecwd</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>    <span class="n">env_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">dotenv_values</span><span class="p">(</span><span class="n">dotenv_path</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>    <span class="o">...</span>
+</code></pre></div>
+<h3 id="implementation-details">Implementation Details<a class="headerlink" href="#implementation-details" title="Permanent link">&para;</a></h3>
+<p>When <code>dotenv_path=None</code>, we explicitly call <code>find_dotenv(usecwd=True)</code> before passing to <code>dotenv_values()</code>. This is necessary because:</p>
+<ol>
+<li><code>dotenv_values(None)</code> internally calls <code>find_dotenv()</code> (without <code>usecwd=True</code>)</li>
+<li><code>find_dotenv()</code> defaults to <code>usecwd=False</code>, which searches from <code>__file__</code> location</li>
+<li>Since <code>api.py</code> is in <code>src/envresolve/</code>, the search would start there and walk up to project root</li>
+<li>This could find the wrong <code>.env</code> file (e.g., project's dev <code>.env</code> instead of application's <code>.env</code>)</li>
+</ol>
+<p>By using <code>find_dotenv(usecwd=True)</code>, we ensure the search starts from <code>os.getcwd()</code>, matching user expectations.</p>
 <h2 id="rationale">Rationale<a class="headerlink" href="#rationale" title="Permanent link">&para;</a></h2>
+<h3 id="for-users">For Users<a class="headerlink" href="#for-users" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Environment-aware</strong>: Automatically detects Azure SDK availability</li>
-<li><strong>Test coverage</strong>: Doctests run when dependencies are present</li>
-<li><strong>No manual intervention</strong>: Users don't need to modify code based on their environment</li>
-<li><strong>Pytest integration</strong>: Uses standard pytest skip mechanism</li>
+<li><strong>Zero-friction migration</strong>: Drop-in replacement for <code>load_dotenv()</code></li>
+<li><strong>Intuitive behavior</strong>: <code>None</code> means "search from current directory" (matches shell behavior)</li>
+<li><strong>Familiar API</strong>: Same parameter name as python-dotenv</li>
 </ul>
-<p>Static <code># doctest: +SKIP</code> was rejected because it prevents testing when dependencies are available.</p>
+<h3 id="for-maintainability">For Maintainability<a class="headerlink" href="#for-maintainability" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Explicit control</strong>: We control search behavior instead of relying on <code>dotenv_values()</code> internals</li>
+<li><strong>Clear intent</strong>: <code>find_dotenv(usecwd=True)</code> explicitly documents search semantics</li>
+<li><strong>Test reliability</strong>: Tests that <code>os.chdir()</code> work correctly because search happens from cwd</li>
+</ul>
 <h2 id="implications">Implications<a class="headerlink" href="#implications" title="Permanent link">&para;</a></h2>
 <h3 id="positive-implications">Positive Implications<a class="headerlink" href="#positive-implications" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Doctests validate documentation accuracy when possible</li>
-<li>Graceful degradation without Azure SDK</li>
-<li>CI can test both scenarios (with/without optional deps)</li>
-<li>Consistent with <code>@pytest.mark.azure</code> strategy (ADR-0012)</li>
+<li>Drop-in replacement for python-dotenv users</li>
+<li>More intuitive default behavior (search from cwd)</li>
+<li>Better aligned with shell conventions (<code>cd</code> changes where <code>.env</code> is found)</li>
 </ul>
-<h3 id="concerns">Concerns<a class="headerlink" href="#concerns" title="Permanent link">&para;</a></h3>
+<h3 id="api-changes">API Changes<a class="headerlink" href="#api-changes" title="Permanent link">&para;</a></h3>
+<p>The <code>load_env()</code> signature was updated for better python-dotenv compatibility:</p>
+<p><strong>Parameter Name</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Before</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">envresolve</span><span class="o">.</span><span class="n">load_env</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;.env&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># After</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">envresolve</span><span class="o">.</span><span class="n">load_env</span><span class="p">(</span><span class="n">dotenv_path</span><span class="o">=</span><span class="s2">&quot;.env&quot;</span><span class="p">)</span>
+</code></pre></div></p>
+<p><strong>Default Value</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Before: Explicit path, always loads `.env` in cwd</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">load_env</span><span class="p">()</span>  <span class="c1"># Loads ./.env</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># After: None triggers search, finds .env from cwd</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">load_env</span><span class="p">()</span>  <span class="c1"># Searches for .env starting from cwd, walks up if not found</span>
+</code></pre></div></p>
+<p>Most users have <code>.env</code> in the current directory, so behavior remains unchanged in practice.</p>
+<h3 id="search-behavior-differences-from-python-dotenv">Search Behavior Differences from python-dotenv<a class="headerlink" href="#search-behavior-differences-from-python-dotenv" title="Permanent link">&para;</a></h3>
+<p><strong>Important limitation</strong>: <code>envresolve.load_env(None)</code> does not have identical search behavior to <code>python-dotenv</code>'s <code>load_dotenv(None)</code>:</p>
 <ul>
-<li><strong>Fixture complexity</strong>: More complex than simple <code>+SKIP</code></li>
-<li><strong>Name coupling</strong>: Relies on doctest function names. <em>Mitigation</em>: Documented in fixture</li>
-<li><strong>Maintenance</strong>: Future optional providers need fixture updates. <em>Mitigation</em>: Centralized in conftest.py</li>
+<li><strong>python-dotenv</strong>: <code>load_dotenv(None)</code> uses <code>find_dotenv(usecwd=False)</code>, which searches from the <strong>calling script's file location</strong></li>
+<li><strong>envresolve</strong>: <code>load_env(None)</code> uses <code>find_dotenv(usecwd=True)</code>, which searches from the <strong>current working directory</strong></li>
 </ul>
+<p><strong>Why the difference?</strong></p>
+<p>When <code>usecwd=False</code>, <code>find_dotenv()</code> searches from the <code>__file__</code> location of the calling code. For python-dotenv (a library users import), this means the user's script location. For envresolve, it would mean the library's installed location (e.g., <code>site-packages/envresolve/api.py</code>), which is never the intended behavior.</p>
+<p>Using <code>usecwd=True</code> provides the most intuitive behavior: search from where the user is running their script.</p>
+<p><strong>For complete python-dotenv compatibility</strong>, use this pattern:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">envresolve</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Use python-dotenv&#39;s search behavior</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">load_dotenv</span><span class="p">()</span>  <span class="c1"># Searches from calling script location, loads to os.environ</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Resolve secrets in os.environ</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="n">envresolve</span><span class="o">.</span><span class="n">register_azure_kv_provider</span><span class="p">()</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="n">envresolve</span><span class="o">.</span><span class="n">resolve_os_environ</span><span class="p">()</span>  <span class="c1"># Resolves akv:// URIs in os.environ</span>
+</code></pre></div>
+<p>This approach:
+- Preserves python-dotenv's exact search semantics
+- Keeps envresolve focused on secret resolution
+- Provides clear separation of concerns</p>
 <h2 id="alternatives">Alternatives<a class="headerlink" href="#alternatives" title="Permanent link">&para;</a></h2>
-<h3 id="1-unconditional-doctest-skip">1. Unconditional <code># doctest: +SKIP</code><a class="headerlink" href="#1-unconditional-doctest-skip" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Simpler</li>
-<li>Rejected: Never validates doctests, even when Azure SDK present</li>
-</ul>
-<h3 id="2-custom-doctest-directive-eg-skip_if_no_azure">2. Custom doctest directive (e.g., <code>+SKIP_IF_NO_AZURE</code>)<a class="headerlink" href="#2-custom-doctest-directive-eg-skip_if_no_azure" title="Permanent link">&para;</a></h3>
-<ul>
-<li>More explicit in docstrings</li>
-<li>Rejected: Requires complex pytest doctest plugin customization</li>
-</ul>
-<h3 id="3-separate-doctest-files-for-optional-features">3. Separate doctest files for optional features<a class="headerlink" href="#3-separate-doctest-files-for-optional-features" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Clear separation</li>
-<li>Rejected: Duplicates API documentation, harder to maintain</li>
-</ul>
+<h3 id="keep-path-parameter-only-change-default-to-none">Keep <code>path</code> parameter, only change default to <code>None</code><a class="headerlink" href="#keep-path-parameter-only-change-default-to-none" title="Permanent link">&para;</a></h3>
+<p><strong>Pros</strong>: Smaller breaking change (only default value)</p>
+<p><strong>Cons</strong>:
+- Still migration friction (parameter name mismatch)
+- Inconsistent with python-dotenv's established API
+- Confusing documentation ("path" vs. "dotenv_path")</p>
+<p><strong>Rejection reason</strong>: Partial migration creates long-term API inconsistency.</p>
+<h3 id="add-dotenv_path-as-alias-deprecate-path">Add <code>dotenv_path</code> as alias, deprecate <code>path</code><a class="headerlink" href="#add-dotenv_path-as-alias-deprecate-path" title="Permanent link">&para;</a></h3>
+<p><strong>Pros</strong>: Gradual migration path</p>
+<p><strong>Cons</strong>:
+- Increased complexity (two parameters doing the same thing)
+- Deprecation warnings add friction
+- Eventually needs breaking change anyway
+- envresolve is v0.x, users expect breakage</p>
+<p><strong>Rejection reason</strong>: For v0.x libraries, clean break is better than deprecation cycle.</p>
+<h3 id="keep-original-signature-add-searchfalse-flag">Keep original signature, add <code>search=False</code> flag<a class="headerlink" href="#keep-original-signature-add-searchfalse-flag" title="Permanent link">&para;</a></h3>
+<p><strong>Pros</strong>: No breaking change</p>
+<p><strong>Cons</strong>:
+- Doesn't solve migration friction (parameter name still wrong)
+- More complex API (two parameters to control one behavior)
+- <code>path=".env", search=True</code> is confusing</p>
+<p><strong>Rejection reason</strong>: Adds complexity without solving the root problem.</p>
 <h2 id="future-direction">Future Direction<a class="headerlink" href="#future-direction" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Extend pattern for other optional dependencies (AWS, GCP providers)</li>
-<li>Consider pytest plugin for cleaner syntax</li>
-<li>Add logging to show which doctests are skipped and why</li>
+<li>Consider adding <code>load_env_strict(dotenv_path: str | Path)</code> that requires explicit path and never searches</li>
+<li>If users request it, add <code>usecwd</code> parameter to expose python-dotenv's search control: <code>load_env(dotenv_path=None, usecwd=True)</code></li>
 </ul>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Implementation: <code>conftest.py:17-46</code></li>
-<li>Related: ADR-0012 (pytest markers for test files)</li>
-<li>Pytest docs: https://docs.pytest.org/en/stable/how-to/skipping.html</li>
+<li>Issue: #13 "Align load_env signature with load_dotenv"</li>
+<li>Implementation: <code>src/envresolve/api.py:129-183</code></li>
+<li>Tests: <code>tests/e2e/test_load_env.py</code></li>
+<li>python-dotenv docs: https://saurabh-kumar.com/python-dotenv/</li>
+<li>Related ADRs: 0013 (class-based API design)</li>
 </ul>
 
 

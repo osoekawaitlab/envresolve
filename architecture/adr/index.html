@@ -1012,6 +1012,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#adr-0017-align-load_env-parameter-with-python-dotenv" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0017: Align load_env() Parameter with python-dotenv
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1483,6 +1492,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0017-load-env-dotenv-path-parameter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0017-load-env-dotenv-path-parameter.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1682,6 +1714,15 @@
   <a href="#adr-0016-typeerror-based-custom-exception-for-mutually-exclusive-parameters" class="md-nav__link">
     <span class="md-ellipsis">
       ADR 0016: TypeError-based Custom Exception for Mutually Exclusive Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0017-align-load_env-parameter-with-python-dotenv" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0017: Align load_env() Parameter with python-dotenv
     </span>
   </a>
   
@@ -1931,6 +1972,20 @@
 <li>Fail-fast approach with structured exception data (<code>arg1</code>, <code>arg2</code> attributes)</li>
 </ul>
 <p><a href="../../adr/0016-mutually-exclusive-parameters-with-typeerror/">View Full ADR</a></p>
+<hr />
+<h3 id="adr-0017-align-load_env-parameter-with-python-dotenv">ADR 0017: Align load_env() Parameter with python-dotenv<a class="headerlink" href="#adr-0017-align-load_env-parameter-with-python-dotenv" title="Permanent link">&para;</a></h3>
+<p><strong>Status</strong>: Accepted
+<strong>Date</strong>: 2025-10-20</p>
+<p>Changed <code>load_env()</code> signature to match python-dotenv's <code>load_dotenv()</code> for zero-friction migration.</p>
+<p><strong>Key Decision</strong>: Rename parameter from <code>path</code> to <code>dotenv_path</code> and change default from <code>".env"</code> to <code>None</code>. When <code>None</code>, explicitly use <code>find_dotenv(usecwd=True)</code> to search from current working directory.</p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Drop-in replacement for python-dotenv users</li>
+<li>Explicit control over search behavior (from cwd, not from <code>__file__</code>)</li>
+<li>More intuitive default (search from current directory)</li>
+<li>Better alignment with python-dotenv ecosystem</li>
+</ul>
+<p><a href="../../adr/0017-load-env-dotenv-path-parameter/">View Full ADR</a></p>
 <hr />
 <h2 id="adr-template">ADR Template<a class="headerlink" href="#adr-template" title="Permanent link">&para;</a></h2>
 <p>All ADRs follow a consistent template defined in <a href="../../adr/0000-adr-template/">ADR 0000: ADR Template</a>.</p>
