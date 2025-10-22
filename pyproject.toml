@@ -9,6 +9,23 @@ authors = [{name = "osoken"}]
 dependencies = [
     "python-dotenv>=1.1.1",
 ]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://github.com/osoekawaitlab/envresolve"
+Documentation = "https://osoekawaitlab.github.io/envresolve/"
+Repository = "https://github.com/osoekawaitlab/envresolve"
 
 [project.optional-dependencies]
 azure = [
@@ -37,7 +54,7 @@ release = [
     "twine>=6.0.1",
 ]
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+requires = ["setuptools>=70.1"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.dynamic]
