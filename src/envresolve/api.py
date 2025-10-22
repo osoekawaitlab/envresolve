@@ -84,10 +84,9 @@ class EnvResolver:
                 else:
                     msg = f"Failed to import Azure Key Vault provider. Error: {e}"
                 raise ProviderRegistrationError(msg, original_error=e) from e
-
-            provider = provider_class()
-
-        self._providers["akv"] = provider
+            self._providers["akv"] = provider_class()
+        else:
+            self._providers["akv"] = provider
         # Reset resolver to pick up new providers
         self._resolver = None
 
