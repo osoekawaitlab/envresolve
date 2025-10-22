@@ -17,28 +17,28 @@ When loading environment variables from `.env` files or `os.environ`, two distin
 
 The original implementation had a single `stop_on_error` flag that controlled both types of errors uniformly. However, real-world usage revealed different requirements for handling these error types.
 
-### Key Use Case: Shell Prompt Variables
+### Key Insight: Different Error Types Need Different Handling
 
-In many environments, shell prompt variables like `$PS1` (bash/zsh) or `%PROMPT%` (Windows) contain literal `$` characters as part of their formatting syntax (e.g., `PS1="\u@\h:\w\$ "`). When `load_env()` or `resolve_os_environ()` processes these values:
+The original implementation had a single `stop_on_error` flag that controlled both types of errors uniformly. However, real-world usage revealed different requirements for handling these error types:
 
-- Variable expansion attempts to resolve unintended variable references like `${u}` or `${h}`
-- This raises `VariableNotFoundError` and halts processing
-- Users cannot load their `.env` files or process `os.environ` because of these system variables
+**Variable expansion errors** can have different severities:
+- **Typos in `.env` files**: `DB_URL=${DATABSE_HOST}` (should be `DATABASE_HOST`) - should raise error
+- **Optional variables**: `LOG_LEVEL=${LOG_LEVEL:-info}` where `LOG_LEVEL` might not exist - could be tolerable
+- **System variables**: `$PS1` (bash/zsh) or `%PROMPT%` (Windows) contain literal `$` characters (e.g., `PS1="\u@\h:\w\$ "`) that trigger unintended expansion - could be tolerable
 
-In contrast, secret URIs (`akv://...`) are **intentional** and should always succeed:
-
-- If a secret URI fails to resolve, it indicates a real problem (network, permissions, missing secret)
+**Secret resolution errors** are consistently critical:
+- If a secret URI (`akv://vault/secret`) fails to resolve, it indicates a real problem (network, permissions, missing secret)
 - Silently ignoring resolution failures would leave `akv://vault/secret` as a literal string in `os.environ`
 - This could cause hard-to-debug issues in application code
 
 ### Need for Granular Control
 
-Users need different error handling strategies based on the error source:
+Users need different error handling strategies:
+- **Default behavior (both `True`)**: Fail-fast for strict error detection
+- **Selective suppression**: Users can set `stop_on_expansion_error=False` when they know certain variables might be missing (e.g., when processing `os.environ` that includes system variables)
+- **Always report secret failures**: `stop_on_resolution_error=True` ensures intentional secret URIs are validated
 
-- **Expansion errors**: Often tolerable (optional variables, shell prompt variables like `$PS1`)
-- **Resolution errors**: Usually indicate real problems that need immediate attention
-
-A single `stop_on_error` flag cannot serve both needs.
+A single `stop_on_error` flag cannot serve both needs. Future enhancements (ignore patterns) will provide more granular control for the expansion error case.
 
 ## Decision
 
@@ -98,18 +98,20 @@ Unlike `VariableNotFoundError`, `CircularReferenceError` represents:
 
 Therefore, `CircularReferenceError` is excluded from `stop_on_expansion_error` control.
 
-### Default Behavior Unchanged
+### Default Behavior
 
-Both flags default to `True`, preserving backward-compatible fail-fast behavior for existing code.
+Both flags default to `True`, preserving fail-fast behavior for strict error detection. Users can selectively disable error handling by setting either flag to `False` when needed (e.g., `stop_on_expansion_error=False` to tolerate missing optional variables).
 
 ## Implications
 
 ### Positive Implications
 
-1. **Shell prompt compatibility**: Users can set `stop_on_expansion_error=False` to handle system variables like `$PS1` or `%PROMPT%` that contain `$` characters
-2. **Flexible resilience**: Applications can choose to tolerate missing optional variables while still catching secret resolution failures
-3. **Clear error reporting**: When `stop_on_resolution_error=True`, users get immediate feedback on secret provider issues
-4. **Future-proof**: API won't need changes if new error types are added (they'll fit into expansion or resolution categories)
+1. **Strict by default**: Both flags default to `True`, providing fail-fast behavior that catches typos and configuration errors early
+2. **Selective tolerance**: Users can set `stop_on_expansion_error=False` when processing `os.environ` with system variables like `$PS1` or `%PROMPT%` that contain `$` characters
+3. **Flexible resilience**: Applications can choose to tolerate missing optional variables while still catching secret resolution failures
+4. **Clear error reporting**: Immediate feedback on both configuration errors (by default) and secret provider issues
+5. **Future-proof**: API won't need changes if new error types are added (they'll fit into expansion or resolution categories)
+6. **Complements ignore patterns**: The default strict behavior works well with planned ignore pattern features (roadmap v0.1.x), where users can explicitly list variables to skip rather than silently ignoring all errors
 
 ### Concerns
 

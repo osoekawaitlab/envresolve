@@ -319,6 +319,26 @@ Changed `load_env()` signature to match python-dotenv's `load_dotenv()` for zero
 
 ---
 
+### ADR 0018: Granular Error Handling for Variable Expansion and Secret Resolution
+
+**Status**: Accepted
+**Date**: 2025-10-21
+
+Split single `stop_on_error` flag into separate controls for expansion errors and resolution errors.
+
+**Key Decision**: Replace `stop_on_error` with `stop_on_expansion_error` and `stop_on_resolution_error` in both `load_env()` and `resolve_os_environ()`. CircularReferenceError is always raised regardless of flags.
+
+**Rationale**:
+
+- Shell prompt variables (`$PS1`, `%PROMPT%`) contain literal `$` characters that should be skippable
+- Secret resolution failures (`akv://`) indicate real problems and should be reported
+- Two-category model (expansion/resolution) is more user-friendly than per-exception flags
+- CircularReferenceError represents infinite loop configuration error (must not be suppressed)
+
+[View Full ADR](../adr/0018-granular-error-handling.md)
+
+---
+
 ## ADR Template
 
 All ADRs follow a consistent template defined in [ADR 0000: ADR Template](../adr/0000-adr-template.md).

@@ -179,7 +179,10 @@ def test_resolve_os_environ_with_overwrite_false(
 
 
 def test_resolve_os_environ_with_stop_on_error_false() -> None:
-    """Test resolve_os_environ with stop_on_error=False continues on errors."""
+    """Test resolve_os_environ continues on errors.
+
+    Tests that stop_on_resolution_error=False continues on errors.
+    """
 
     # Create a provider that fails for specific secrets
     class FailingProvider:
@@ -202,7 +205,7 @@ def test_resolve_os_environ_with_stop_on_error_false() -> None:
         },
         clear=True,
     ):
-        result = resolver.resolve_os_environ(stop_on_error=False)
+        result = resolver.resolve_os_environ(stop_on_resolution_error=False)
 
         # Should have resolved successful keys
         assert result["API_KEY"] == "resolved-api-key"
@@ -219,7 +222,7 @@ def test_resolve_os_environ_with_stop_on_error_false() -> None:
 
 
 def test_resolve_os_environ_with_stop_on_error_true() -> None:
-    """Test resolve_os_environ with stop_on_error=True raises on errors."""
+    """Test resolve_os_environ with stop_on_resolution_error=True raises on errors."""
 
     # Create a provider that fails for specific secrets
     class FailingProvider:
@@ -244,7 +247,7 @@ def test_resolve_os_environ_with_stop_on_error_true() -> None:
         ),
         pytest.raises(SecretResolutionError),
     ):
-        resolver.resolve_os_environ(stop_on_error=True)
+        resolver.resolve_os_environ(stop_on_resolution_error=True)
 
 
 def test_resolve_os_environ_with_empty_environ(
@@ -276,7 +279,11 @@ def test_resolve_os_environ_with_nonexistent_keys(
 
 
 def test_resolve_os_environ_propagates_unexpected_errors() -> None:
-    """Test that unexpected errors are always raised regardless of stop_on_error."""
+    """Test that unexpected errors are always raised.
+
+    Tests that unexpected errors are always raised regardless of the
+    stop_on_resolution_error parameter.
+    """
 
     # Create a provider that raises a non-domain error
     class UnexpectedErrorProvider:
@@ -295,8 +302,9 @@ def test_resolve_os_environ_propagates_unexpected_errors() -> None:
         ),
         pytest.raises(ValueError, match="Unexpected internal error"),
     ):
-        # stop_on_error=False should not suppress non-EnvResolveError exceptions
-        resolver.resolve_os_environ(stop_on_error=False)
+        # stop_on_resolution_error=False should not suppress
+        # non-EnvResolveError exceptions
+        resolver.resolve_os_environ(stop_on_resolution_error=False)
 
 
 def test_resolve_os_environ_with_empty_keys_list(

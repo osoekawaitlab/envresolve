@@ -96,3 +96,4 @@ nav:
           - 0015-terraform-managed-live-tests.md: adr/0015-terraform-managed-live-tests.md
           - 0016-mutually-exclusive-parameters-with-typeerror.md: adr/0016-mutually-exclusive-parameters-with-typeerror.md
           - 0017-load-env-dotenv-path-parameter.md: adr/0017-load-env-dotenv-path-parameter.md
+          - 0018-granular-error-handling.md: adr/0018-granular-error-handling.md
