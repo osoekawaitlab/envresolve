@@ -243,13 +243,126 @@ def test_resolve_os_environ_with_overwrite_false(
 
 
 @pytest.mark.e2e
-def test_resolve_os_environ_with_stop_on_error_false(
-    resolve_mocks: ResolveOsEnvironMocks, mocker: MockFixture
+@pytest.mark.usefixtures("resolve_mocks")
+def test_resolve_os_environ_expansion_error_raised_by_default(
+    mocker: MockFixture,
 ) -> None:
-    """Test resolve_os_environ with stop_on_error=False.
+    """Test resolve_os_environ raises VariableNotFoundError by default.
 
     Acceptance criteria:
-    - Support stop_on_error parameter to control error handling
+    - Raise VariableNotFoundError when referenced variable is not found
+    """
+    mocker.patch.dict(
+        os.environ,
+        {
+            "VALID": "hello",
+            "INVALID": "${NONEXISTENT}",
+        },
+        clear=True,
+    )
+
+    with pytest.raises(envresolve.VariableNotFoundError) as exc_info:
+        envresolve.resolve_os_environ()
+
+    assert "NONEXISTENT" in str(exc_info.value)
+
+
+@pytest.mark.e2e
+@pytest.mark.usefixtures("resolve_mocks")
+def test_resolve_os_environ_expansion_error_suppressed(
+    mocker: MockFixture,
+) -> None:
+    """Test resolve_os_environ skips expansion errors.
+
+    Tests that stop_on_expansion_error=False skips expansion errors.
+
+    Acceptance criteria:
+    - Skip variables with expansion errors when stop_on_expansion_error=False
+    """
+    mocker.patch.dict(
+        os.environ,
+        {
+            "VALID": "hello",
+            "INVALID": "${NONEXISTENT}",
+            "ALSO_VALID": "world",
+        },
+        clear=True,
+    )
+
+    result = envresolve.resolve_os_environ(stop_on_expansion_error=False)
+
+    assert result == {"VALID": "hello", "ALSO_VALID": "world"}
+    assert "INVALID" not in result
+
+
+@pytest.mark.e2e
+@pytest.mark.usefixtures("resolve_mocks")
+def test_resolve_os_environ_circular_reference_error_raised_by_default(
+    mocker: MockFixture,
+) -> None:
+    """Test resolve_os_environ raises CircularReferenceError by default.
+
+    Acceptance criteria:
+    - Raise CircularReferenceError when circular reference is detected
+    """
+    mocker.patch.dict(
+        os.environ,
+        {
+            "A": "${B}",
+            "B": "${A}",
+        },
+        clear=True,
+    )
+
+    with pytest.raises(envresolve.CircularReferenceError):
+        envresolve.resolve_os_environ()
+
+
+@pytest.mark.e2e
+def test_resolve_os_environ_resolution_error_raised_by_default(
+    resolve_mocks: ResolveOsEnvironMocks, mocker: MockFixture
+) -> None:
+    """Test resolve_os_environ raises SecretResolutionError by default.
+
+    Acceptance criteria:
+    - Raise SecretResolutionError when secret resolution fails
+    """
+
+    def get_secret_by_name_with_error(
+        name: str,  # noqa: ARG001
+        version: str | None = None,  # noqa: ARG001
+    ) -> MagicMock:
+        # Lazy import using importlib (ADR-0014 pattern)
+        azure_exceptions = importlib.import_module("azure.core.exceptions")
+        resource_not_found_error = azure_exceptions.ResourceNotFoundError
+
+        msg = "Secret not found"
+        raise resource_not_found_error(msg)
+
+    resolve_mocks.set_secret_getter(get_secret_by_name_with_error)
+    mocker.patch.dict(
+        os.environ,
+        {
+            "VALID": "hello",
+            "SECRET": "akv://test-vault/bad-secret",
+        },
+        clear=True,
+    )
+
+    with pytest.raises(envresolve.SecretResolutionError):
+        envresolve.resolve_os_environ()
+
+
+@pytest.mark.e2e
+def test_resolve_os_environ_resolution_error_suppressed(
+    resolve_mocks: ResolveOsEnvironMocks, mocker: MockFixture
+) -> None:
+    """Test resolve_os_environ skips resolution errors.
+
+    Tests that stop_on_resolution_error=False skips resolution errors.
+
+    Acceptance criteria:
+    - Skip variables with resolution errors when stop_on_resolution_error=False
     """
 
     def get_secret_by_name_with_error(
@@ -278,12 +391,84 @@ def test_resolve_os_environ_with_stop_on_error_false(
         clear=True,
     )
 
-    result = envresolve.resolve_os_environ(stop_on_error=False)
+    result = envresolve.resolve_os_environ(stop_on_resolution_error=False)
 
     assert "GOOD_KEY" in result
     assert result["GOOD_KEY"] == "resolved-good-secret"
     assert "BAD_KEY" not in result  # Skipped due to error
     assert result["PLAIN"] == "plain-value"
+
+
+@pytest.mark.e2e
+def test_resolve_os_environ_both_errors_suppressed(
+    resolve_mocks: ResolveOsEnvironMocks, mocker: MockFixture
+) -> None:
+    """Test resolve_os_environ with both error flags set to False.
+
+    Verifies that VariableNotFoundError is suppressed,
+    SecretResolutionError is suppressed, but CircularReferenceError
+    is always raised (configuration error).
+    """
+
+    def get_secret_by_name_with_error(
+        name: str,
+        version: str | None = None,
+    ) -> MagicMock:
+        if name == "bad-secret":
+            # Lazy import using importlib (ADR-0014 pattern)
+            azure_exceptions = importlib.import_module("azure.core.exceptions")
+            resource_not_found_error = azure_exceptions.ResourceNotFoundError
+
+            msg = "Secret not found"
+            raise resource_not_found_error(msg)
+        mock = MagicMock()
+        mock.value = f"resolved-{name}" + (f"-{version}" if version else "")
+        return mock
+
+    resolve_mocks.set_secret_getter(get_secret_by_name_with_error)
+    mocker.patch.dict(
+        os.environ,
+        {
+            "VALID": "hello",
+            "EXPANSION_ERROR": "${NONEXISTENT}",
+            "SECRET": "akv://test-vault/bad-secret",
+            "CIRCULAR_A": "${CIRCULAR_B}",
+            "CIRCULAR_B": "${CIRCULAR_A}",
+            "GOOD_SECRET": "akv://test-vault/good-secret",
+            "ALSO_VALID": "world",
+        },
+        clear=True,
+    )
+
+    # CircularReferenceError should still be raised
+    with pytest.raises(envresolve.CircularReferenceError):
+        envresolve.resolve_os_environ(
+            stop_on_expansion_error=False, stop_on_resolution_error=False
+        )
+
+
+@pytest.mark.e2e
+@pytest.mark.usefixtures("resolve_mocks")
+def test_resolve_os_environ_both_errors_raised(
+    mocker: MockFixture,
+) -> None:
+    """Test resolve_os_environ raises first error when both flags are True (default).
+
+    Acceptance criteria:
+    - Raise first error encountered when both flags are True
+    """
+    mocker.patch.dict(
+        os.environ,
+        {
+            "EXPANSION_ERROR": "${NONEXISTENT}",
+            "VALID": "hello",
+        },
+        clear=True,
+    )
+
+    # Should raise expansion error (first in environ)
+    with pytest.raises(envresolve.VariableNotFoundError):
+        envresolve.resolve_os_environ()
 
 
 @pytest.mark.e2e

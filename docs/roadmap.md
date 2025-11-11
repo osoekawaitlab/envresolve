@@ -17,6 +17,11 @@
 - Validation helpers for string-based API (`is_resolved`, `needs_expansion`, `is_secret_uri`)
 - Optional metadata/query helpers for resolved values
 - Structured logging hooks for resolution diagnostics
+- Variable ignore patterns for error handling:
+  - Function parameter: `ignore_keys`, `ignore_patterns`
+  - Pattern matching support (e.g., `PS*`, `PROMPT*`)
+  - Environment variable configuration: `ENVRESOLVE_IGNORE`
+  - Use case: Skip system variables like `$PS1`, `%PROMPT%` that contain `$` characters
 
 ### v0.2.x
 

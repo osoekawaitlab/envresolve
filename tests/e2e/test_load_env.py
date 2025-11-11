@@ -233,3 +233,159 @@ def test_load_env_filters_none_values(temp_env_dir: Path) -> None:
 
     assert result == {"VALID": "value"}
     assert "COMMENTED" not in result
+
+
+def test_load_env_expansion_error_raised_by_default(
+    temp_env_dir: Path, mocker: MockerFixture
+) -> None:
+    """Test load_env() raises VariableNotFoundError by default."""
+    env_file = temp_env_dir / ".env"
+    env_file.write_text("VALID=hello\nINVALID=${NONEXISTENT}\n")
+
+    # Clear os.environ to ensure NONEXISTENT doesn't exist anywhere
+    mocker.patch.dict("os.environ", {"PATH": "/usr/bin"}, clear=True)
+
+    with pytest.raises(envresolve.VariableNotFoundError) as exc_info:
+        envresolve.load_env(dotenv_path=env_file, export=False)
+
+    assert "NONEXISTENT" in str(exc_info.value)
+
+
+def test_load_env_expansion_error_suppressed(
+    temp_env_dir: Path, mocker: MockerFixture
+) -> None:
+    """Test load_env() skips variables with expansion errors.
+
+    Tests that stop_on_expansion_error=False skips expansion errors.
+    """
+    env_file = temp_env_dir / ".env"
+    env_file.write_text("VALID=hello\nINVALID=${NONEXISTENT}\nALSO_VALID=world\n")
+
+    mocker.patch.dict("os.environ", {"PATH": "/usr/bin"}, clear=True)
+
+    result = envresolve.load_env(
+        dotenv_path=env_file, export=False, stop_on_expansion_error=False
+    )
+
+    # Only valid variables should be resolved
+    assert result == {"VALID": "hello", "ALSO_VALID": "world"}
+    assert "INVALID" not in result
+
+
+def test_load_env_circular_reference_error_raised_by_default(
+    temp_env_dir: Path, mocker: MockerFixture
+) -> None:
+    """Test load_env() raises CircularReferenceError by default."""
+    env_file = temp_env_dir / ".env"
+    env_file.write_text("A=${B}\nB=${A}\n")
+
+    mocker.patch.dict("os.environ", {"PATH": "/usr/bin"}, clear=True)
+
+    with pytest.raises(envresolve.CircularReferenceError):
+        envresolve.load_env(dotenv_path=env_file, export=False)
+
+
+def test_load_env_resolution_error_raised_by_default(
+    temp_env_dir: Path, mocker: MockerFixture
+) -> None:
+    """Test load_env() raises SecretResolutionError by default."""
+    env_file = temp_env_dir / ".env"
+    env_file.write_text("VALID=hello\nSECRET=akv://test-vault/secret\n")
+
+    # Register mock provider that raises SecretResolutionError
+    mock_provider = MagicMock(spec=SecretProvider)
+    mock_provider.resolve.side_effect = envresolve.SecretResolutionError(
+        "Failed to fetch secret", "akv://test-vault/secret"
+    )
+    envresolve.register_azure_kv_provider(provider=mock_provider)
+
+    mocker.patch.dict("os.environ", {"PATH": "/usr/bin"}, clear=True)
+
+    with pytest.raises(envresolve.SecretResolutionError) as exc_info:
+        envresolve.load_env(dotenv_path=env_file, export=False)
+
+    assert "Failed to fetch secret" in str(exc_info.value)
+
+
+def test_load_env_resolution_error_suppressed(
+    temp_env_dir: Path, mocker: MockerFixture
+) -> None:
+    """Test load_env() skips variables with resolution errors.
+
+    Tests that stop_on_resolution_error=False skips resolution errors.
+    """
+    env_file = temp_env_dir / ".env"
+    env_file.write_text(
+        "VALID=hello\nSECRET=akv://test-vault/secret\nALSO_VALID=world\n"
+    )
+
+    # Register mock provider that raises SecretResolutionError
+    mock_provider = MagicMock(spec=SecretProvider)
+    mock_provider.resolve.side_effect = envresolve.SecretResolutionError(
+        "Failed to fetch secret", "akv://test-vault/secret"
+    )
+    envresolve.register_azure_kv_provider(provider=mock_provider)
+
+    mocker.patch.dict("os.environ", {"PATH": "/usr/bin"}, clear=True)
+
+    result = envresolve.load_env(
+        dotenv_path=env_file, export=False, stop_on_resolution_error=False
+    )
+
+    # Only variables without resolution errors should be resolved
+    assert result == {"VALID": "hello", "ALSO_VALID": "world"}
+    assert "SECRET" not in result
+
+
+def test_load_env_both_errors_suppressed(
+    temp_env_dir: Path, mocker: MockerFixture
+) -> None:
+    """Test load_env() with both error flags set to False.
+
+    Verifies that VariableNotFoundError is suppressed,
+    SecretResolutionError is suppressed, but CircularReferenceError
+    is always raised (configuration error).
+    """
+    env_file = temp_env_dir / ".env"
+    env_file.write_text(
+        "VALID=hello\n"
+        "EXPANSION_ERROR=${NONEXISTENT}\n"
+        "SECRET=akv://test-vault/secret\n"
+        "CIRCULAR_A=${CIRCULAR_B}\n"
+        "CIRCULAR_B=${CIRCULAR_A}\n"
+        "ALSO_VALID=world\n"
+    )
+
+    # Register mock provider that raises SecretResolutionError
+    mock_provider = MagicMock(spec=SecretProvider)
+    mock_provider.resolve.side_effect = envresolve.SecretResolutionError(
+        "Failed to fetch secret", "akv://test-vault/secret"
+    )
+    envresolve.register_azure_kv_provider(provider=mock_provider)
+
+    mocker.patch.dict("os.environ", {"PATH": "/usr/bin"}, clear=True)
+
+    # CircularReferenceError should still be raised
+    with pytest.raises(envresolve.CircularReferenceError):
+        envresolve.load_env(
+            dotenv_path=env_file,
+            export=False,
+            stop_on_expansion_error=False,
+            stop_on_resolution_error=False,
+        )
+
+
+def test_load_env_both_errors_raised(temp_env_dir: Path, mocker: MockerFixture) -> None:
+    """Test load_env() raises first error encountered.
+
+    Tests that both flags set to True (default) raise the first error.
+    """
+    env_file = temp_env_dir / ".env"
+    # Put expansion error first
+    env_file.write_text("EXPANSION_ERROR=${NONEXISTENT}\nVALID=hello\n")
+
+    mocker.patch.dict("os.environ", {"PATH": "/usr/bin"}, clear=True)
+
+    # Should raise expansion error (first in the file)
+    with pytest.raises(envresolve.VariableNotFoundError):
+        envresolve.load_env(dotenv_path=env_file, export=False)

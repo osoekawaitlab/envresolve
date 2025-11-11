@@ -9,9 +9,10 @@ from dotenv import dotenv_values, find_dotenv
 
 from envresolve.application.resolver import SecretResolver
 from envresolve.exceptions import (
-    EnvResolveError,
     MutuallyExclusiveArgumentsError,
     ProviderRegistrationError,
+    SecretResolutionError,
+    VariableNotFoundError,
 )
 
 if TYPE_CHECKING:
@@ -83,10 +84,9 @@ class EnvResolver:
                 else:
                     msg = f"Failed to import Azure Key Vault provider. Error: {e}"
                 raise ProviderRegistrationError(msg, original_error=e) from e
-
-            provider = provider_class()
-
-        self._providers["akv"] = provider
+            self._providers["akv"] = provider_class()
+        else:
+            self._providers["akv"] = provider
         # Reset resolver to pick up new providers
         self._resolver = None
 
@@ -132,6 +132,8 @@ class EnvResolver:
         *,
         export: bool = True,
         override: bool = False,
+        stop_on_expansion_error: bool = True,
+        stop_on_resolution_error: bool = True,
     ) -> dict[str, str]:
         """Load environment variables from a .env file and resolve secret URIs.
 
@@ -147,6 +149,12 @@ class EnvResolver:
                 (default: None)
             export: If True, export resolved variables to os.environ
             override: If True, override existing os.environ variables
+            stop_on_expansion_error: If False, skip variables with expansion errors
+                (e.g., VariableNotFoundError). CircularReferenceError is always
+                raised as it indicates a configuration error. (default: True)
+            stop_on_resolution_error: If False, skip variables with resolution errors
+                (e.g., SecretResolutionError). Useful for resilience against transient
+                secret store failures. (default: True)
 
         Returns:
             Dictionary of resolved environment variables
@@ -154,15 +162,21 @@ class EnvResolver:
         Raises:
             URIParseError: If a URI format is invalid
             SecretResolutionError: If secret resolution fails
+                (when stop_on_resolution_error=True)
             VariableNotFoundError: If a referenced variable is not found
+                (when stop_on_expansion_error=True)
             CircularReferenceError: If a circular variable reference is detected
         """
         # Load .env file
         # When dotenv_path is None, use find_dotenv with usecwd=True
         if dotenv_path is None:
             dotenv_path = find_dotenv(usecwd=True)
+        # Use interpolate=False to prevent python-dotenv from expanding variables
+        # We handle expansion ourselves in resolve_with_env
         env_dict = {
-            k: v for k, v in dotenv_values(dotenv_path).items() if v is not None
+            k: v
+            for k, v in dotenv_values(dotenv_path, interpolate=False).items()
+            if v is not None
         }
 
         # Build complete environment (for variable expansion)
@@ -172,7 +186,19 @@ class EnvResolver:
         # Resolve each variable
         resolved: dict[str, str] = {}
         for key, value in env_dict.items():
-            resolved[key] = self.resolve_with_env(value, complete_env)
+            try:
+                resolved[key] = self.resolve_with_env(value, complete_env)
+            except VariableNotFoundError:
+                if stop_on_expansion_error:
+                    raise
+                # Skip this variable on expansion error
+                continue
+            except SecretResolutionError:
+                if stop_on_resolution_error:
+                    raise
+                # Skip this variable on resolution error
+                continue
+            # CircularReferenceError is always raised (configuration error)
 
         # Export to os.environ if requested
         if export:
@@ -182,75 +208,71 @@ class EnvResolver:
 
         return resolved
 
+    def _get_target_environ(
+        self, keys: list[str] | None, prefix: str | None
+    ) -> dict[str, str]:
+        """Get the target environment variables to process."""
+        if keys is not None:
+            return {k: os.environ[k] for k in keys if k in os.environ}
+        if prefix is not None:
+            return {k: v for k, v in os.environ.items() if k.startswith(prefix)}
+        return dict(os.environ)
+
+    def _resolve_environ_variable(
+        self,
+        value: str,
+        *,
+        stop_on_expansion_error: bool,
+        stop_on_resolution_error: bool,
+    ) -> str | None:
+        """Resolve a single environment variable, handling errors granularly."""
+        try:
+            return self.resolve_with_env(value, dict(os.environ))
+        except VariableNotFoundError:
+            if stop_on_expansion_error:
+                raise
+            return None
+        except SecretResolutionError:
+            if stop_on_resolution_error:
+                raise
+            return None
+        # CircularReferenceError is always raised as it's a configuration error.
+
     def resolve_os_environ(
         self,
         keys: list[str] | None = None,
         prefix: str | None = None,
         *,
         overwrite: bool = True,
-        stop_on_error: bool = True,
+        stop_on_expansion_error: bool = True,
+        stop_on_resolution_error: bool = True,
     ) -> dict[str, str]:
-        """Resolve secret URIs in os.environ.
-
-        Args:
-            keys: List of specific keys to resolve. If None, scan all keys.
-                Mutually exclusive with prefix.
-            prefix: Only process keys with this prefix, strip prefix from output.
-                Mutually exclusive with keys.
-            overwrite: If True, update os.environ with resolved values.
-            stop_on_error: If False, continue on secret resolution errors
-                (e.g., SecretResolutionError), skipping the failed key. Other
-                unexpected errors will still be raised.
-
-        Returns:
-            Dictionary of resolved values
-
-        Raises:
-            MutuallyExclusiveArgumentsError: If both keys and prefix are specified
-        """
-        # Check mutually exclusive arguments
+        """Resolve secret URIs in os.environ."""
         if keys is not None and prefix is not None:
             arg1 = "keys"
             arg2 = "prefix"
             raise MutuallyExclusiveArgumentsError(arg1, arg2)
 
-        # Determine which keys to process
-        if keys is not None:
-            keys_to_process = keys
-        elif prefix is not None:
-            keys_to_process = [k for k in os.environ if k.startswith(prefix)]
-        else:
-            keys_to_process = list(os.environ)
-
-        # Resolve each key
+        target_env = self._get_target_environ(keys, prefix)
         resolved: dict[str, str] = {}
-        for key in keys_to_process:
-            if key not in os.environ:
+
+        for key, value in target_env.items():
+            resolved_value = self._resolve_environ_variable(
+                value,
+                stop_on_expansion_error=stop_on_expansion_error,
+                stop_on_resolution_error=stop_on_resolution_error,
+            )
+            if resolved_value is None:
                 continue
 
-            value = os.environ[key]
-
-            # Resolve the value
-            try:
-                resolved_value = self.resolve_with_env(value, dict(os.environ))
-            except EnvResolveError:
-                if stop_on_error:
-                    raise
-                # Skip this key on error
-                continue
-
-            # Determine output key (strip prefix if specified)
             output_key = (
                 key[len(prefix) :] if prefix and key.startswith(prefix) else key
             )
-
             resolved[output_key] = resolved_value
 
-            # Update os.environ if requested
             if overwrite:
                 os.environ[output_key] = resolved_value
-                # If prefix stripping occurred, remove the old key
-                if prefix and key.startswith(prefix) and output_key != key:
+                if prefix and key != output_key:
                     del os.environ[key]
 
         return resolved
@@ -330,6 +352,8 @@ def load_env(
     *,
     export: bool = True,
     override: bool = False,
+    stop_on_expansion_error: bool = True,
+    stop_on_resolution_error: bool = True,
 ) -> dict[str, str]:
     """Load environment variables from a .env file and resolve secret URIs.
 
@@ -344,6 +368,12 @@ def load_env(
             Mimics python-dotenv's load_dotenv() behavior. (default: None)
         export: If True, export resolved variables to os.environ (default: True)
         override: If True, override existing os.environ variables (default: False)
+        stop_on_expansion_error: If False, skip variables with expansion errors
+            (e.g., VariableNotFoundError). CircularReferenceError is always
+            raised as it indicates a configuration error. (default: True)
+        stop_on_resolution_error: If False, skip variables with resolution errors
+            (e.g., SecretResolutionError). Useful for resilience against transient
+            secret store failures. (default: True)
 
     Returns:
         Dictionary of resolved environment variables
@@ -351,7 +381,9 @@ def load_env(
     Raises:
         URIParseError: If a URI format is invalid
         SecretResolutionError: If secret resolution fails
+            (when stop_on_resolution_error=True)
         VariableNotFoundError: If a referenced variable is not found
+            (when stop_on_expansion_error=True)
         CircularReferenceError: If a circular variable reference is detected
 
     Examples:
@@ -362,7 +394,13 @@ def load_env(
         >>> # Load specific file without exporting
         >>> resolved = envresolve.load_env("custom.env", export=False)  # doctest: +SKIP
     """
-    return _default_resolver.load_env(dotenv_path, export=export, override=override)
+    return _default_resolver.load_env(
+        dotenv_path,
+        export=export,
+        override=override,
+        stop_on_expansion_error=stop_on_expansion_error,
+        stop_on_resolution_error=stop_on_resolution_error,
+    )
 
 
 def resolve_os_environ(
@@ -370,7 +408,8 @@ def resolve_os_environ(
     prefix: str | None = None,
     *,
     overwrite: bool = True,
-    stop_on_error: bool = True,
+    stop_on_expansion_error: bool = True,
+    stop_on_resolution_error: bool = True,
 ) -> dict[str, str]:
     """Resolve secret URIs in os.environ.
 
@@ -383,9 +422,12 @@ def resolve_os_environ(
         prefix: Only process keys with this prefix, strip prefix from output.
             Mutually exclusive with keys.
         overwrite: If True, update os.environ with resolved values (default: True).
-        stop_on_error: If False, continue on secret resolution errors
-            (e.g., SecretResolutionError), skipping the failed key. Other
-            unexpected errors will still be raised (default: True).
+        stop_on_expansion_error: If False, skip variables with expansion errors
+            (e.g., VariableNotFoundError). CircularReferenceError is always
+            raised as it indicates a configuration error. (default: True)
+        stop_on_resolution_error: If False, skip variables with resolution errors
+            (e.g., SecretResolutionError). Useful for resilience against transient
+            secret store failures. (default: True)
 
     Returns:
         Dictionary of resolved values
@@ -393,9 +435,11 @@ def resolve_os_environ(
     Raises:
         MutuallyExclusiveArgumentsError: If both keys and prefix are specified
         URIParseError: If the URI format is invalid
-        SecretResolutionError: If secret resolution fails (when stop_on_error=True)
         VariableNotFoundError: If a referenced variable is not found
+            (when stop_on_expansion_error=True)
         CircularReferenceError: If a circular variable reference is detected
+        SecretResolutionError: If secret resolution fails
+            (when stop_on_resolution_error=True)
 
     Examples:
         >>> import envresolve
@@ -410,5 +454,6 @@ def resolve_os_environ(
         keys=keys,
         prefix=prefix,
         overwrite=overwrite,
-        stop_on_error=stop_on_error,
+        stop_on_expansion_error=stop_on_expansion_error,
+        stop_on_resolution_error=stop_on_resolution_error,
     )
