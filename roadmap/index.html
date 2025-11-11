@@ -1380,6 +1380,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0018-granular-error-handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0018-granular-error-handling.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1522,6 +1545,11 @@
 <li>Validation helpers for string-based API (<code>is_resolved</code>, <code>needs_expansion</code>, <code>is_secret_uri</code>)</li>
 <li>Optional metadata/query helpers for resolved values</li>
 <li>Structured logging hooks for resolution diagnostics</li>
+<li>Variable ignore patterns for error handling:</li>
+<li>Function parameter: <code>ignore_keys</code>, <code>ignore_patterns</code></li>
+<li>Pattern matching support (e.g., <code>PS*</code>, <code>PROMPT*</code>)</li>
+<li>Environment variable configuration: <code>ENVRESOLVE_IGNORE</code></li>
+<li>Use case: Skip system variables like <code>$PS1</code>, <code>%PROMPT%</code> that contain <code>$</code> characters</li>
 </ul>
 <h3 id="v02x">v0.2.x<a class="headerlink" href="#v02x" title="Permanent link">&para;</a></h3>
 <ul>

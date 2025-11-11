@@ -1021,6 +1021,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#adr-0018-granular-error-handling-for-variable-expansion-and-secret-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0018: Granular Error Handling for Variable Expansion and Secret Resolution
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1515,6 +1524,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0018-granular-error-handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0018-granular-error-handling.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1723,6 +1755,15 @@
   <a href="#adr-0017-align-load_env-parameter-with-python-dotenv" class="md-nav__link">
     <span class="md-ellipsis">
       ADR 0017: Align load_env() Parameter with python-dotenv
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0018-granular-error-handling-for-variable-expansion-and-secret-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0018: Granular Error Handling for Variable Expansion and Secret Resolution
     </span>
   </a>
   
@@ -1986,6 +2027,20 @@
 <li>Better alignment with python-dotenv ecosystem</li>
 </ul>
 <p><a href="../../adr/0017-load-env-dotenv-path-parameter/">View Full ADR</a></p>
+<hr />
+<h3 id="adr-0018-granular-error-handling-for-variable-expansion-and-secret-resolution">ADR 0018: Granular Error Handling for Variable Expansion and Secret Resolution<a class="headerlink" href="#adr-0018-granular-error-handling-for-variable-expansion-and-secret-resolution" title="Permanent link">&para;</a></h3>
+<p><strong>Status</strong>: Accepted
+<strong>Date</strong>: 2025-10-21</p>
+<p>Split single <code>stop_on_error</code> flag into separate controls for expansion errors and resolution errors.</p>
+<p><strong>Key Decision</strong>: Replace <code>stop_on_error</code> with <code>stop_on_expansion_error</code> and <code>stop_on_resolution_error</code> in both <code>load_env()</code> and <code>resolve_os_environ()</code>. CircularReferenceError is always raised regardless of flags.</p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Shell prompt variables (<code>$PS1</code>, <code>%PROMPT%</code>) contain literal <code>$</code> characters that should be skippable</li>
+<li>Secret resolution failures (<code>akv://</code>) indicate real problems and should be reported</li>
+<li>Two-category model (expansion/resolution) is more user-friendly than per-exception flags</li>
+<li>CircularReferenceError represents infinite loop configuration error (must not be suppressed)</li>
+</ul>
+<p><a href="../../adr/0018-granular-error-handling/">View Full ADR</a></p>
 <hr />
 <h2 id="adr-template">ADR Template<a class="headerlink" href="#adr-template" title="Permanent link">&para;</a></h2>
 <p>All ADRs follow a consistent template defined in <a href="../../adr/0000-adr-template/">ADR 0000: ADR Template</a>.</p>

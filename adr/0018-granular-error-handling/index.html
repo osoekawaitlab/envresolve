@@ -10,13 +10,11 @@
       
       
       
-        <link rel="canonical" href="https://github.com/osoekawaitlab/envresolve/adr/0015-terraform-managed-live-tests/">
+        <link rel="canonical" href="https://github.com/osoekawaitlab/envresolve/adr/0018-granular-error-handling/">
       
       
-        <link rel="prev" href="../0014-importlib-lazy-import/">
+        <link rel="prev" href="../0017-load-env-dotenv-path-parameter/">
       
-      
-        <link rel="next" href="../0016-mutually-exclusive-parameters-with-typeerror/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -24,7 +22,7 @@
     
     
       
-        <title>0015-terraform-managed-live-tests.md - envresolve</title>
+        <title>0018-granular-error-handling.md - envresolve</title>
       
     
     
@@ -78,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#architecture-decision-record-adr" class="md-skip">
+        <a href="#adr-0018-granular-error-handling-for-variable-expansion-and-secret-resolution" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0015-terraform-managed-live-tests.md
+              0018-granular-error-handling.md
             
           </span>
         </div>
@@ -1213,32 +1211,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    0015-terraform-managed-live-tests.md
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0015-terraform-managed-live-tests/" class="md-nav__link">
         
   
   
@@ -1249,131 +1225,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#title" class="md-nav__link">
-    <span class="md-ellipsis">
-      Title
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#status" class="md-nav__link">
-    <span class="md-ellipsis">
-      Status
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#date" class="md-nav__link">
-    <span class="md-ellipsis">
-      Date
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
-    <span class="md-ellipsis">
-      Context
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      Decision
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rationale" class="md-nav__link">
-    <span class="md-ellipsis">
-      Rationale
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
-    <span class="md-ellipsis">
-      Consequences
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Consequences">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#positive" class="md-nav__link">
-    <span class="md-ellipsis">
-      Positive
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#negative" class="md-nav__link">
-    <span class="md-ellipsis">
-      Negative
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#alternatives-considered" class="md-nav__link">
-    <span class="md-ellipsis">
-      Alternatives Considered
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#follow-up-actions" class="md-nav__link">
-    <span class="md-ellipsis">
-      Follow-Up Actions
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1429,10 +1280,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0018-granular-error-handling/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    0018-granular-error-handling.md
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1443,6 +1316,254 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      Status
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#date" class="md-nav__link">
+    <span class="md-ellipsis">
+      Date
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Context">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-insight-different-error-types-need-different-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Insight: Different Error Types Need Different Handling
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#need-for-granular-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      Need for Granular Control
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Decision
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rationale
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Rationale">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-two-categories-instead-of-per-error-type-flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Two Categories Instead of Per-Error-Type Flags
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-circularreferenceerror-is-always-raised" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why CircularReferenceError is Always Raised
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      Default Behavior
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implications
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positive-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Positive Implications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Concerns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternatives
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#alternative-1-keep-single-stop_on_error-flag" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 1: Keep Single stop_on_error Flag
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-2-per-exception-type-flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 2: Per-Exception-Type Flags
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-3-error-callback" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 3: Error Callback
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-4-separate-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 4: Separate Functions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-direction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Future Direction
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Future Direction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#potential-future-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Potential Future Enhancements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#triggers-for-revisiting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Triggers for Revisiting
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1490,15 +1611,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#title" class="md-nav__link">
-    <span class="md-ellipsis">
-      Title
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#status" class="md-nav__link">
     <span class="md-ellipsis">
       Status
@@ -1523,6 +1635,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Context">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-insight-different-error-types-need-different-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Insight: Different Error Types Need Different Handling
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#need-for-granular-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      Need for Granular Control
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1541,31 +1677,31 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
-    <span class="md-ellipsis">
-      Consequences
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Consequences">
+    <nav class="md-nav" aria-label="Rationale">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#positive" class="md-nav__link">
+  <a href="#why-two-categories-instead-of-per-error-type-flags" class="md-nav__link">
     <span class="md-ellipsis">
-      Positive
+      Why Two Categories Instead of Per-Error-Type Flags
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#negative" class="md-nav__link">
+  <a href="#why-circularreferenceerror-is-always-raised" class="md-nav__link">
     <span class="md-ellipsis">
-      Negative
+      Why CircularReferenceError is Always Raised
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      Default Behavior
     </span>
   </a>
   
@@ -1577,18 +1713,126 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#alternatives-considered" class="md-nav__link">
+  <a href="#implications" class="md-nav__link">
     <span class="md-ellipsis">
-      Alternatives Considered
+      Implications
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positive-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Positive Implications
     </span>
   </a>
   
 </li>
+        
+          <li class="md-nav__item">
+  <a href="#concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Concerns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#follow-up-actions" class="md-nav__link">
+  <a href="#alternatives" class="md-nav__link">
     <span class="md-ellipsis">
-      Follow-Up Actions
+      Alternatives
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#alternative-1-keep-single-stop_on_error-flag" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 1: Keep Single stop_on_error Flag
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-2-per-exception-type-flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 2: Per-Exception-Type Flags
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-3-error-callback" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 3: Error Callback
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-4-separate-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 4: Separate Functions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-direction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Future Direction
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Future Direction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#potential-future-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Potential Future Enhancements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#triggers-for-revisiting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Triggers for Revisiting
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
     </span>
   </a>
   
@@ -1613,67 +1857,165 @@
   
 
 
-<h1 id="architecture-decision-record-adr">Architecture Decision Record (ADR)<a class="headerlink" href="#architecture-decision-record-adr" title="Permanent link">&para;</a></h1>
-<h2 id="title">Title<a class="headerlink" href="#title" title="Permanent link">&para;</a></h2>
-<p>Manage Azure Live Test Infrastructure with Terraform</p>
+<h1 id="adr-0018-granular-error-handling-for-variable-expansion-and-secret-resolution">ADR 0018: Granular Error Handling for Variable Expansion and Secret Resolution<a class="headerlink" href="#adr-0018-granular-error-handling-for-variable-expansion-and-secret-resolution" title="Permanent link">&para;</a></h1>
 <h2 id="status">Status<a class="headerlink" href="#status" title="Permanent link">&para;</a></h2>
 <p>Accepted</p>
 <h2 id="date">Date<a class="headerlink" href="#date" title="Permanent link">&para;</a></h2>
-<p>2025-10-15</p>
+<p>2025-10-21</p>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p>envresolve includes optional support for Azure Key Vault. Unit and end-to-end tests currently use mocks to avoid external dependencies, but they cannot guarantee the integration behaves correctly against real Azure services. We also want a reproducible way to provision the required Azure resources (resource group, Key Vault, sample secrets) for contributors and CI without manual setup.</p>
-<p>Key considerations:</p>
-<ul>
-<li>Ensure infra can be created and destroyed deterministically for on-demand live tests.</li>
-<li>Capture secrets and configuration outputs so the pytest suite can authenticate and assert on real data.</li>
-<li>Keep costs low (single Key Vault, sample secret) and enable quick cleanup.</li>
-<li>Avoid leaking credentials by relying on standard Azure service principal flows and environment variables.</li>
-</ul>
-<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p>Adopt Terraform to manage live-test infrastructure and introduce an <code>azure and live</code> pytest marker for the real Azure integration tests. Provisioning is documented under <code>infra/terraform</code>, including helper Nox sessions (<code>terraform_plan_live</code>, <code>terraform_apply_live</code>, <code>terraform_destroy_live</code>) that wrap common operations. Terraform outputs supply the values consumed by live tests via environment variables such as <code>ENVRESOLVE_LIVE_KEY_VAULT_NAME</code> and <code>ENVRESOLVE_LIVE_SECRET_VALUE</code>.</p>
-<p>Live tests are opt-in: they skip automatically when configuration variables or Azure credentials are absent. A dedicated CI workflow (manual/cron) can apply Terraform, run the live suite, and tear down the resources afterwards.</p>
-<h2 id="rationale">Rationale<a class="headerlink" href="#rationale" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>Repeatability</strong>: Terraform defines the full resource graph, removing ad-hoc setup steps.</li>
-<li><strong>Safety</strong>: Helper sessions ensure <code>terraform destroy</code> is easy to run and can be wired into CI cleanup even on failures.</li>
-<li><strong>Isolation</strong>: Live tests sit behind explicit pytest markers, so day-to-day development remains fast and free from cloud dependencies.</li>
-<li><strong>Documentation</strong>: A focused user guide page explains the workflow for both local and CI executions, lowering the barrier for contributors.</li>
-</ul>
-<h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
-<h3 id="positive">Positive<a class="headerlink" href="#positive" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Real Azure regressions are caught before release.</li>
-<li>All required secrets and outputs are version-controlled and discoverable.</li>
-<li>CI pipelines can gate live tests separately from the core suite.</li>
-</ul>
-<h3 id="negative">Negative<a class="headerlink" href="#negative" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Terraform and Azure CLI become prerequisites for running the live suite.</li>
-<li>Sensitive Terraform outputs must be handled carefully (e.g., stored in CI secrets rather than printed to logs).</li>
-<li>Additional maintenance is required to keep infrastructure definitions aligned with evolving test needs.</li>
-</ul>
-<h2 id="alternatives-considered">Alternatives Considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
+<p>When loading environment variables from <code>.env</code> files or <code>os.environ</code>, two distinct types of errors can occur:</p>
 <ol>
-<li><strong>Manual Azure setup instructions only</strong></li>
-<li>
-<p><em>Rejected</em>: Too error-prone; contributors might misconfigure permissions or forget cleanup.</p>
-</li>
-<li>
-<p><strong>Dynamic resource creation inside pytest fixtures</strong></p>
-</li>
-<li>
-<p><em>Rejected</em>: Implementing provisioning in Python would duplicate Terraform features, complicate teardown, and intertwine infrastructure logic with tests.</p>
-</li>
-<li>
-<p><strong>Always rely on mocked tests</strong></p>
-</li>
-<li><em>Rejected</em>: Mocks cannot detect changes in Azure SDK behavior, identity requirements, or Key Vault service quirks.</li>
+<li><strong>Variable expansion errors</strong>: Variables referenced with <code>${VAR}</code> syntax cannot be resolved</li>
+<li><strong>Secret resolution errors</strong>: Secret URIs like <code>akv://vault/secret</code> fail to fetch from providers</li>
 </ol>
-<h2 id="follow-up-actions">Follow-Up Actions<a class="headerlink" href="#follow-up-actions" title="Permanent link">&para;</a></h2>
+<p>The original implementation had a single <code>stop_on_error</code> flag that controlled both types of errors uniformly. However, real-world usage revealed different requirements for handling these error types.</p>
+<h3 id="key-insight-different-error-types-need-different-handling">Key Insight: Different Error Types Need Different Handling<a class="headerlink" href="#key-insight-different-error-types-need-different-handling" title="Permanent link">&para;</a></h3>
+<p>The original implementation had a single <code>stop_on_error</code> flag that controlled both types of errors uniformly. However, real-world usage revealed different requirements for handling these error types:</p>
+<p><strong>Variable expansion errors</strong> can have different severities:
+- <strong>Typos in <code>.env</code> files</strong>: <code>DB_URL=${DATABSE_HOST}</code> (should be <code>DATABASE_HOST</code>) - should raise error
+- <strong>Optional variables</strong>: <code>LOG_LEVEL=${LOG_LEVEL:-info}</code> where <code>LOG_LEVEL</code> might not exist - could be tolerable
+- <strong>System variables</strong>: <code>$PS1</code> (bash/zsh) or <code>%PROMPT%</code> (Windows) contain literal <code>$</code> characters (e.g., <code>PS1="\u@\h:\w\$ "</code>) that trigger unintended expansion - could be tolerable</p>
+<p><strong>Secret resolution errors</strong> are consistently critical:
+- If a secret URI (<code>akv://vault/secret</code>) fails to resolve, it indicates a real problem (network, permissions, missing secret)
+- Silently ignoring resolution failures would leave <code>akv://vault/secret</code> as a literal string in <code>os.environ</code>
+- This could cause hard-to-debug issues in application code</p>
+<h3 id="need-for-granular-control">Need for Granular Control<a class="headerlink" href="#need-for-granular-control" title="Permanent link">&para;</a></h3>
+<p>Users need different error handling strategies:
+- <strong>Default behavior (both <code>True</code>)</strong>: Fail-fast for strict error detection
+- <strong>Selective suppression</strong>: Users can set <code>stop_on_expansion_error=False</code> when they know certain variables might be missing (e.g., when processing <code>os.environ</code> that includes system variables)
+- <strong>Always report secret failures</strong>: <code>stop_on_resolution_error=True</code> ensures intentional secret URIs are validated</p>
+<p>A single <code>stop_on_error</code> flag cannot serve both needs. Future enhancements (ignore patterns) will provide more granular control for the expansion error case.</p>
+<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
+<p>Replace single <code>stop_on_error</code> parameter with two granular parameters in both <code>load_env()</code> and <code>resolve_os_environ()</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">load_env</span><span class="p">(</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">dotenv_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="o">*</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">export</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">override</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">stop_on_expansion_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">stop_on_resolution_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="o">...</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="k">def</span><span class="w"> </span><span class="nf">resolve_os_environ</span><span class="p">(</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="o">*</span><span class="p">,</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">stop_on_expansion_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">stop_on_resolution_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="o">...</span>
+</code></pre></div>
+<p><strong>Error categorization:</strong></p>
 <ul>
-<li>Wire the Terraform workflow into CI (manual dispatch or scheduled job).</li>
-<li>Consider adding Key Vault network ACL configuration once CI egress addresses are known.</li>
-<li>Expand live coverage as new Azure providers or features are added.</li>
+<li><code>stop_on_expansion_error</code> controls: <code>VariableNotFoundError</code> only</li>
+<li><code>stop_on_resolution_error</code> controls: <code>SecretResolutionError</code></li>
+<li><code>CircularReferenceError</code> is <strong>always raised</strong> (configuration error, cannot be suppressed)</li>
+</ul>
+<h2 id="rationale">Rationale<a class="headerlink" href="#rationale" title="Permanent link">&para;</a></h2>
+<h3 id="why-two-categories-instead-of-per-error-type-flags">Why Two Categories Instead of Per-Error-Type Flags<a class="headerlink" href="#why-two-categories-instead-of-per-error-type-flags" title="Permanent link">&para;</a></h3>
+<p>We could have provided individual flags for each exception type (<code>stop_on_variable_not_found</code>, <code>stop_on_secret_resolution</code>, etc.), but this would:</p>
+<ul>
+<li>Complicate the API as new error types are added</li>
+<li>Make the mental model more complex for users</li>
+<li>Not align with how users think about the problem</li>
+</ul>
+<p>Instead, grouping by <strong>operation</strong> (expansion vs resolution) provides:</p>
+<ul>
+<li><strong>Clear mental model</strong>: Users understand "variable expansion" vs "secret fetching"</li>
+<li><strong>Stable API</strong>: New error types fit into existing categories</li>
+<li><strong>User-centric</strong>: Matches how users describe their needs ("I want to skip missing variables but not secret failures")</li>
+</ul>
+<h3 id="why-circularreferenceerror-is-always-raised">Why CircularReferenceError is Always Raised<a class="headerlink" href="#why-circularreferenceerror-is-always-raised" title="Permanent link">&para;</a></h3>
+<p>Unlike <code>VariableNotFoundError</code>, <code>CircularReferenceError</code> represents:</p>
+<ul>
+<li><strong>Infinite loop</strong>: <code>A=${B}, B=${A}</code> can never resolve</li>
+<li><strong>Configuration mistake</strong>: Never intentional</li>
+<li><strong>Safety issue</strong>: Suppressing would hide a critical problem</li>
+</ul>
+<p>Therefore, <code>CircularReferenceError</code> is excluded from <code>stop_on_expansion_error</code> control.</p>
+<h3 id="default-behavior">Default Behavior<a class="headerlink" href="#default-behavior" title="Permanent link">&para;</a></h3>
+<p>Both flags default to <code>True</code>, preserving fail-fast behavior for strict error detection. Users can selectively disable error handling by setting either flag to <code>False</code> when needed (e.g., <code>stop_on_expansion_error=False</code> to tolerate missing optional variables).</p>
+<h2 id="implications">Implications<a class="headerlink" href="#implications" title="Permanent link">&para;</a></h2>
+<h3 id="positive-implications">Positive Implications<a class="headerlink" href="#positive-implications" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Strict by default</strong>: Both flags default to <code>True</code>, providing fail-fast behavior that catches typos and configuration errors early</li>
+<li><strong>Selective tolerance</strong>: Users can set <code>stop_on_expansion_error=False</code> when processing <code>os.environ</code> with system variables like <code>$PS1</code> or <code>%PROMPT%</code> that contain <code>$</code> characters</li>
+<li><strong>Flexible resilience</strong>: Applications can choose to tolerate missing optional variables while still catching secret resolution failures</li>
+<li><strong>Clear error reporting</strong>: Immediate feedback on both configuration errors (by default) and secret provider issues</li>
+<li><strong>Future-proof</strong>: API won't need changes if new error types are added (they'll fit into expansion or resolution categories)</li>
+<li><strong>Complements ignore patterns</strong>: The default strict behavior works well with planned ignore pattern features (roadmap v0.1.x), where users can explicitly list variables to skip rather than silently ignoring all errors</li>
+</ol>
+<h3 id="concerns">Concerns<a class="headerlink" href="#concerns" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>API surface increase</strong>: Two new parameters per function</li>
+<li><strong>Mitigation</strong>: Parameters are optional with sensible defaults</li>
+<li><strong>Potential confusion</strong>: Users might not understand which errors belong to which category</li>
+<li><strong>Mitigation</strong>: Clear documentation with examples, explicit mention in docstrings</li>
+<li><strong>Asymmetry</strong>: CircularReferenceError is an expansion error but not controlled by the flag</li>
+<li><strong>Mitigation</strong>: Documented explicitly; safety justifies the exception</li>
+</ol>
+<h2 id="alternatives">Alternatives<a class="headerlink" href="#alternatives" title="Permanent link">&para;</a></h2>
+<h3 id="alternative-1-keep-single-stop_on_error-flag">Alternative 1: Keep Single <code>stop_on_error</code> Flag<a class="headerlink" href="#alternative-1-keep-single-stop_on_error-flag" title="Permanent link">&para;</a></h3>
+<p><strong>Characteristics</strong>: Original design with uniform error handling</p>
+<p><strong>Pros</strong>:
+- Simpler API
+- No decision needed about error categorization</p>
+<p><strong>Cons</strong>:
+- Cannot handle shell prompt variables (must stop on all errors or none)
+- All-or-nothing approach doesn't match user needs</p>
+<p><strong>Rejected because</strong>: Real-world usage (e.g., <code>$PS1</code> variables) requires different handling for expansion vs resolution errors.</p>
+<h3 id="alternative-2-per-exception-type-flags">Alternative 2: Per-Exception-Type Flags<a class="headerlink" href="#alternative-2-per-exception-type-flags" title="Permanent link">&para;</a></h3>
+<p><strong>Characteristics</strong>: Individual flags like <code>stop_on_variable_not_found</code>, <code>stop_on_circular_reference</code>, <code>stop_on_secret_resolution</code></p>
+<p><strong>Pros</strong>:
+- Maximum flexibility
+- Explicit control over each error type</p>
+<p><strong>Cons</strong>:
+- API grows with each new error type
+- Too granular for typical use cases
+- Cognitive overhead: users must understand internal exception hierarchy</p>
+<p><strong>Rejected because</strong>: Over-engineered for current needs; expansion/resolution categorization is more intuitive.</p>
+<h3 id="alternative-3-error-callback">Alternative 3: Error Callback<a class="headerlink" href="#alternative-3-error-callback" title="Permanent link">&para;</a></h3>
+<p><strong>Characteristics</strong>: Allow users to provide a callback function to decide whether to suppress each error</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">load_env</span><span class="p">(</span><span class="n">error_handler</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="ne">Exception</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="o">...</span>
+</code></pre></div>
+<p><strong>Pros</strong>:
+- Maximum flexibility
+- Can implement complex error handling logic</p>
+<p><strong>Cons</strong>:
+- Much more complex API
+- Harder to use for simple cases
+- Requires users to understand exception types</p>
+<p><strong>Rejected because</strong>: Too complex for the common use cases; boolean flags are more Pythonic.</p>
+<h3 id="alternative-4-separate-functions">Alternative 4: Separate Functions<a class="headerlink" href="#alternative-4-separate-functions" title="Permanent link">&para;</a></h3>
+<p><strong>Characteristics</strong>: Provide separate <code>load_env_strict()</code> / <code>load_env_lenient()</code> variants</p>
+<p><strong>Pros</strong>:
+- Clear intent from function name
+- No parameter complexity</p>
+<p><strong>Cons</strong>:
+- Doesn't solve granular control problem (still need to specify which errors to tolerate)
+- API proliferation (need variants for each function)</p>
+<p><strong>Rejected because</strong>: Doesn't address the core need for separate expansion/resolution control.</p>
+<h2 id="future-direction">Future Direction<a class="headerlink" href="#future-direction" title="Permanent link">&para;</a></h2>
+<h3 id="potential-future-enhancements">Potential Future Enhancements<a class="headerlink" href="#potential-future-enhancements" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Additional error categories</strong>: If new operation types are added (e.g., validation, transformation), they would get their own <code>stop_on_*</code> parameters</li>
+<li><strong>Error callbacks</strong>: If users need more complex error handling logic, we could add optional callbacks while keeping the simple boolean flags for common cases</li>
+<li><strong>Logging integration</strong>: Consider adding optional logging of suppressed errors for debugging</li>
+</ol>
+<h3 id="triggers-for-revisiting">Triggers for Revisiting<a class="headerlink" href="#triggers-for-revisiting" title="Permanent link">&para;</a></h3>
+<ul>
+<li>User feedback indicating the two-category model is insufficient</li>
+<li>New error types that don't fit cleanly into expansion or resolution categories</li>
+<li>Performance concerns with try/except overhead (unlikely but possible)</li>
+</ul>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Issue #17: Granular Error Handling</li>
+<li>ADR-0002: Custom Exception Hierarchy</li>
+<li>Shell prompt variables (<code>$PS1</code>, <code>%PROMPT%</code>): Real-world use case that motivated this design</li>
 </ul>
 
 
