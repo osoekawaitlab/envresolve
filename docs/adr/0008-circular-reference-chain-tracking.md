@@ -118,14 +118,14 @@ def _resolve(var_name: str, env: dict[str, str], stack: list[str]) -> str:
 ### Concerns
 
 - **Memory overhead**: Storing chain list for each error
-  - Mitigation: Chains are typically 2-10 variables; minimal memory impact
-  - Errors are exceptional path, not hot path
+    - Mitigation: Chains are typically 2-10 variables; minimal memory impact
+    - Errors are exceptional path, not hot path
 - **Stack management complexity**: Need to pass and maintain stack through recursion
-  - Mitigation: Stack is implementation detail, not exposed in public API
-  - Clear with try/finally pattern
+    - Mitigation: Stack is implementation detail, not exposed in public API
+    - Clear with try/finally pattern
 - **Chain extraction logic**: Must correctly identify cycle portion
-  - Mitigation: Simple slice operation `stack[cycle_start:]`
-  - Well-tested in unit tests
+    - Mitigation: Simple slice operation `stack[cycle_start:]`
+    - Well-tested in unit tests
 
 ## Alternatives
 
@@ -140,13 +140,13 @@ class CircularReferenceError(EnvResolveError):
 ```
 
 - **Pros**:
-  - Simplest implementation
-  - Minimal memory usage
-  - No stack tracking needed
+    - Simplest implementation
+    - Minimal memory usage
+    - No stack tracking needed
 - **Cons**:
-  - Poor debugging experience
-  - User must manually trace references
-  - Hard to identify long cycles
+    - Poor debugging experience
+    - User must manually trace references
+    - Hard to identify long cycles
 - **Rejection reason**: Sacrifices usability for minimal complexity reduction
 
 ### Full Stack Trace in Error Message
@@ -159,12 +159,12 @@ msg = f"Circular reference: {variable_name}\n{traceback.format_stack()}"
 ```
 
 - **Pros**:
-  - Shows complete execution context
-  - Includes line numbers and file names
+    - Shows complete execution context
+    - Includes line numbers and file names
 - **Cons**:
-  - Cluttered with implementation details (internal function names)
-  - Confuses users with irrelevant information
-  - Chain is buried in noise
+    - Cluttered with implementation details (internal function names)
+    - Confuses users with irrelevant information
+    - Chain is buried in noise
 - **Rejection reason**: Too much information, not user-focused
 
 ### Lazy Chain Computation
@@ -183,12 +183,12 @@ def find_cycle(var_name: str, env: dict[str, str]) -> list[str]:
 ```
 
 - **Pros**:
-  - No overhead during normal execution
-  - Chain only computed when error occurs
+    - No overhead during normal execution
+    - Chain only computed when error occurs
 - **Cons**:
-  - Complex re-traversal logic
-  - May not find exact same cycle (if nested expansion)
-  - Requires parsing variable references again
+    - Complex re-traversal logic
+    - May not find exact same cycle (if nested expansion)
+    - Requires parsing variable references again
 - **Rejection reason**: Complexity outweighs benefits; expansion already maintains stack
 
 ### Set-Based Cycle Detection Only
@@ -202,20 +202,20 @@ if var_name in visited:
 ```
 
 - **Pros**:
-  - Fast O(1) lookup
-  - Simple implementation
+    - Fast O(1) lookup
+    - Simple implementation
 - **Cons**:
-  - Set is unordered; can't show reference chain in correct order
-  - Cycle path is lost (which variables led to which)
-  - Error message is confusing: "Circular reference in {C, A, B, D}" (no order)
+    - Set is unordered; can't show reference chain in correct order
+    - Cycle path is lost (which variables led to which)
+    - Error message is confusing: "Circular reference in {C, A, B, D}" (no order)
 - **Rejection reason**: Order is critical for understanding the problem
 
 ## Future Direction
 
 - **Cycle visualization**: For complex cycles, consider:
-  - ASCII art diagram showing the cycle
-  - Graphviz DOT format for automated visualization
-  - Suggestion of which variable to change
+    - ASCII art diagram showing the cycle
+    - Graphviz DOT format for automated visualization
+    - Suggestion of which variable to change
 
 - **Cycle length limits**: If cycles exceed N variables, truncate display:
 
@@ -224,16 +224,16 @@ if var_name in visited:
   ```
 
 - **Interactive debugging**: If running in interactive environment:
-  - Highlight cycle variables in configuration file
-  - Suggest breaking the cycle with environment override
+    - Highlight cycle variables in configuration file
+    - Suggest breaking the cycle with environment override
 
 - **Multiple cycle detection**: Currently stops at first cycle found:
-  - Consider detecting all cycles in a configuration
-  - Report all cycles together for comprehensive fix
+    - Consider detecting all cycles in a configuration
+    - Report all cycles together for comprehensive fix
 
 - **Performance monitoring**: Track cycle detection overhead:
-  - If stack management becomes bottleneck, optimize
-  - Consider specialized data structure for large configurations
+    - If stack management becomes bottleneck, optimize
+    - Consider specialized data structure for large configurations
 
 ## References
 
@@ -241,5 +241,5 @@ if var_name in visited:
 - Implementation: `src/envresolve/exceptions.py::CircularReferenceError`
 - Implementation: `src/envresolve/services/expansion.py::_resolve`
 - Test cases: `tests/unit/test_expansion.py::test_circular_reference_raises_error`
-- Graph cycle detection algorithms: https://en.wikipedia.org/wiki/Cycle_detection
-- Error message best practices: https://developers.google.com/tech-writing/error-messages
+- Graph cycle detection algorithms: <https://en.wikipedia.org/wiki/Cycle_detection>
+- Error message best practices: <https://developers.google.com/tech-writing/error-messages>

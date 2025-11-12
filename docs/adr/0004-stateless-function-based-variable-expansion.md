@@ -84,10 +84,10 @@ result = expander.expand(text)
 
 - **Pros**: Less repetition when using the same env multiple times
 - **Cons**:
-  - Unnecessary object creation for one-time use
-  - Hidden state makes testing more complex
-  - Need to create new objects to switch env dicts
-  - Violates "functions over classes" principle when state is not needed
+    - Unnecessary object creation for one-time use
+    - Hidden state makes testing more complex
+    - Need to create new objects to switch env dicts
+    - Violates "functions over classes" principle when state is not needed
 - **Rejection reason**: Adds complexity without sufficient benefit. State is not needed for this operation.
 
 ### Factory Functions

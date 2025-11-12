@@ -43,13 +43,13 @@ Algorithm choices:
 
 Use a **two-phase iterative algorithm** that processes variables in phases:
 
-**Phase 1: Innermost Curly Braces**
+### Phase 1: Innermost Curly Braces
 
 - Pattern: `\$\{([^{}]+)\}` (no nested braces)
 - Expand innermost `${VAR}` references first
 - Repeat until no more innermost curly braces match
 
-**Phase 2: Simple Variables**
+### Phase 2: Simple Variables
 
 - Pattern: `\$([A-Za-z_][A-Za-z0-9_]*)\b`
 - Expand `$VAR` syntax
@@ -109,11 +109,11 @@ def _expand_text(value: str, env: dict[str, str], stack: list[str]) -> str:
 ### Concerns
 
 - **Performance**: Deeply nested variables require multiple passes
-  - Mitigation: Most real-world usage is 1-2 levels deep; still O(n*m) where m is nesting depth
+    - Mitigation: Most real-world usage is 1-2 levels deep; still O(n*m) where m is nesting depth
 - **Pattern ambiguity**: `${VAR${NESTED}}` (missing underscore) is syntactically valid but confusing
-  - Mitigation: Document best practices; users should use `${VAR_${NESTED}}`
+    - Mitigation: Document best practices; users should use `${VAR_${NESTED}}`
 - **Infinite loop risk**: Pattern must make progress each iteration
-  - Mitigation: Iteration only continues if pattern matched; unresolved patterns raise errors
+    - Mitigation: Iteration only continues if pattern matched; unresolved patterns raise errors
 
 ## Alternatives
 
@@ -128,9 +128,9 @@ re.sub(pattern, replace_func, text)
 
 - **Pros**: Simple implementation, single pass
 - **Cons**:
-  - Cannot handle nested braces correctly
-  - `${VAR_${NESTED}}` - inner `${NESTED}` not matched by `[^}]+`
-  - Would need complex lookahead/lookbehind patterns
+    - Cannot handle nested braces correctly
+    - `${VAR_${NESTED}}` - inner `${NESTED}` not matched by `[^}]+`
+    - Would need complex lookahead/lookbehind patterns
 - **Rejection reason**: Regex cannot elegantly handle nested structures
 
 ### AST-Based Parser
@@ -146,13 +146,13 @@ result = evaluate(ast, env)
 ```
 
 - **Pros**:
-  - Very explicit structure
-  - Easy to add features (filters, default values)
-  - Excellent error reporting with positions
+    - Very explicit structure
+    - Easy to add features (filters, default values)
+    - Excellent error reporting with positions
 - **Cons**:
-  - Significant complexity overhead
-  - Requires lexer, parser, evaluator
-  - Overkill for current feature set
+    - Significant complexity overhead
+    - Requires lexer, parser, evaluator
+    - Overkill for current feature set
 - **Rejection reason**: Complexity not justified for variable expansion use case
 
 ### Multi-Pass Until Stable
@@ -169,9 +169,9 @@ while True:
 
 - **Pros**: Handles any nesting depth automatically
 - **Cons**:
-  - Risk of infinite loops if pattern produces itself
-  - Harder to detect true errors vs. stability
-  - No clear phase ordering for mixed syntax
+    - Risk of infinite loops if pattern produces itself
+    - Harder to detect true errors vs. stability
+    - No clear phase ordering for mixed syntax
 - **Rejection reason**: Less predictable behavior, harder error handling
 
 ### Greedy Regex with Backtracking
@@ -184,17 +184,17 @@ pattern = r"\$\{([^{}]|\{[^{}]*\})*\}"
 
 - **Pros**: Single regex pattern
 - **Cons**:
-  - Regex complexity explodes with nesting depth
-  - Poor error messages on mismatch
-  - Performance degrades with deep nesting (catastrophic backtracking risk)
+    - Regex complexity explodes with nesting depth
+    - Poor error messages on mismatch
+    - Performance degrades with deep nesting (catastrophic backtracking risk)
 - **Rejection reason**: Regex is wrong tool for nested structures
 
 ## Future Direction
 
 - **Performance optimization**: If profiling shows issues, consider:
-  - Compile patterns once (already done with module-level `re.compile`)
-  - Add depth limit to prevent pathological cases
-  - Cache expansion results for repeated patterns
+    - Compile patterns once (already done with module-level `re.compile`)
+    - Add depth limit to prevent pathological cases
+    - Cache expansion results for repeated patterns
 
 - **Enhanced error messages**: Show partial expansion state when errors occur:
 
@@ -204,9 +204,9 @@ pattern = r"\$\{([^{}]|\{[^{}]*\})*\}"
   ```
 
 - **Syntax extensions**: If needed, two-phase algorithm can be extended:
-  - Default values: `${VAR:-default}`
-  - Filters: `${VAR|lowercase}`
-  - Escape sequences: `\${NOT_A_VAR}`
+    - Default values: `${VAR:-default}`
+    - Filters: `${VAR|lowercase}`
+    - Escape sequences: `\${NOT_A_VAR}`
 
 - **Migration to AST**: If feature set grows significantly (10+ syntax features), consider AST-based approach for maintainability
 
@@ -216,4 +216,4 @@ pattern = r"\$\{([^{}]|\{[^{}]*\})*\}"
 - ADR 0004: Stateless function-based variable expansion
 - Implementation: `src/envresolve/services/expansion.py`
 - Test cases: `tests/unit/test_expansion.py::test_expand_nested_curly_braces`
-- Bash variable expansion: https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html
+- Bash variable expansion: <https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html>

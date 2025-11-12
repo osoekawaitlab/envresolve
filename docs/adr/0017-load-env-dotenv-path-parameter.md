@@ -29,11 +29,13 @@ def load_dotenv(dotenv_path: str | Path | None = None, ...):
 ```
 
 The differences:
+
 1. **Parameter name**: `path` vs. `dotenv_path`
 2. **Default value**: `.env` (explicit path) vs. `None` (search behavior)
 3. **Search semantics**: When `None`, python-dotenv searches for `.env` starting from the current working directory
 
 Users migrating from python-dotenv had to:
+
 - Rename parameter: `load_dotenv()` → `load_env(path=...)`
 - Change default behavior: `load_dotenv()` → `load_env(path=".env")`
 
@@ -100,7 +102,8 @@ By using `find_dotenv(usecwd=True)`, we ensure the search starts from `os.getcwd
 
 The `load_env()` signature was updated for better python-dotenv compatibility:
 
-**Parameter Name**
+#### Parameter Name
+
 ```python
 # Before
 envresolve.load_env(path=".env")
@@ -109,7 +112,8 @@ envresolve.load_env(path=".env")
 envresolve.load_env(dotenv_path=".env")
 ```
 
-**Default Value**
+#### Default Value
+
 ```python
 # Before: Explicit path, always loads `.env` in cwd
 load_env()  # Loads ./.env
@@ -148,6 +152,7 @@ envresolve.resolve_os_environ()  # Resolves akv:// URIs in os.environ
 ```
 
 This approach:
+
 - Preserves python-dotenv's exact search semantics
 - Keeps envresolve focused on secret resolution
 - Provides clear separation of concerns
@@ -159,6 +164,7 @@ This approach:
 **Pros**: Smaller breaking change (only default value)
 
 **Cons**:
+
 - Still migration friction (parameter name mismatch)
 - Inconsistent with python-dotenv's established API
 - Confusing documentation ("path" vs. "dotenv_path")
@@ -170,6 +176,7 @@ This approach:
 **Pros**: Gradual migration path
 
 **Cons**:
+
 - Increased complexity (two parameters doing the same thing)
 - Deprecation warnings add friction
 - Eventually needs breaking change anyway
@@ -182,6 +189,7 @@ This approach:
 **Pros**: No breaking change
 
 **Cons**:
+
 - Doesn't solve migration friction (parameter name still wrong)
 - More complex API (two parameters to control one behavior)
 - `path=".env", search=True` is confusing
@@ -198,5 +206,5 @@ This approach:
 - Issue: #13 "Align load_env signature with load_dotenv"
 - Implementation: `src/envresolve/api.py:129-183`
 - Tests: `tests/e2e/test_load_env.py`
-- python-dotenv docs: https://saurabh-kumar.com/python-dotenv/
+- python-dotenv docs: <https://saurabh-kumar.com/python-dotenv/>
 - Related ADRs: 0013 (class-based API design)

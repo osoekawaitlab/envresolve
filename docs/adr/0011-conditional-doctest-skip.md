@@ -101,4 +101,4 @@ Static `# doctest: +SKIP` was rejected because it prevents testing when dependen
 
 - Implementation: `conftest.py:17-46`
 - Related: ADR-0012 (pytest markers for test files)
-- Pytest docs: https://docs.pytest.org/en/stable/how-to/skipping.html
+- Pytest docs: <https://docs.pytest.org/en/stable/how-to/skipping.html>

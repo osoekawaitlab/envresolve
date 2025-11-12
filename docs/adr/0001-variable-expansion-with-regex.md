@@ -86,5 +86,5 @@ Build an abstract syntax tree for variable references.
 
 ## References
 
-- Python `re` module documentation: https://docs.python.org/3/library/re.html
+- Python `re` module documentation: <https://docs.python.org/3/library/re.html>
 - Issue #1: Variable expansion in environment variables
