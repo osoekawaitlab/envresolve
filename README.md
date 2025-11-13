@@ -238,7 +238,7 @@ nox -s docs_serve      # Open http://localhost:8000
 
 ### Contributing
 
-See [Contributing Guide](http://localhost:8000/osoekawaitlab/envresolve/developer-guide/contributing/) for guidelines on:
+See [Contributing Guide](https://osoekawaitlab.github.io/envresolve/developer-guide/contributing/) for guidelines on:
 
 - Code style and conventions
 - Test-driven development workflow
