@@ -114,5 +114,5 @@ def register_azure_kv_provider(self, **kwargs: Any) -> None:
 
 - Implementation: `src/envresolve/api.py::EnvResolver.register_azure_kv_provider`
 - Related ADRs: 0002 (custom exception hierarchy), 0009 (provider registry), 0012 (pytest markers for optional providers)
-- Python docs: https://docs.python.org/3/library/importlib.html
+- Python docs: <https://docs.python.org/3/library/importlib.html>
 - Issue #5: Changed from `ImportError` to `ProviderRegistrationError` to align with ADR-0002

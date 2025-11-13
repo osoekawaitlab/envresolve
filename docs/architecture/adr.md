@@ -46,16 +46,7 @@ Defined structured exception design for variable expansion errors.
 **Status**: Accepted
 **Date**: 2025-10-11
 
-Chose a stateless function (`expand_variables()`) as the core API with convenience wrapper classes.
-
-**Key Decision**: Use `expand_variables(text, env)` instead of a stateful `VariableExpander(env)` class.
-
-**Rationale**:
-
-- Simpler and more explicit
-- No hidden state
-- Better for testing
-- More Pythonic for stateless operations
+Chose a stateless function (`expand_variables()`) as the core API instead of a stateful class.
 
 [View Full ADR](../adr/0004-stateless-function-based-variable-expansion.md)
 
@@ -66,16 +57,7 @@ Chose a stateless function (`expand_variables()`) as the core API with convenien
 **Status**: Accepted
 **Date**: 2025-10-12
 
-Decided to use a string-based API instead of data models for resolution results.
-
-**Key Decision**: Return `str` directly instead of `ResolutionResult` models.
-
-**Rationale**:
-
-- Users ultimately need strings for `os.environ`
-- Zero conversion overhead
-- Infrastructure utilities should be transparent
-- Idempotent resolution is safer and more composable
+Return `str` directly instead of data models, with idempotent resolution (safe to call multiple times).
 
 [View Full ADR](../adr/0005-string-based-api-with-idempotent-resolution.md)
 
@@ -86,16 +68,7 @@ Decided to use a string-based API instead of data models for resolution results.
 **Status**: Accepted
 **Date**: 2025-10-13
 
-Chose a two-phase iterative algorithm for supporting nested variable expansion like `${VAR_${NESTED}}`.
-
-**Key Decision**: Expand innermost curly braces first, then simple variables, iterating until stable.
-
-**Rationale**:
-
-- Correct inside-out evaluation order
-- Predictable behavior for complex nesting
-- No recursion depth limits
-- Clear error detection
+Two-phase iterative algorithm: expand innermost `${...}` first, then simple `$VAR`.
 
 [View Full ADR](../adr/0006-nested-variable-expansion-implementation.md)
 
@@ -108,15 +81,6 @@ Chose a two-phase iterative algorithm for supporting nested variable expansion l
 
 Separated pure business logic (services layer) from environment integration (application layer).
 
-**Key Decision**: Move `EnvExpander` and `DotEnvExpander` from `services/expansion.py` to `application/expanders.py`.
-
-**Rationale**:
-
-- Single Responsibility Principle
-- Better testability (pure logic without I/O)
-- Clear dependency direction
-- Matches clean architecture patterns
-
 [View Full ADR](../adr/0007-layer-separation-services-vs-application.md)
 
 ---
@@ -126,16 +90,7 @@ Separated pure business logic (services layer) from environment integration (app
 **Status**: Accepted
 **Date**: 2025-10-13
 
-Extended `CircularReferenceError` to include full reference chain for better debugging.
-
-**Key Decision**: Add `chain: list[str]` attribute showing complete cycle (e.g., `["A", "B", "C", "A"]`).
-
-**Rationale**:
-
-- Immediate visibility of complete cycle
-- Better debugging experience
-- Programmatic access to cycle information
-- Actionable error messages
+Extended `CircularReferenceError` to include full reference chain (`chain: list[str]`) for better debugging.
 
 [View Full ADR](../adr/0008-circular-reference-chain-tracking.md)
 
@@ -146,16 +101,7 @@ Extended `CircularReferenceError` to include full reference chain for better deb
 **Status**: Accepted
 **Date**: 2025-10-13
 
-Established manual provider registration with a global registry instead of auto-discovery or dependency injection.
-
-**Key Decision**: Users explicitly call `register_azure_kv_provider()` before resolving secrets. Providers are stored in a module-level singleton registry.
-
-**Rationale**:
-
-- Opt-in dependencies (only load what you need)
-- Explicit control over initialization timing
-- Resource efficiency through singleton providers
-- Clear API surface
+Users explicitly call `register_azure_kv_provider()` before resolving secrets.
 
 [View Full ADR](../adr/0009-manual-provider-registration-pattern.md)
 
@@ -168,15 +114,6 @@ Established manual provider registration with a global registry instead of auto-
 
 Implemented iterative resolution with cycle detection to support URI-to-URI resolution chains.
 
-**Key Decision**: Use a `while` loop with a `seen` set to resolve URIs iteratively until a stable value is reached or a cycle is detected.
-
-**Rationale**:
-
-- Supports arbitrary nesting depth
-- Maintains idempotency (plain strings pass through)
-- Safe cycle detection without infinite loops
-- Flexible for mixed variable/URI resolution
-
 [View Full ADR](../adr/0010-iterative-uri-resolution.md)
 
 ---
@@ -186,16 +123,7 @@ Implemented iterative resolution with cycle detection to support URI-to-URI reso
 **Status**: Accepted
 **Date**: 2025-10-13
 
-Implemented pytest fixture-based conditional skipping for doctests that require optional dependencies.
-
-**Key Decision**: Use autouse fixture in `conftest.py` to detect Azure SDK availability and skip Azure-related doctests when dependencies are missing.
-
-**Rationale**:
-
-- Doctests validate documentation when dependencies are present
-- Graceful degradation without Azure SDK
-- Consistent with pytest marker strategy
-- Avoids manual `+SKIP` directives
+Pytest fixture-based conditional skipping for doctests requiring optional dependencies.
 
 [View Full ADR](../adr/0011-conditional-doctest-skip.md)
 
@@ -206,16 +134,7 @@ Implemented pytest fixture-based conditional skipping for doctests that require 
 **Status**: Accepted
 **Date**: 2025-10-13
 
-Introduced dedicated pytest marker (`azure`) to isolate tests requiring optional Azure SDK dependencies.
-
-**Key Decision**: Mark Azure-dependent tests with `@pytest.mark.azure` and provide `tests_without_azure` Nox session that excludes them.
-
-**Rationale**:
-
-- Core test suite runs without optional dependencies
-- Clear signal for which tests require Azure
-- CI can run lightweight and full test suites separately
-- Minimal disruption for contributors
+Introduced `@pytest.mark.azure` to isolate tests requiring optional Azure SDK dependencies.
 
 [View Full ADR](../adr/0012-pytest-markers-for-azure-dependencies.md)
 
@@ -228,15 +147,6 @@ Introduced dedicated pytest marker (`azure`) to isolate tests requiring optional
 
 Encapsulated resolution state in `EnvResolver` class with module-level facade for backward compatibility.
 
-**Key Decision**: Introduce `EnvResolver` class that encapsulates provider registry and resolver instance, expose singleton instance through module-level functions.
-
-**Rationale**:
-
-- Eliminates `global` keyword usage
-- Better testability (tests can instantiate isolated resolvers)
-- Maintains simple module-level API
-- Supports multiple resolver instances if needed
-
 [View Full ADR](../adr/0013-class-based-api-design.md)
 
 ---
@@ -248,15 +158,6 @@ Encapsulated resolution state in `EnvResolver` class with module-level facade fo
 
 Used `importlib.import_module` for lazy loading of optional Azure SDK dependencies with rich error messages.
 
-**Key Decision**: Defer Azure SDK imports until `register_azure_kv_provider()` is called, and raise `ProviderRegistrationError` (not `ImportError`) with helpful installation instructions when dependencies are missing.
-
-**Rationale**:
-
-- Users can import envresolve without Azure SDK
-- Clear, actionable error messages
-- Aligns with custom exception hierarchy (ADR-0002)
-- Extensible pattern for future optional providers
-
 [View Full ADR](../adr/0014-importlib-lazy-import.md)
 
 ---
@@ -266,15 +167,7 @@ Used `importlib.import_module` for lazy loading of optional Azure SDK dependenci
 **Status**: Accepted
 **Date**: 2025-10-15
 
-Standardized live Azure Key Vault testing with Terraform-managed resources and explicit pytest gating.
-
-**Key Decision**: Use Terraform manifests in `infra/terraform` plus helper Nox sessions to provision/destroy a Key Vault and sample secret for live tests.
-
-**Rationale**:
-
-- Repeatable provisioning for contributors and CI
-- Clear separation between mocked and live suites via markers
-- Easier cleanup through scripted Terraform destroy
+Standardized live Azure Key Vault testing with Terraform-managed resources.
 
 [View Full ADR](../adr/0015-terraform-managed-live-tests.md)
 
@@ -285,15 +178,7 @@ Standardized live Azure Key Vault testing with Terraform-managed resources and e
 **Status**: Accepted
 **Date**: 2025-10-18
 
-Created `MutuallyExclusiveArgumentsError` inheriting from both `EnvResolveError` and `TypeError` following pandas exception patterns.
-
-**Key Decision**: Raise `MutuallyExclusiveArgumentsError` when both `keys` and `prefix` are specified in `resolve_os_environ()`.
-
-**Rationale**:
-
-- Aligns with Python ecosystem standards (pandas, argparse use `TypeError`)
-- Maintains domain exception hierarchy while providing standard semantics
-- Fail-fast approach with structured exception data (`arg1`, `arg2` attributes)
+Created `MutuallyExclusiveArgumentsError` inheriting from both `EnvResolveError` and `TypeError`.
 
 [View Full ADR](../adr/0016-mutually-exclusive-parameters-with-typeerror.md)
 
@@ -306,15 +191,6 @@ Created `MutuallyExclusiveArgumentsError` inheriting from both `EnvResolveError`
 
 Changed `load_env()` signature to match python-dotenv's `load_dotenv()` for zero-friction migration.
 
-**Key Decision**: Rename parameter from `path` to `dotenv_path` and change default from `".env"` to `None`. When `None`, explicitly use `find_dotenv(usecwd=True)` to search from current working directory.
-
-**Rationale**:
-
-- Drop-in replacement for python-dotenv users
-- Explicit control over search behavior (from cwd, not from `__file__`)
-- More intuitive default (search from current directory)
-- Better alignment with python-dotenv ecosystem
-
 [View Full ADR](../adr/0017-load-env-dotenv-path-parameter.md)
 
 ---
@@ -324,18 +200,20 @@ Changed `load_env()` signature to match python-dotenv's `load_dotenv()` for zero
 **Status**: Accepted
 **Date**: 2025-10-21
 
-Split single `stop_on_error` flag into separate controls for expansion errors and resolution errors.
-
-**Key Decision**: Replace `stop_on_error` with `stop_on_expansion_error` and `stop_on_resolution_error` in both `load_env()` and `resolve_os_environ()`. CircularReferenceError is always raised regardless of flags.
-
-**Rationale**:
-
-- Shell prompt variables (`$PS1`, `%PROMPT%`) contain literal `$` characters that should be skippable
-- Secret resolution failures (`akv://`) indicate real problems and should be reported
-- Two-category model (expansion/resolution) is more user-friendly than per-exception flags
-- CircularReferenceError represents infinite loop configuration error (must not be suppressed)
+Split single `stop_on_error` flag into `stop_on_expansion_error` and `stop_on_resolution_error`.
 
 [View Full ADR](../adr/0018-granular-error-handling.md)
+
+---
+
+### ADR 0019: Do Not Implement Validation Helper Functions and Metadata Query Helpers
+
+**Status**: Accepted
+**Date**: 2025-11-12
+
+Decided not to implement validation helpers and metadata query helpers due to lack of concrete use cases.
+
+[View Full ADR](../adr/0019-do-not-implement-validation-helpers.md)
 
 ---
 

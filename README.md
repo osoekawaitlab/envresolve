@@ -102,6 +102,7 @@ secret = envresolve.resolve_secret("akv://vault/secret")
 ```
 
 This is particularly useful for:
+
 - **Testing**: Inject mock providers without patching internal implementation details
 - **Custom authentication**: Use specific Azure credentials (service principal, managed identity, etc.)
 - **Provider configuration**: Pre-configure providers with custom settings
@@ -146,7 +147,7 @@ pip install envresolve[azure]
 
 ## Documentation
 
-Full documentation: https://osoekawaitlab.github.io/envresolve/
+Full documentation: <https://osoekawaitlab.github.io/envresolve/>
 
 ## Development
 
@@ -232,7 +233,7 @@ nox -s docs_serve      # Open http://localhost:8000
 
 ### Contributing
 
-See [Contributing Guide](https://osoekawaitlab.github.io/envresolve/contributing/) for guidelines on:
+See [Contributing Guide](http://localhost:8000/osoekawaitlab/envresolve/developer-guide/contributing/) for guidelines on:
 
 - Code style and conventions
 - Test-driven development workflow

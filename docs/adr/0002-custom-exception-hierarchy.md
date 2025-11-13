@@ -62,10 +62,10 @@ if var_name not in env:
 
 - **Pros**: No extra code, familiar to Python developers
 - **Cons**:
-  - Cannot distinguish library errors from other KeyError in client code
-  - Poor semantic clarity (KeyError doesn't convey "variable not found in expansion")
-  - Tight coupling to implementation (exposes that we use dict internally)
-  - Cannot catch "all envresolve errors" without catching unrelated errors
+    - Cannot distinguish library errors from other KeyError in client code
+    - Poor semantic clarity (KeyError doesn't convey "variable not found in expansion")
+    - Tight coupling to implementation (exposes that we use dict internally)
+    - Cannot catch "all envresolve errors" without catching unrelated errors
 - **Rejection reason**: Lack of namespace isolation and poor API clarity
 
 ### Exception Wrapper Pattern
@@ -91,6 +91,6 @@ except KeyError as e:
 
 ## References
 
-- Python Exception Hierarchy: https://docs.python.org/3/library/exceptions.html#exception-hierarchy
+- Python Exception Hierarchy: <https://docs.python.org/3/library/exceptions.html#exception-hierarchy>
 - PEP 3151: Reworking the OS and IO exception hierarchy
 - Issue #1: Variable expansion feature implementation

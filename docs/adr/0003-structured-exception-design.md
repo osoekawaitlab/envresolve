@@ -88,5 +88,5 @@ class VariableNotFoundError(EnvResolveError):
 ## References
 
 - ADR 0002: Custom Exception Hierarchy
-- Python Exception Best Practices: https://docs.python.org/3/tutorial/errors.html
+- Python Exception Best Practices: <https://docs.python.org/3/tutorial/errors.html>
 - Issue #1: Variable expansion feature implementation

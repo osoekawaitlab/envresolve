@@ -180,7 +180,7 @@ if keys is not None and prefix is not None:
 
 ## References
 
-- pandas Exception Guidelines: https://github.com/pandas-dev/pandas/wiki/Choosing-Exceptions-to-Raise
+- pandas Exception Guidelines: <https://github.com/pandas-dev/pandas/wiki/Choosing-Exceptions-to-Raise>
 - pandas DataFrame.filter() implementation pattern
 - ADR-0002: Custom Exception Hierarchy
 - ADR-0003: Structured Exception Design

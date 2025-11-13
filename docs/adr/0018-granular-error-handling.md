@@ -22,11 +22,13 @@ The original implementation had a single `stop_on_error` flag that controlled bo
 The original implementation had a single `stop_on_error` flag that controlled both types of errors uniformly. However, real-world usage revealed different requirements for handling these error types:
 
 **Variable expansion errors** can have different severities:
+
 - **Typos in `.env` files**: `DB_URL=${DATABSE_HOST}` (should be `DATABASE_HOST`) - should raise error
 - **Optional variables**: `LOG_LEVEL=${LOG_LEVEL:-info}` where `LOG_LEVEL` might not exist - could be tolerable
 - **System variables**: `$PS1` (bash/zsh) or `%PROMPT%` (Windows) contain literal `$` characters (e.g., `PS1="\u@\h:\w\$ "`) that trigger unintended expansion - could be tolerable
 
 **Secret resolution errors** are consistently critical:
+
 - If a secret URI (`akv://vault/secret`) fails to resolve, it indicates a real problem (network, permissions, missing secret)
 - Silently ignoring resolution failures would leave `akv://vault/secret` as a literal string in `os.environ`
 - This could cause hard-to-debug issues in application code
@@ -34,6 +36,7 @@ The original implementation had a single `stop_on_error` flag that controlled bo
 ### Need for Granular Control
 
 Users need different error handling strategies:
+
 - **Default behavior (both `True`)**: Fail-fast for strict error detection
 - **Selective suppression**: Users can set `stop_on_expansion_error=False` when they know certain variables might be missing (e.g., when processing `os.environ` that includes system variables)
 - **Always report secret failures**: `stop_on_resolution_error=True` ensures intentional secret URIs are validated
@@ -129,10 +132,12 @@ Both flags default to `True`, preserving fail-fast behavior for strict error det
 **Characteristics**: Original design with uniform error handling
 
 **Pros**:
+
 - Simpler API
 - No decision needed about error categorization
 
 **Cons**:
+
 - Cannot handle shell prompt variables (must stop on all errors or none)
 - All-or-nothing approach doesn't match user needs
 
@@ -143,10 +148,12 @@ Both flags default to `True`, preserving fail-fast behavior for strict error det
 **Characteristics**: Individual flags like `stop_on_variable_not_found`, `stop_on_circular_reference`, `stop_on_secret_resolution`
 
 **Pros**:
+
 - Maximum flexibility
 - Explicit control over each error type
 
 **Cons**:
+
 - API grows with each new error type
 - Too granular for typical use cases
 - Cognitive overhead: users must understand internal exception hierarchy
@@ -163,10 +170,12 @@ def load_env(error_handler: Callable[[Exception, str], bool] = None):
 ```
 
 **Pros**:
+
 - Maximum flexibility
 - Can implement complex error handling logic
 
 **Cons**:
+
 - Much more complex API
 - Harder to use for simple cases
 - Requires users to understand exception types
@@ -178,10 +187,12 @@ def load_env(error_handler: Callable[[Exception, str], bool] = None):
 **Characteristics**: Provide separate `load_env_strict()` / `load_env_lenient()` variants
 
 **Pros**:
+
 - Clear intent from function name
 - No parameter complexity
 
 **Cons**:
+
 - Doesn't solve granular control problem (still need to specify which errors to tolerate)
 - API proliferation (need variants for each function)
 

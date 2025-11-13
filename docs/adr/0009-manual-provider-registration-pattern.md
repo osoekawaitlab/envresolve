@@ -91,17 +91,17 @@ def _get_provider(scheme: str) -> SecretProvider:
 ### Concerns
 
 - **Manual setup required**: Users must remember to call `register_*()` before use
-  - Mitigation: Clear error messages with registration instructions
-  - Mitigation: Examples in documentation show registration as first step
+    - Mitigation: Clear error messages with registration instructions
+    - Mitigation: Examples in documentation show registration as first step
 
 - **Global state**: Module-level registry is mutable global state
-  - Mitigation: Registration is write-once in typical usage
-  - Mitigation: Tests can clear registry between test cases if needed
-  - Future: Consider making registry explicit parameter for advanced use cases
+    - Mitigation: Registration is write-once in typical usage
+    - Mitigation: Tests can clear registry between test cases if needed
+    - Future: Consider making registry explicit parameter for advanced use cases
 
 - **No auto-discovery**: Cannot scan for available providers automatically
-  - Mitigation: Explicit is better than implicit (Zen of Python)
-  - Future: Optional `register_all()` for convenience if many providers exist
+    - Mitigation: Explicit is better than implicit (Zen of Python)
+    - Future: Optional `register_all()` for convenience if many providers exist
 
 ## Alternatives
 
@@ -118,11 +118,11 @@ _PROVIDERS["akv"] = AzureKVProvider()
 
 - **Pros**: No manual registration needed, automatic discovery
 - **Cons**:
-  - Imports have side effects (anti-pattern)
-  - Cannot control initialization timing
-  - Cannot pass configuration
-  - Harder to test (import side effects)
-  - Forces loading of all provider dependencies
+    - Imports have side effects (anti-pattern)
+    - Cannot control initialization timing
+    - Cannot pass configuration
+    - Harder to test (import side effects)
+    - Forces loading of all provider dependencies
 - **Rejection reason**: Side effects on import violate Python best practices; explicit is better
 
 ### Registry as Explicit Parameter
@@ -136,13 +136,13 @@ result = resolve_secret("akv://...", registry=registry)
 ```
 
 - **Pros**:
-  - No global state
-  - Easy to use multiple registries
-  - Explicit dependency injection
+    - No global state
+    - Easy to use multiple registries
+    - Explicit dependency injection
 - **Cons**:
-  - Verbose - every call needs registry parameter
-  - Poor ergonomics for simple use cases
-  - Complicates API significantly
+    - Verbose - every call needs registry parameter
+    - Poor ergonomics for simple use cases
+    - Complicates API significantly
 - **Rejection reason**: Over-engineered for typical use; global registry is simpler
 
 ### Plugin System with Entry Points
@@ -159,14 +159,14 @@ entry_points={
 ```
 
 - **Pros**:
-  - Standard Python plugin pattern
-  - Extensible by third-party packages
-  - Auto-discovery without imports
+    - Standard Python plugin pattern
+    - Extensible by third-party packages
+    - Auto-discovery without imports
 - **Cons**:
-  - Overkill for first-party providers
-  - Complexity in initialization and configuration
-  - Harder to debug
-  - Not needed until third-party provider ecosystem exists
+    - Overkill for first-party providers
+    - Complexity in initialization and configuration
+    - Harder to debug
+    - Not needed until third-party provider ecosystem exists
 - **Rejection reason**: Premature optimization; manual registration is sufficient for v0.1.x
 
 ### Factory Pattern with Builder
@@ -179,22 +179,24 @@ result = resolve_secret("akv://...", provider=provider)
 ```
 
 - **Pros**:
-  - Flexible provider configuration
-  - No global state
+    - Flexible provider configuration
+    - No global state
 - **Cons**:
-  - Users must manage provider lifecycle
-  - Verbose for simple cases
-  - Cannot share providers across resolutions
+    - Users must manage provider lifecycle
+    - Verbose for simple cases
+    - Cannot share providers across resolutions
 - **Rejection reason**: Too much manual management; global registry with caching is better
 
 ## Future Direction
 
 - **Optional `register_all()` convenience**: If many providers exist, provide single-call registration:
+
   ```python
   envresolve.register_all()  # Registers all installed providers
   ```
 
 - **Registry introspection**: Add query functions if needed:
+
   ```python
   envresolve.list_providers()  # → ["akv", "kv", "aws"]
   envresolve.is_provider_registered("akv")  # → bool
@@ -203,12 +205,14 @@ result = resolve_secret("akv://...", provider=provider)
 - **Thread-safe registry mutations**: If use cases emerge for dynamic provider registration in threaded environments, add locking
 
 - **Custom registries for advanced use cases**: Support optional explicit registry parameter:
+
   ```python
   custom_registry = ProviderRegistry()
   resolve_secret("akv://...", registry=custom_registry)  # Override global
   ```
 
 - **Provider configuration API**: If providers need complex configuration, add builder pattern:
+
   ```python
   register_azure_kv_provider(
       credential=my_credential,
