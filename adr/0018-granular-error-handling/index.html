@@ -16,6 +16,8 @@
         <link rel="prev" href="../0017-load-env-dotenv-path-parameter/">
       
       
+        <link rel="next" href="../0019-do-not-implement-validation-helpers/">
+      
       
       <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.21">
@@ -1569,6 +1571,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0019-do-not-implement-validation-helpers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0019-do-not-implement-validation-helpers.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1871,19 +1896,25 @@
 <p>The original implementation had a single <code>stop_on_error</code> flag that controlled both types of errors uniformly. However, real-world usage revealed different requirements for handling these error types.</p>
 <h3 id="key-insight-different-error-types-need-different-handling">Key Insight: Different Error Types Need Different Handling<a class="headerlink" href="#key-insight-different-error-types-need-different-handling" title="Permanent link">&para;</a></h3>
 <p>The original implementation had a single <code>stop_on_error</code> flag that controlled both types of errors uniformly. However, real-world usage revealed different requirements for handling these error types:</p>
-<p><strong>Variable expansion errors</strong> can have different severities:
-- <strong>Typos in <code>.env</code> files</strong>: <code>DB_URL=${DATABSE_HOST}</code> (should be <code>DATABASE_HOST</code>) - should raise error
-- <strong>Optional variables</strong>: <code>LOG_LEVEL=${LOG_LEVEL:-info}</code> where <code>LOG_LEVEL</code> might not exist - could be tolerable
-- <strong>System variables</strong>: <code>$PS1</code> (bash/zsh) or <code>%PROMPT%</code> (Windows) contain literal <code>$</code> characters (e.g., <code>PS1="\u@\h:\w\$ "</code>) that trigger unintended expansion - could be tolerable</p>
-<p><strong>Secret resolution errors</strong> are consistently critical:
-- If a secret URI (<code>akv://vault/secret</code>) fails to resolve, it indicates a real problem (network, permissions, missing secret)
-- Silently ignoring resolution failures would leave <code>akv://vault/secret</code> as a literal string in <code>os.environ</code>
-- This could cause hard-to-debug issues in application code</p>
+<p><strong>Variable expansion errors</strong> can have different severities:</p>
+<ul>
+<li><strong>Typos in <code>.env</code> files</strong>: <code>DB_URL=${DATABSE_HOST}</code> (should be <code>DATABASE_HOST</code>) - should raise error</li>
+<li><strong>Optional variables</strong>: <code>LOG_LEVEL=${LOG_LEVEL:-info}</code> where <code>LOG_LEVEL</code> might not exist - could be tolerable</li>
+<li><strong>System variables</strong>: <code>$PS1</code> (bash/zsh) or <code>%PROMPT%</code> (Windows) contain literal <code>$</code> characters (e.g., <code>PS1="\u@\h:\w\$ "</code>) that trigger unintended expansion - could be tolerable</li>
+</ul>
+<p><strong>Secret resolution errors</strong> are consistently critical:</p>
+<ul>
+<li>If a secret URI (<code>akv://vault/secret</code>) fails to resolve, it indicates a real problem (network, permissions, missing secret)</li>
+<li>Silently ignoring resolution failures would leave <code>akv://vault/secret</code> as a literal string in <code>os.environ</code></li>
+<li>This could cause hard-to-debug issues in application code</li>
+</ul>
 <h3 id="need-for-granular-control">Need for Granular Control<a class="headerlink" href="#need-for-granular-control" title="Permanent link">&para;</a></h3>
-<p>Users need different error handling strategies:
-- <strong>Default behavior (both <code>True</code>)</strong>: Fail-fast for strict error detection
-- <strong>Selective suppression</strong>: Users can set <code>stop_on_expansion_error=False</code> when they know certain variables might be missing (e.g., when processing <code>os.environ</code> that includes system variables)
-- <strong>Always report secret failures</strong>: <code>stop_on_resolution_error=True</code> ensures intentional secret URIs are validated</p>
+<p>Users need different error handling strategies:</p>
+<ul>
+<li><strong>Default behavior (both <code>True</code>)</strong>: Fail-fast for strict error detection</li>
+<li><strong>Selective suppression</strong>: Users can set <code>stop_on_expansion_error=False</code> when they know certain variables might be missing (e.g., when processing <code>os.environ</code> that includes system variables)</li>
+<li><strong>Always report secret failures</strong>: <code>stop_on_resolution_error=True</code> ensures intentional secret URIs are validated</li>
+</ul>
 <p>A single <code>stop_on_error</code> flag cannot serve both needs. Future enhancements (ignore patterns) will provide more granular control for the expansion error case.</p>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
 <p>Replace single <code>stop_on_error</code> parameter with two granular parameters in both <code>load_env()</code> and <code>resolve_os_environ()</code>:</p>
@@ -1959,44 +1990,60 @@
 <h2 id="alternatives">Alternatives<a class="headerlink" href="#alternatives" title="Permanent link">&para;</a></h2>
 <h3 id="alternative-1-keep-single-stop_on_error-flag">Alternative 1: Keep Single <code>stop_on_error</code> Flag<a class="headerlink" href="#alternative-1-keep-single-stop_on_error-flag" title="Permanent link">&para;</a></h3>
 <p><strong>Characteristics</strong>: Original design with uniform error handling</p>
-<p><strong>Pros</strong>:
-- Simpler API
-- No decision needed about error categorization</p>
-<p><strong>Cons</strong>:
-- Cannot handle shell prompt variables (must stop on all errors or none)
-- All-or-nothing approach doesn't match user needs</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Simpler API</li>
+<li>No decision needed about error categorization</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Cannot handle shell prompt variables (must stop on all errors or none)</li>
+<li>All-or-nothing approach doesn't match user needs</li>
+</ul>
 <p><strong>Rejected because</strong>: Real-world usage (e.g., <code>$PS1</code> variables) requires different handling for expansion vs resolution errors.</p>
 <h3 id="alternative-2-per-exception-type-flags">Alternative 2: Per-Exception-Type Flags<a class="headerlink" href="#alternative-2-per-exception-type-flags" title="Permanent link">&para;</a></h3>
 <p><strong>Characteristics</strong>: Individual flags like <code>stop_on_variable_not_found</code>, <code>stop_on_circular_reference</code>, <code>stop_on_secret_resolution</code></p>
-<p><strong>Pros</strong>:
-- Maximum flexibility
-- Explicit control over each error type</p>
-<p><strong>Cons</strong>:
-- API grows with each new error type
-- Too granular for typical use cases
-- Cognitive overhead: users must understand internal exception hierarchy</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Maximum flexibility</li>
+<li>Explicit control over each error type</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>API grows with each new error type</li>
+<li>Too granular for typical use cases</li>
+<li>Cognitive overhead: users must understand internal exception hierarchy</li>
+</ul>
 <p><strong>Rejected because</strong>: Over-engineered for current needs; expansion/resolution categorization is more intuitive.</p>
 <h3 id="alternative-3-error-callback">Alternative 3: Error Callback<a class="headerlink" href="#alternative-3-error-callback" title="Permanent link">&para;</a></h3>
 <p><strong>Characteristics</strong>: Allow users to provide a callback function to decide whether to suppress each error</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">load_env</span><span class="p">(</span><span class="n">error_handler</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="ne">Exception</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="o">...</span>
 </code></pre></div>
-<p><strong>Pros</strong>:
-- Maximum flexibility
-- Can implement complex error handling logic</p>
-<p><strong>Cons</strong>:
-- Much more complex API
-- Harder to use for simple cases
-- Requires users to understand exception types</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Maximum flexibility</li>
+<li>Can implement complex error handling logic</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Much more complex API</li>
+<li>Harder to use for simple cases</li>
+<li>Requires users to understand exception types</li>
+</ul>
 <p><strong>Rejected because</strong>: Too complex for the common use cases; boolean flags are more Pythonic.</p>
 <h3 id="alternative-4-separate-functions">Alternative 4: Separate Functions<a class="headerlink" href="#alternative-4-separate-functions" title="Permanent link">&para;</a></h3>
 <p><strong>Characteristics</strong>: Provide separate <code>load_env_strict()</code> / <code>load_env_lenient()</code> variants</p>
-<p><strong>Pros</strong>:
-- Clear intent from function name
-- No parameter complexity</p>
-<p><strong>Cons</strong>:
-- Doesn't solve granular control problem (still need to specify which errors to tolerate)
-- API proliferation (need variants for each function)</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Clear intent from function name</li>
+<li>No parameter complexity</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Doesn't solve granular control problem (still need to specify which errors to tolerate)</li>
+<li>API proliferation (need variants for each function)</li>
+</ul>
 <p><strong>Rejected because</strong>: Doesn't address the core need for separate expansion/resolution control.</p>
 <h2 id="future-direction">Future Direction<a class="headerlink" href="#future-direction" title="Permanent link">&para;</a></h2>
 <h3 id="potential-future-enhancements">Potential Future Enhancements<a class="headerlink" href="#potential-future-enhancements" title="Permanent link">&para;</a></h3>

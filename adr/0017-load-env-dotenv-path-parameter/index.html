@@ -1430,6 +1430,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="API Changes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameter-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameter Name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      Default Value
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1528,6 +1552,29 @@
   
   <span class="md-ellipsis">
     0018-granular-error-handling.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0019-do-not-implement-validation-helpers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0019-do-not-implement-validation-helpers.md
     
   </span>
   
@@ -1698,6 +1745,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="API Changes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameter-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameter Name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      Default Value
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1809,13 +1880,17 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">load_dotenv</span><span class="p">(</span><span class="n">dotenv_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="o">...</span>
 </code></pre></div>
-<p>The differences:
-1. <strong>Parameter name</strong>: <code>path</code> vs. <code>dotenv_path</code>
-2. <strong>Default value</strong>: <code>.env</code> (explicit path) vs. <code>None</code> (search behavior)
-3. <strong>Search semantics</strong>: When <code>None</code>, python-dotenv searches for <code>.env</code> starting from the current working directory</p>
-<p>Users migrating from python-dotenv had to:
-- Rename parameter: <code>load_dotenv()</code> → <code>load_env(path=...)</code>
-- Change default behavior: <code>load_dotenv()</code> → <code>load_env(path=".env")</code></p>
+<p>The differences:</p>
+<ol>
+<li><strong>Parameter name</strong>: <code>path</code> vs. <code>dotenv_path</code></li>
+<li><strong>Default value</strong>: <code>.env</code> (explicit path) vs. <code>None</code> (search behavior)</li>
+<li><strong>Search semantics</strong>: When <code>None</code>, python-dotenv searches for <code>.env</code> starting from the current working directory</li>
+</ol>
+<p>Users migrating from python-dotenv had to:</p>
+<ul>
+<li>Rename parameter: <code>load_dotenv()</code> → <code>load_env(path=...)</code></li>
+<li>Change default behavior: <code>load_dotenv()</code> → <code>load_env(path=".env")</code></li>
+</ul>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
 <p>Change <code>load_env()</code> signature to match python-dotenv's <code>load_dotenv()</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">load_env</span><span class="p">(</span>
@@ -1869,20 +1944,20 @@
 </ul>
 <h3 id="api-changes">API Changes<a class="headerlink" href="#api-changes" title="Permanent link">&para;</a></h3>
 <p>The <code>load_env()</code> signature was updated for better python-dotenv compatibility:</p>
-<p><strong>Parameter Name</strong>
+<h4 id="parameter-name">Parameter Name<a class="headerlink" href="#parameter-name" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Before</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">envresolve</span><span class="o">.</span><span class="n">load_env</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;.env&quot;</span><span class="p">)</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># After</span>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">envresolve</span><span class="o">.</span><span class="n">load_env</span><span class="p">(</span><span class="n">dotenv_path</span><span class="o">=</span><span class="s2">&quot;.env&quot;</span><span class="p">)</span>
-</code></pre></div></p>
-<p><strong>Default Value</strong>
+</code></pre></div>
+<h4 id="default-value">Default Value<a class="headerlink" href="#default-value" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Before: Explicit path, always loads `.env` in cwd</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">load_env</span><span class="p">()</span>  <span class="c1"># Loads ./.env</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># After: None triggers search, finds .env from cwd</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">load_env</span><span class="p">()</span>  <span class="c1"># Searches for .env starting from cwd, walks up if not found</span>
-</code></pre></div></p>
+</code></pre></div>
 <p>Most users have <code>.env</code> in the current directory, so behavior remains unchanged in practice.</p>
 <h3 id="search-behavior-differences-from-python-dotenv">Search Behavior Differences from python-dotenv<a class="headerlink" href="#search-behavior-differences-from-python-dotenv" title="Permanent link">&para;</a></h3>
 <p><strong>Important limitation</strong>: <code>envresolve.load_env(None)</code> does not have identical search behavior to <code>python-dotenv</code>'s <code>load_dotenv(None)</code>:</p>
@@ -1904,32 +1979,40 @@
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="n">envresolve</span><span class="o">.</span><span class="n">register_azure_kv_provider</span><span class="p">()</span>
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="n">envresolve</span><span class="o">.</span><span class="n">resolve_os_environ</span><span class="p">()</span>  <span class="c1"># Resolves akv:// URIs in os.environ</span>
 </code></pre></div>
-<p>This approach:
-- Preserves python-dotenv's exact search semantics
-- Keeps envresolve focused on secret resolution
-- Provides clear separation of concerns</p>
+<p>This approach:</p>
+<ul>
+<li>Preserves python-dotenv's exact search semantics</li>
+<li>Keeps envresolve focused on secret resolution</li>
+<li>Provides clear separation of concerns</li>
+</ul>
 <h2 id="alternatives">Alternatives<a class="headerlink" href="#alternatives" title="Permanent link">&para;</a></h2>
 <h3 id="keep-path-parameter-only-change-default-to-none">Keep <code>path</code> parameter, only change default to <code>None</code><a class="headerlink" href="#keep-path-parameter-only-change-default-to-none" title="Permanent link">&para;</a></h3>
 <p><strong>Pros</strong>: Smaller breaking change (only default value)</p>
-<p><strong>Cons</strong>:
-- Still migration friction (parameter name mismatch)
-- Inconsistent with python-dotenv's established API
-- Confusing documentation ("path" vs. "dotenv_path")</p>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Still migration friction (parameter name mismatch)</li>
+<li>Inconsistent with python-dotenv's established API</li>
+<li>Confusing documentation ("path" vs. "dotenv_path")</li>
+</ul>
 <p><strong>Rejection reason</strong>: Partial migration creates long-term API inconsistency.</p>
 <h3 id="add-dotenv_path-as-alias-deprecate-path">Add <code>dotenv_path</code> as alias, deprecate <code>path</code><a class="headerlink" href="#add-dotenv_path-as-alias-deprecate-path" title="Permanent link">&para;</a></h3>
 <p><strong>Pros</strong>: Gradual migration path</p>
-<p><strong>Cons</strong>:
-- Increased complexity (two parameters doing the same thing)
-- Deprecation warnings add friction
-- Eventually needs breaking change anyway
-- envresolve is v0.x, users expect breakage</p>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Increased complexity (two parameters doing the same thing)</li>
+<li>Deprecation warnings add friction</li>
+<li>Eventually needs breaking change anyway</li>
+<li>envresolve is v0.x, users expect breakage</li>
+</ul>
 <p><strong>Rejection reason</strong>: For v0.x libraries, clean break is better than deprecation cycle.</p>
 <h3 id="keep-original-signature-add-searchfalse-flag">Keep original signature, add <code>search=False</code> flag<a class="headerlink" href="#keep-original-signature-add-searchfalse-flag" title="Permanent link">&para;</a></h3>
 <p><strong>Pros</strong>: No breaking change</p>
-<p><strong>Cons</strong>:
-- Doesn't solve migration friction (parameter name still wrong)
-- More complex API (two parameters to control one behavior)
-- <code>path=".env", search=True</code> is confusing</p>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Doesn't solve migration friction (parameter name still wrong)</li>
+<li>More complex API (two parameters to control one behavior)</li>
+<li><code>path=".env", search=True</code> is confusing</li>
+</ul>
 <p><strong>Rejection reason</strong>: Adds complexity without solving the root problem.</p>
 <h2 id="future-direction">Future Direction<a class="headerlink" href="#future-direction" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1941,7 +2024,7 @@
 <li>Issue: #13 "Align load_env signature with load_dotenv"</li>
 <li>Implementation: <code>src/envresolve/api.py:129-183</code></li>
 <li>Tests: <code>tests/e2e/test_load_env.py</code></li>
-<li>python-dotenv docs: https://saurabh-kumar.com/python-dotenv/</li>
+<li>python-dotenv docs: <a href="https://saurabh-kumar.com/python-dotenv/">https://saurabh-kumar.com/python-dotenv/</a></li>
 <li>Related ADRs: 0013 (class-based API design)</li>
 </ul>
 

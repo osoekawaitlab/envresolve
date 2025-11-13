@@ -1030,6 +1030,24 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#adr-0019-do-not-implement-validation-helper-functions-and-metadata-query-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0019: Do Not Implement Validation Helper Functions and Metadata Query Helpers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0020-add-ignore_keys-parameter-for-selective-variable-exclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0020: Add ignore_keys Parameter for Selective Variable Exclusion
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1547,6 +1565,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0019-do-not-implement-validation-helpers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0019-do-not-implement-validation-helpers.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1769,6 +1810,24 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#adr-0019-do-not-implement-validation-helper-functions-and-metadata-query-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0019: Do Not Implement Validation Helper Functions and Metadata Query Helpers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0020-add-ignore_keys-parameter-for-selective-variable-exclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0020: Add ignore_keys Parameter for Selective Variable Exclusion
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1837,210 +1896,104 @@
 <h3 id="adr-0004-stateless-function-based-variable-expansion">ADR 0004: Stateless Function-Based Variable Expansion<a class="headerlink" href="#adr-0004-stateless-function-based-variable-expansion" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted
 <strong>Date</strong>: 2025-10-11</p>
-<p>Chose a stateless function (<code>expand_variables()</code>) as the core API with convenience wrapper classes.</p>
-<p><strong>Key Decision</strong>: Use <code>expand_variables(text, env)</code> instead of a stateful <code>VariableExpander(env)</code> class.</p>
-<p><strong>Rationale</strong>:</p>
-<ul>
-<li>Simpler and more explicit</li>
-<li>No hidden state</li>
-<li>Better for testing</li>
-<li>More Pythonic for stateless operations</li>
-</ul>
+<p>Chose a stateless function (<code>expand_variables()</code>) as the core API instead of a stateful class.</p>
 <p><a href="../../adr/0004-stateless-function-based-variable-expansion/">View Full ADR</a></p>
 <hr />
 <h3 id="adr-0005-string-based-api-with-idempotent-resolution">ADR 0005: String-Based API with Idempotent Resolution<a class="headerlink" href="#adr-0005-string-based-api-with-idempotent-resolution" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted
 <strong>Date</strong>: 2025-10-12</p>
-<p>Decided to use a string-based API instead of data models for resolution results.</p>
-<p><strong>Key Decision</strong>: Return <code>str</code> directly instead of <code>ResolutionResult</code> models.</p>
-<p><strong>Rationale</strong>:</p>
-<ul>
-<li>Users ultimately need strings for <code>os.environ</code></li>
-<li>Zero conversion overhead</li>
-<li>Infrastructure utilities should be transparent</li>
-<li>Idempotent resolution is safer and more composable</li>
-</ul>
+<p>Return <code>str</code> directly instead of data models, with idempotent resolution (safe to call multiple times).</p>
 <p><a href="../../adr/0005-string-based-api-with-idempotent-resolution/">View Full ADR</a></p>
 <hr />
 <h3 id="adr-0006-nested-variable-expansion-implementation">ADR 0006: Nested Variable Expansion Implementation<a class="headerlink" href="#adr-0006-nested-variable-expansion-implementation" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted
 <strong>Date</strong>: 2025-10-13</p>
-<p>Chose a two-phase iterative algorithm for supporting nested variable expansion like <code>${VAR_${NESTED}}</code>.</p>
-<p><strong>Key Decision</strong>: Expand innermost curly braces first, then simple variables, iterating until stable.</p>
-<p><strong>Rationale</strong>:</p>
-<ul>
-<li>Correct inside-out evaluation order</li>
-<li>Predictable behavior for complex nesting</li>
-<li>No recursion depth limits</li>
-<li>Clear error detection</li>
-</ul>
+<p>Two-phase iterative algorithm: expand innermost <code>${...}</code> first, then simple <code>$VAR</code>.</p>
 <p><a href="../../adr/0006-nested-variable-expansion-implementation/">View Full ADR</a></p>
 <hr />
 <h3 id="adr-0007-layer-separation-services-vs-application">ADR 0007: Layer Separation (Services vs Application)<a class="headerlink" href="#adr-0007-layer-separation-services-vs-application" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted
 <strong>Date</strong>: 2025-10-13</p>
 <p>Separated pure business logic (services layer) from environment integration (application layer).</p>
-<p><strong>Key Decision</strong>: Move <code>EnvExpander</code> and <code>DotEnvExpander</code> from <code>services/expansion.py</code> to <code>application/expanders.py</code>.</p>
-<p><strong>Rationale</strong>:</p>
-<ul>
-<li>Single Responsibility Principle</li>
-<li>Better testability (pure logic without I/O)</li>
-<li>Clear dependency direction</li>
-<li>Matches clean architecture patterns</li>
-</ul>
 <p><a href="../../adr/0007-layer-separation-services-vs-application/">View Full ADR</a></p>
 <hr />
 <h3 id="adr-0008-circular-reference-chain-tracking">ADR 0008: Circular Reference Chain Tracking<a class="headerlink" href="#adr-0008-circular-reference-chain-tracking" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted
 <strong>Date</strong>: 2025-10-13</p>
-<p>Extended <code>CircularReferenceError</code> to include full reference chain for better debugging.</p>
-<p><strong>Key Decision</strong>: Add <code>chain: list[str]</code> attribute showing complete cycle (e.g., <code>["A", "B", "C", "A"]</code>).</p>
-<p><strong>Rationale</strong>:</p>
-<ul>
-<li>Immediate visibility of complete cycle</li>
-<li>Better debugging experience</li>
-<li>Programmatic access to cycle information</li>
-<li>Actionable error messages</li>
-</ul>
+<p>Extended <code>CircularReferenceError</code> to include full reference chain (<code>chain: list[str]</code>) for better debugging.</p>
 <p><a href="../../adr/0008-circular-reference-chain-tracking/">View Full ADR</a></p>
 <hr />
 <h3 id="adr-0009-manual-provider-registration-pattern">ADR 0009: Manual Provider Registration Pattern<a class="headerlink" href="#adr-0009-manual-provider-registration-pattern" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted
 <strong>Date</strong>: 2025-10-13</p>
-<p>Established manual provider registration with a global registry instead of auto-discovery or dependency injection.</p>
-<p><strong>Key Decision</strong>: Users explicitly call <code>register_azure_kv_provider()</code> before resolving secrets. Providers are stored in a module-level singleton registry.</p>
-<p><strong>Rationale</strong>:</p>
-<ul>
-<li>Opt-in dependencies (only load what you need)</li>
-<li>Explicit control over initialization timing</li>
-<li>Resource efficiency through singleton providers</li>
-<li>Clear API surface</li>
-</ul>
+<p>Users explicitly call <code>register_azure_kv_provider()</code> before resolving secrets.</p>
 <p><a href="../../adr/0009-manual-provider-registration-pattern/">View Full ADR</a></p>
 <hr />
 <h3 id="adr-0010-iterative-uri-resolution">ADR 0010: Iterative URI Resolution<a class="headerlink" href="#adr-0010-iterative-uri-resolution" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted
 <strong>Date</strong>: 2025-10-13</p>
 <p>Implemented iterative resolution with cycle detection to support URI-to-URI resolution chains.</p>
-<p><strong>Key Decision</strong>: Use a <code>while</code> loop with a <code>seen</code> set to resolve URIs iteratively until a stable value is reached or a cycle is detected.</p>
-<p><strong>Rationale</strong>:</p>
-<ul>
-<li>Supports arbitrary nesting depth</li>
-<li>Maintains idempotency (plain strings pass through)</li>
-<li>Safe cycle detection without infinite loops</li>
-<li>Flexible for mixed variable/URI resolution</li>
-</ul>
 <p><a href="../../adr/0010-iterative-uri-resolution/">View Full ADR</a></p>
 <hr />
 <h3 id="adr-0011-conditional-doctest-skip">ADR 0011: Conditional Doctest Skip<a class="headerlink" href="#adr-0011-conditional-doctest-skip" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted
 <strong>Date</strong>: 2025-10-13</p>
-<p>Implemented pytest fixture-based conditional skipping for doctests that require optional dependencies.</p>
-<p><strong>Key Decision</strong>: Use autouse fixture in <code>conftest.py</code> to detect Azure SDK availability and skip Azure-related doctests when dependencies are missing.</p>
-<p><strong>Rationale</strong>:</p>
-<ul>
-<li>Doctests validate documentation when dependencies are present</li>
-<li>Graceful degradation without Azure SDK</li>
-<li>Consistent with pytest marker strategy</li>
-<li>Avoids manual <code>+SKIP</code> directives</li>
-</ul>
+<p>Pytest fixture-based conditional skipping for doctests requiring optional dependencies.</p>
 <p><a href="../../adr/0011-conditional-doctest-skip/">View Full ADR</a></p>
 <hr />
 <h3 id="adr-0012-pytest-markers-for-azure-dependencies">ADR 0012: Pytest Markers for Azure Dependencies<a class="headerlink" href="#adr-0012-pytest-markers-for-azure-dependencies" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted
 <strong>Date</strong>: 2025-10-13</p>
-<p>Introduced dedicated pytest marker (<code>azure</code>) to isolate tests requiring optional Azure SDK dependencies.</p>
-<p><strong>Key Decision</strong>: Mark Azure-dependent tests with <code>@pytest.mark.azure</code> and provide <code>tests_without_azure</code> Nox session that excludes them.</p>
-<p><strong>Rationale</strong>:</p>
-<ul>
-<li>Core test suite runs without optional dependencies</li>
-<li>Clear signal for which tests require Azure</li>
-<li>CI can run lightweight and full test suites separately</li>
-<li>Minimal disruption for contributors</li>
-</ul>
+<p>Introduced <code>@pytest.mark.azure</code> to isolate tests requiring optional Azure SDK dependencies.</p>
 <p><a href="../../adr/0012-pytest-markers-for-azure-dependencies/">View Full ADR</a></p>
 <hr />
 <h3 id="adr-0013-class-based-api-design">ADR 0013: Class-Based API Design<a class="headerlink" href="#adr-0013-class-based-api-design" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted
 <strong>Date</strong>: 2025-10-14</p>
 <p>Encapsulated resolution state in <code>EnvResolver</code> class with module-level facade for backward compatibility.</p>
-<p><strong>Key Decision</strong>: Introduce <code>EnvResolver</code> class that encapsulates provider registry and resolver instance, expose singleton instance through module-level functions.</p>
-<p><strong>Rationale</strong>:</p>
-<ul>
-<li>Eliminates <code>global</code> keyword usage</li>
-<li>Better testability (tests can instantiate isolated resolvers)</li>
-<li>Maintains simple module-level API</li>
-<li>Supports multiple resolver instances if needed</li>
-</ul>
 <p><a href="../../adr/0013-class-based-api-design/">View Full ADR</a></p>
 <hr />
 <h3 id="adr-0014-importlib-lazy-import">ADR 0014: Importlib Lazy Import<a class="headerlink" href="#adr-0014-importlib-lazy-import" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted
 <strong>Date</strong>: 2025-10-14</p>
 <p>Used <code>importlib.import_module</code> for lazy loading of optional Azure SDK dependencies with rich error messages.</p>
-<p><strong>Key Decision</strong>: Defer Azure SDK imports until <code>register_azure_kv_provider()</code> is called, and raise <code>ProviderRegistrationError</code> (not <code>ImportError</code>) with helpful installation instructions when dependencies are missing.</p>
-<p><strong>Rationale</strong>:</p>
-<ul>
-<li>Users can import envresolve without Azure SDK</li>
-<li>Clear, actionable error messages</li>
-<li>Aligns with custom exception hierarchy (ADR-0002)</li>
-<li>Extensible pattern for future optional providers</li>
-</ul>
 <p><a href="../../adr/0014-importlib-lazy-import/">View Full ADR</a></p>
 <hr />
 <h3 id="adr-0015-manage-azure-live-test-infrastructure-with-terraform">ADR 0015: Manage Azure Live Test Infrastructure with Terraform<a class="headerlink" href="#adr-0015-manage-azure-live-test-infrastructure-with-terraform" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted
 <strong>Date</strong>: 2025-10-15</p>
-<p>Standardized live Azure Key Vault testing with Terraform-managed resources and explicit pytest gating.</p>
-<p><strong>Key Decision</strong>: Use Terraform manifests in <code>infra/terraform</code> plus helper Nox sessions to provision/destroy a Key Vault and sample secret for live tests.</p>
-<p><strong>Rationale</strong>:</p>
-<ul>
-<li>Repeatable provisioning for contributors and CI</li>
-<li>Clear separation between mocked and live suites via markers</li>
-<li>Easier cleanup through scripted Terraform destroy</li>
-</ul>
+<p>Standardized live Azure Key Vault testing with Terraform-managed resources.</p>
 <p><a href="../../adr/0015-terraform-managed-live-tests/">View Full ADR</a></p>
 <hr />
 <h3 id="adr-0016-typeerror-based-custom-exception-for-mutually-exclusive-parameters">ADR 0016: TypeError-based Custom Exception for Mutually Exclusive Parameters<a class="headerlink" href="#adr-0016-typeerror-based-custom-exception-for-mutually-exclusive-parameters" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted
 <strong>Date</strong>: 2025-10-18</p>
-<p>Created <code>MutuallyExclusiveArgumentsError</code> inheriting from both <code>EnvResolveError</code> and <code>TypeError</code> following pandas exception patterns.</p>
-<p><strong>Key Decision</strong>: Raise <code>MutuallyExclusiveArgumentsError</code> when both <code>keys</code> and <code>prefix</code> are specified in <code>resolve_os_environ()</code>.</p>
-<p><strong>Rationale</strong>:</p>
-<ul>
-<li>Aligns with Python ecosystem standards (pandas, argparse use <code>TypeError</code>)</li>
-<li>Maintains domain exception hierarchy while providing standard semantics</li>
-<li>Fail-fast approach with structured exception data (<code>arg1</code>, <code>arg2</code> attributes)</li>
-</ul>
+<p>Created <code>MutuallyExclusiveArgumentsError</code> inheriting from both <code>EnvResolveError</code> and <code>TypeError</code>.</p>
 <p><a href="../../adr/0016-mutually-exclusive-parameters-with-typeerror/">View Full ADR</a></p>
 <hr />
 <h3 id="adr-0017-align-load_env-parameter-with-python-dotenv">ADR 0017: Align load_env() Parameter with python-dotenv<a class="headerlink" href="#adr-0017-align-load_env-parameter-with-python-dotenv" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted
 <strong>Date</strong>: 2025-10-20</p>
 <p>Changed <code>load_env()</code> signature to match python-dotenv's <code>load_dotenv()</code> for zero-friction migration.</p>
-<p><strong>Key Decision</strong>: Rename parameter from <code>path</code> to <code>dotenv_path</code> and change default from <code>".env"</code> to <code>None</code>. When <code>None</code>, explicitly use <code>find_dotenv(usecwd=True)</code> to search from current working directory.</p>
-<p><strong>Rationale</strong>:</p>
-<ul>
-<li>Drop-in replacement for python-dotenv users</li>
-<li>Explicit control over search behavior (from cwd, not from <code>__file__</code>)</li>
-<li>More intuitive default (search from current directory)</li>
-<li>Better alignment with python-dotenv ecosystem</li>
-</ul>
 <p><a href="../../adr/0017-load-env-dotenv-path-parameter/">View Full ADR</a></p>
 <hr />
 <h3 id="adr-0018-granular-error-handling-for-variable-expansion-and-secret-resolution">ADR 0018: Granular Error Handling for Variable Expansion and Secret Resolution<a class="headerlink" href="#adr-0018-granular-error-handling-for-variable-expansion-and-secret-resolution" title="Permanent link">&para;</a></h3>
 <p><strong>Status</strong>: Accepted
 <strong>Date</strong>: 2025-10-21</p>
-<p>Split single <code>stop_on_error</code> flag into separate controls for expansion errors and resolution errors.</p>
-<p><strong>Key Decision</strong>: Replace <code>stop_on_error</code> with <code>stop_on_expansion_error</code> and <code>stop_on_resolution_error</code> in both <code>load_env()</code> and <code>resolve_os_environ()</code>. CircularReferenceError is always raised regardless of flags.</p>
-<p><strong>Rationale</strong>:</p>
-<ul>
-<li>Shell prompt variables (<code>$PS1</code>, <code>%PROMPT%</code>) contain literal <code>$</code> characters that should be skippable</li>
-<li>Secret resolution failures (<code>akv://</code>) indicate real problems and should be reported</li>
-<li>Two-category model (expansion/resolution) is more user-friendly than per-exception flags</li>
-<li>CircularReferenceError represents infinite loop configuration error (must not be suppressed)</li>
-</ul>
+<p>Split single <code>stop_on_error</code> flag into <code>stop_on_expansion_error</code> and <code>stop_on_resolution_error</code>.</p>
 <p><a href="../../adr/0018-granular-error-handling/">View Full ADR</a></p>
+<hr />
+<h3 id="adr-0019-do-not-implement-validation-helper-functions-and-metadata-query-helpers">ADR 0019: Do Not Implement Validation Helper Functions and Metadata Query Helpers<a class="headerlink" href="#adr-0019-do-not-implement-validation-helper-functions-and-metadata-query-helpers" title="Permanent link">&para;</a></h3>
+<p><strong>Status</strong>: Accepted
+<strong>Date</strong>: 2025-11-12</p>
+<p>Decided not to implement validation helpers and metadata query helpers due to lack of concrete use cases.</p>
+<p><a href="../../adr/0019-do-not-implement-validation-helpers/">View Full ADR</a></p>
+<hr />
+<h3 id="adr-0020-add-ignore_keys-parameter-for-selective-variable-exclusion">ADR 0020: Add ignore_keys Parameter for Selective Variable Exclusion<a class="headerlink" href="#adr-0020-add-ignore_keys-parameter-for-selective-variable-exclusion" title="Permanent link">&para;</a></h3>
+<p><strong>Status</strong>: Accepted
+<strong>Date</strong>: 2025-11-13</p>
+<p>Added <code>ignore_keys</code> parameter to selectively skip variable expansion for specified keys.</p>
+<p><a href="../../adr/0020-ignore-keys-for-selective-exclusion/">View Full ADR</a></p>
 <hr />
 <h2 id="adr-template">ADR Template<a class="headerlink" href="#adr-template" title="Permanent link">&para;</a></h2>
 <p>All ADRs follow a consistent template defined in <a href="../../adr/0000-adr-template/">ADR 0000: ADR Template</a>.</p>

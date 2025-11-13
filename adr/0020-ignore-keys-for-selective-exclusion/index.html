@@ -10,26 +10,24 @@
       
       
       
-        <link rel="canonical" href="https://github.com/osoekawaitlab/envresolve/">
+        <link rel="canonical" href="https://github.com/osoekawaitlab/envresolve/adr/0020-ignore-keys-for-selective-exclusion/">
       
       
       
-        <link rel="next" href="roadmap/">
       
-      
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.21">
     
     
       
-        <title>envresolve</title>
+        <title>ADR 0020: Add ignore_keys Parameter for Selective Variable Exclusion - envresolve</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.2a3383ac.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2a3383ac.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -48,9 +46,9 @@
       
     
     
-      <link rel="stylesheet" href="assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -76,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#welcome-to-envresolve" class="md-skip">
+        <a href="#adr-0020-add-ignore_keys-parameter-for-selective-variable-exclusion" class="md-skip">
           Skip to content
         </a>
       
@@ -90,7 +88,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="envresolve" class="md-header__button md-logo" aria-label="envresolve" data-md-component="logo">
+    <a href="../.." title="envresolve" class="md-header__button md-logo" aria-label="envresolve" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -110,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Home
+              ADR 0020: Add ignore_keys Parameter for Selective Variable Exclusion
             
           </span>
         </div>
@@ -221,11 +219,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="." class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -244,7 +240,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="roadmap/" class="md-tabs__link">
+      <a href="../../roadmap/" class="md-tabs__link">
         
   
   
@@ -265,7 +261,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="user-guide/installation/" class="md-tabs__link">
+        <a href="../../user-guide/installation/" class="md-tabs__link">
           
   
   
@@ -285,7 +281,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="api-reference/public_api/" class="md-tabs__link">
+        <a href="../../api-reference/public_api/" class="md-tabs__link">
           
   
   
@@ -305,7 +301,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="developer-guide/contributing/" class="md-tabs__link">
+        <a href="../../developer-guide/contributing/" class="md-tabs__link">
           
   
   
@@ -325,7 +321,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="architecture/adr/" class="md-tabs__link">
+        <a href="../../architecture/adr/" class="md-tabs__link">
           
   
   
@@ -359,7 +355,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="envresolve" class="md-nav__button md-logo" aria-label="envresolve" data-md-component="logo">
+    <a href="../.." title="envresolve" class="md-nav__button md-logo" aria-label="envresolve" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -386,32 +382,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Home
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -422,86 +396,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#features" class="md-nav__link">
-    <span class="md-ellipsis">
-      Features
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      Quick Start
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Quick Start">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#load-from-env-file" class="md-nav__link">
-    <span class="md-ellipsis">
-      Load from .env File
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#direct-secret-resolution" class="md-nav__link">
-    <span class="md-ellipsis">
-      Direct Secret Resolution
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#simple-variable-expansion" class="md-nav__link">
-    <span class="md-ellipsis">
-      Simple Variable Expansion
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installation
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -513,7 +407,7 @@
   
   
     <li class="md-nav__item">
-      <a href="roadmap/" class="md-nav__link">
+      <a href="../../roadmap/" class="md-nav__link">
         
   
   
@@ -580,7 +474,7 @@
   
   
     <li class="md-nav__item">
-      <a href="user-guide/installation/" class="md-nav__link">
+      <a href="../../user-guide/installation/" class="md-nav__link">
         
   
   
@@ -603,7 +497,7 @@
   
   
     <li class="md-nav__item">
-      <a href="user-guide/basic-usage/" class="md-nav__link">
+      <a href="../../user-guide/basic-usage/" class="md-nav__link">
         
   
   
@@ -678,7 +572,7 @@
   
   
     <li class="md-nav__item">
-      <a href="api-reference/public_api/" class="md-nav__link">
+      <a href="../../api-reference/public_api/" class="md-nav__link">
         
   
   
@@ -701,7 +595,7 @@
   
   
     <li class="md-nav__item">
-      <a href="api-reference/providers/" class="md-nav__link">
+      <a href="../../api-reference/providers/" class="md-nav__link">
         
   
   
@@ -724,7 +618,7 @@
   
   
     <li class="md-nav__item">
-      <a href="api-reference/exceptions/" class="md-nav__link">
+      <a href="../../api-reference/exceptions/" class="md-nav__link">
         
   
   
@@ -799,7 +693,7 @@
   
   
     <li class="md-nav__item">
-      <a href="developer-guide/contributing/" class="md-nav__link">
+      <a href="../../developer-guide/contributing/" class="md-nav__link">
         
   
   
@@ -822,7 +716,7 @@
   
   
     <li class="md-nav__item">
-      <a href="developer-guide/live-tests/" class="md-nav__link">
+      <a href="../../developer-guide/live-tests/" class="md-nav__link">
         
   
   
@@ -897,7 +791,7 @@
   
   
     <li class="md-nav__item">
-      <a href="architecture/adr/" class="md-nav__link">
+      <a href="../../architecture/adr/" class="md-nav__link">
         
   
   
@@ -965,7 +859,7 @@
   
   
     <li class="md-nav__item">
-      <a href="adr/0000-adr-template/" class="md-nav__link">
+      <a href="../0000-adr-template/" class="md-nav__link">
         
   
   
@@ -988,7 +882,7 @@
   
   
     <li class="md-nav__item">
-      <a href="adr/0001-variable-expansion-with-regex/" class="md-nav__link">
+      <a href="../0001-variable-expansion-with-regex/" class="md-nav__link">
         
   
   
@@ -1011,7 +905,7 @@
   
   
     <li class="md-nav__item">
-      <a href="adr/0002-custom-exception-hierarchy/" class="md-nav__link">
+      <a href="../0002-custom-exception-hierarchy/" class="md-nav__link">
         
   
   
@@ -1034,7 +928,7 @@
   
   
     <li class="md-nav__item">
-      <a href="adr/0003-structured-exception-design/" class="md-nav__link">
+      <a href="../0003-structured-exception-design/" class="md-nav__link">
         
   
   
@@ -1057,7 +951,7 @@
   
   
     <li class="md-nav__item">
-      <a href="adr/0004-stateless-function-based-variable-expansion/" class="md-nav__link">
+      <a href="../0004-stateless-function-based-variable-expansion/" class="md-nav__link">
         
   
   
@@ -1080,7 +974,7 @@
   
   
     <li class="md-nav__item">
-      <a href="adr/0005-string-based-api-with-idempotent-resolution/" class="md-nav__link">
+      <a href="../0005-string-based-api-with-idempotent-resolution/" class="md-nav__link">
         
   
   
@@ -1103,7 +997,7 @@
   
   
     <li class="md-nav__item">
-      <a href="adr/0006-nested-variable-expansion-implementation/" class="md-nav__link">
+      <a href="../0006-nested-variable-expansion-implementation/" class="md-nav__link">
         
   
   
@@ -1126,7 +1020,7 @@
   
   
     <li class="md-nav__item">
-      <a href="adr/0007-layer-separation-services-vs-application/" class="md-nav__link">
+      <a href="../0007-layer-separation-services-vs-application/" class="md-nav__link">
         
   
   
@@ -1149,7 +1043,7 @@
   
   
     <li class="md-nav__item">
-      <a href="adr/0008-circular-reference-chain-tracking/" class="md-nav__link">
+      <a href="../0008-circular-reference-chain-tracking/" class="md-nav__link">
         
   
   
@@ -1172,7 +1066,7 @@
   
   
     <li class="md-nav__item">
-      <a href="adr/0009-manual-provider-registration-pattern/" class="md-nav__link">
+      <a href="../0009-manual-provider-registration-pattern/" class="md-nav__link">
         
   
   
@@ -1195,7 +1089,7 @@
   
   
     <li class="md-nav__item">
-      <a href="adr/0010-iterative-uri-resolution/" class="md-nav__link">
+      <a href="../0010-iterative-uri-resolution/" class="md-nav__link">
         
   
   
@@ -1218,7 +1112,7 @@
   
   
     <li class="md-nav__item">
-      <a href="adr/0011-conditional-doctest-skip/" class="md-nav__link">
+      <a href="../0011-conditional-doctest-skip/" class="md-nav__link">
         
   
   
@@ -1241,7 +1135,7 @@
   
   
     <li class="md-nav__item">
-      <a href="adr/0012-pytest-markers-for-azure-dependencies/" class="md-nav__link">
+      <a href="../0012-pytest-markers-for-azure-dependencies/" class="md-nav__link">
         
   
   
@@ -1264,7 +1158,7 @@
   
   
     <li class="md-nav__item">
-      <a href="adr/0013-class-based-api-design/" class="md-nav__link">
+      <a href="../0013-class-based-api-design/" class="md-nav__link">
         
   
   
@@ -1287,7 +1181,7 @@
   
   
     <li class="md-nav__item">
-      <a href="adr/0014-importlib-lazy-import/" class="md-nav__link">
+      <a href="../0014-importlib-lazy-import/" class="md-nav__link">
         
   
   
@@ -1310,7 +1204,7 @@
   
   
     <li class="md-nav__item">
-      <a href="adr/0015-terraform-managed-live-tests/" class="md-nav__link">
+      <a href="../0015-terraform-managed-live-tests/" class="md-nav__link">
         
   
   
@@ -1333,7 +1227,7 @@
   
   
     <li class="md-nav__item">
-      <a href="adr/0016-mutually-exclusive-parameters-with-typeerror/" class="md-nav__link">
+      <a href="../0016-mutually-exclusive-parameters-with-typeerror/" class="md-nav__link">
         
   
   
@@ -1356,7 +1250,7 @@
   
   
     <li class="md-nav__item">
-      <a href="adr/0017-load-env-dotenv-path-parameter/" class="md-nav__link">
+      <a href="../0017-load-env-dotenv-path-parameter/" class="md-nav__link">
         
   
   
@@ -1379,7 +1273,7 @@
   
   
     <li class="md-nav__item">
-      <a href="adr/0018-granular-error-handling/" class="md-nav__link">
+      <a href="../0018-granular-error-handling/" class="md-nav__link">
         
   
   
@@ -1402,7 +1296,7 @@
   
   
     <li class="md-nav__item">
-      <a href="adr/0019-do-not-implement-validation-helpers/" class="md-nav__link">
+      <a href="../0019-do-not-implement-validation-helpers/" class="md-nav__link">
         
   
   
@@ -1460,46 +1354,64 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#features" class="md-nav__link">
+  <a href="#status" class="md-nav__link">
     <span class="md-ellipsis">
-      Features
+      Status
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
+  <a href="#date" class="md-nav__link">
     <span class="md-ellipsis">
-      Quick Start
+      Date
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Quick Start">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Decision
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rationale
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Rationale">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#load-from-env-file" class="md-nav__link">
+  <a href="#phase-1-list-based-exact-matching" class="md-nav__link">
     <span class="md-ellipsis">
-      Load from .env File
+      Phase 1: List-based exact matching
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#direct-secret-resolution" class="md-nav__link">
+  <a href="#why-not-patterns-from-the-start" class="md-nav__link">
     <span class="md-ellipsis">
-      Direct Secret Resolution
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#simple-variable-expansion" class="md-nav__link">
-    <span class="md-ellipsis">
-      Simple Variable Expansion
+      Why not patterns from the start
     </span>
   </a>
   
@@ -1511,9 +1423,93 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
+  <a href="#implications" class="md-nav__link">
     <span class="md-ellipsis">
-      Installation
+      Implications
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positive-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Positive Implications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Concerns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternatives
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#glob-patterns-immediately" class="md-nav__link">
+    <span class="md-ellipsis">
+      Glob Patterns Immediately
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#callback-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      Callback Function
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automatic-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Automatic Detection
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-direction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Future Direction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
     </span>
   </a>
   
@@ -1538,66 +1534,71 @@
   
 
 
-<h1 id="welcome-to-envresolve">Welcome to envresolve<a class="headerlink" href="#welcome-to-envresolve" title="Permanent link">&para;</a></h1>
-<p>Resolve environment variables from secret stores like Azure Key Vault.</p>
-<h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
+<h1 id="adr-0020-add-ignore_keys-parameter-for-selective-variable-exclusion">ADR 0020: Add ignore_keys Parameter for Selective Variable Exclusion<a class="headerlink" href="#adr-0020-add-ignore_keys-parameter-for-selective-variable-exclusion" title="Permanent link">&para;</a></h1>
+<h2 id="status">Status<a class="headerlink" href="#status" title="Permanent link">&para;</a></h2>
+<p>Accepted</p>
+<h2 id="date">Date<a class="headerlink" href="#date" title="Permanent link">&para;</a></h2>
+<p>2025-11-13</p>
+<h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
+<p>System environment variables (<code>$PS1</code>, <code>$PS2</code>, <code>%PROMPT%</code>) contain literal <code>$</code> characters (e.g., <code>PS1="${USER}@${HOST}$ "</code>). When processing these with <code>resolve_os_environ()</code>, the <code>$</code> triggers unintended variable expansion, causing <code>VariableNotFoundError</code>.</p>
+<p>The existing <code>stop_on_expansion_error=False</code> suppresses all expansion errors, preventing detection of legitimate typos in configuration.</p>
+<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
+<p>Add <code>ignore_keys</code> parameter to <code>load_env()</code> and <code>resolve_os_environ()</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">load_env</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">ignore_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span> <span class="o">...</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">resolve_os_environ</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">ignore_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span> <span class="o">...</span>
+</code></pre></div>
+<p>Variables in <code>ignore_keys</code> skip expansion/resolution and are included as-is. Phase 1 uses exact string matching only.</p>
+<h2 id="rationale">Rationale<a class="headerlink" href="#rationale" title="Permanent link">&para;</a></h2>
+<h3 id="phase-1-list-based-exact-matching">Phase 1: List-based exact matching<a class="headerlink" href="#phase-1-list-based-exact-matching" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Variable expansion</strong>: Expand <code>${VAR}</code> and <code>$VAR</code> syntax in strings</li>
-<li><strong>Secret resolution</strong>: Fetch secrets from Azure Key Vault (more providers coming)</li>
-<li><strong>.env support</strong>: Load variables from <code>.env</code> files and automatically resolve secrets</li>
-<li><strong>Circular reference detection</strong>: Prevents infinite loops in variable chains</li>
-<li><strong>Type-safe</strong>: Full mypy type checking support</li>
+<li>Solves the immediate problem (system variables)</li>
+<li>Simple mental model</li>
+<li>Foundation for future pattern matching</li>
 </ul>
-<h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
-<h3 id="load-from-env-file">Load from .env File<a class="headerlink" href="#load-from-env-file" title="Permanent link">&para;</a></h3>
-<p>The easiest way to use <code>envresolve</code> is by loading a <code>.env</code> file.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">envresolve</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># .env file content:</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># VAULT_NAME=my-vault</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># DATABASE_URL=akv://${VAULT_NAME}/db-url</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># API_KEY=akv://${VAULT_NAME}/api-key</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Requires: pip install envresolve[azure]</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Requires: Azure authentication (az login, Managed Identity, etc.)</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">envresolve</span><span class="o">.</span><span class="n">register_azure_kv_provider</span><span class="p">()</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Load .env and resolve all secret URIs</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># By default, searches for .env in current directory and exports to os.environ</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">resolved_vars</span> <span class="o">=</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">load_env</span><span class="p">()</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Or specify explicit path and disable export</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">resolved_vars</span> <span class="o">=</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">load_env</span><span class="p">(</span><span class="n">dotenv_path</span><span class="o">=</span><span class="s2">&quot;.env&quot;</span><span class="p">,</span> <span class="n">export</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="direct-secret-resolution">Direct Secret Resolution<a class="headerlink" href="#direct-secret-resolution" title="Permanent link">&para;</a></h3>
-<p>You can also fetch individual secrets directly:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">envresolve</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Requires: pip install envresolve[azure]</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">envresolve</span><span class="o">.</span><span class="n">register_azure_kv_provider</span><span class="p">()</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">secret_value</span> <span class="o">=</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">resolve_secret</span><span class="p">(</span><span class="s2">&quot;akv://corp-vault/db-password&quot;</span><span class="p">)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">secret_value</span><span class="p">)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="k">except</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">ProviderRegistrationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Azure SDK not available: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="k">except</span> <span class="n">envresolve</span><span class="o">.</span><span class="n">SecretResolutionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to fetch secret: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="simple-variable-expansion">Simple Variable Expansion<a class="headerlink" href="#simple-variable-expansion" title="Permanent link">&para;</a></h3>
-<p>Expand variables without connecting to external services:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">envresolve</span><span class="w"> </span><span class="kn">import</span> <span class="n">expand_variables</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">env</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;VAULT&quot;</span><span class="p">:</span> <span class="s2">&quot;corp-kv&quot;</span><span class="p">,</span> <span class="s2">&quot;SECRET&quot;</span><span class="p">:</span> <span class="s2">&quot;db-password&quot;</span><span class="p">}</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">result</span> <span class="o">=</span> <span class="n">expand_variables</span><span class="p">(</span><span class="s2">&quot;akv://$</span><span class="si">{VAULT}</span><span class="s2">/$</span><span class="si">{SECRET}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># akv://corp-kv/db-password</span>
-</code></pre></div>
-<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Basic installation (variable expansion only)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>pip<span class="w"> </span>install<span class="w"> </span>envresolve
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># With Azure Key Vault support</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>pip<span class="w"> </span>install<span class="w"> </span>envresolve<span class="o">[</span>azure<span class="o">]</span>
-</code></pre></div>
+<h3 id="why-not-patterns-from-the-start">Why not patterns from the start<a class="headerlink" href="#why-not-patterns-from-the-start" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Increases scope and complexity</li>
+<li>List-based approach provides immediate value</li>
+<li>Patterns can be added incrementally without breaking changes</li>
+</ul>
+<h2 id="implications">Implications<a class="headerlink" href="#implications" title="Permanent link">&para;</a></h2>
+<h3 id="positive-implications">Positive Implications<a class="headerlink" href="#positive-implications" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Selective exclusion with strict error checking for other variables</li>
+<li>Complements granular error handling (ADR-0018)</li>
+<li>Non-breaking addition (optional parameter)</li>
+</ul>
+<h3 id="concerns">Concerns<a class="headerlink" href="#concerns" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Manual specification required for each key<ul>
+<li><strong>Mitigation</strong>: Phase 2 will add glob patterns</li>
+</ul>
+</li>
+</ul>
+<h2 id="alternatives">Alternatives<a class="headerlink" href="#alternatives" title="Permanent link">&para;</a></h2>
+<h3 id="glob-patterns-immediately">Glob Patterns Immediately<a class="headerlink" href="#glob-patterns-immediately" title="Permanent link">&para;</a></h3>
+<p><strong>Pros</strong>: More flexible, fewer manual specifications</p>
+<p><strong>Cons</strong>: More complex, increases initial scope</p>
+<p><strong>Rejected</strong>: Incremental approach provides faster value</p>
+<h3 id="callback-function">Callback Function<a class="headerlink" href="#callback-function" title="Permanent link">&para;</a></h3>
+<p><strong>Pros</strong>: Maximum flexibility</p>
+<p><strong>Cons</strong>: Overkill for typical use cases, harder to configure</p>
+<p><strong>Rejected</strong>: List-based approach covers 90% of use cases</p>
+<h3 id="automatic-detection">Automatic Detection<a class="headerlink" href="#automatic-detection" title="Permanent link">&para;</a></h3>
+<p><strong>Pros</strong>: Zero configuration</p>
+<p><strong>Cons</strong>: Magic behavior, platform-specific, users lose control</p>
+<p><strong>Rejected</strong>: Explicit configuration is more predictable</p>
+<h2 id="future-direction">Future Direction<a class="headerlink" href="#future-direction" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Phase 2</strong>: <code>ignore_patterns</code> with glob matching (<code>PS*</code>, <code>PROMPT*</code>)</li>
+<li><strong>Phase 3</strong>: <code>ENVRESOLVE_IGNORE</code> environment variable</li>
+<li><strong>Potential</strong>: Case-insensitive matching, regex patterns, invert logic</li>
+</ul>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Issue #20: Add ignore_keys parameter</li>
+<li>ADR-0018: Granular Error Handling</li>
+</ul>
 
 
 
@@ -1652,10 +1653,10 @@
     
     
       
-      <script id="__config" type="application/json">{"base": ".", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.f55a23d4.min.js"></script>
+      <script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
       
     
   </body>

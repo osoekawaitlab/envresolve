@@ -1499,6 +1499,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0019-do-not-implement-validation-helpers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0019-do-not-implement-validation-helpers.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1810,15 +1833,21 @@
 </ul>
 <h3 id="concerns">Concerns<a class="headerlink" href="#concerns" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Memory overhead</strong>: Storing chain list for each error</li>
+<li><strong>Memory overhead</strong>: Storing chain list for each error<ul>
 <li>Mitigation: Chains are typically 2-10 variables; minimal memory impact</li>
 <li>Errors are exceptional path, not hot path</li>
-<li><strong>Stack management complexity</strong>: Need to pass and maintain stack through recursion</li>
+</ul>
+</li>
+<li><strong>Stack management complexity</strong>: Need to pass and maintain stack through recursion<ul>
 <li>Mitigation: Stack is implementation detail, not exposed in public API</li>
 <li>Clear with try/finally pattern</li>
-<li><strong>Chain extraction logic</strong>: Must correctly identify cycle portion</li>
+</ul>
+</li>
+<li><strong>Chain extraction logic</strong>: Must correctly identify cycle portion<ul>
 <li>Mitigation: Simple slice operation <code>stack[cycle_start:]</code></li>
 <li>Well-tested in unit tests</li>
+</ul>
+</li>
 </ul>
 <h2 id="alternatives">Alternatives<a class="headerlink" href="#alternatives" title="Permanent link">&para;</a></h2>
 <h3 id="variable-name-only-original-design">Variable Name Only (Original Design)<a class="headerlink" href="#variable-name-only-original-design" title="Permanent link">&para;</a></h3>
@@ -1828,14 +1857,18 @@
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Circular reference detected: </span><span class="si">{</span><span class="n">variable_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
 <ul>
-<li><strong>Pros</strong>:</li>
+<li><strong>Pros</strong>:<ul>
 <li>Simplest implementation</li>
 <li>Minimal memory usage</li>
 <li>No stack tracking needed</li>
-<li><strong>Cons</strong>:</li>
+</ul>
+</li>
+<li><strong>Cons</strong>:<ul>
 <li>Poor debugging experience</li>
 <li>User must manually trace references</li>
 <li>Hard to identify long cycles</li>
+</ul>
+</li>
 <li><strong>Rejection reason</strong>: Sacrifices usability for minimal complexity reduction</li>
 </ul>
 <h3 id="full-stack-trace-in-error-message">Full Stack Trace in Error Message<a class="headerlink" href="#full-stack-trace-in-error-message" title="Permanent link">&para;</a></h3>
@@ -1844,13 +1877,17 @@
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Circular reference: </span><span class="si">{</span><span class="n">variable_name</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_stack</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
 </code></pre></div>
 <ul>
-<li><strong>Pros</strong>:</li>
+<li><strong>Pros</strong>:<ul>
 <li>Shows complete execution context</li>
 <li>Includes line numbers and file names</li>
-<li><strong>Cons</strong>:</li>
+</ul>
+</li>
+<li><strong>Cons</strong>:<ul>
 <li>Cluttered with implementation details (internal function names)</li>
 <li>Confuses users with irrelevant information</li>
 <li>Chain is buried in noise</li>
+</ul>
+</li>
 <li><strong>Rejection reason</strong>: Too much information, not user-focused</li>
 </ul>
 <h3 id="lazy-chain-computation">Lazy Chain Computation<a class="headerlink" href="#lazy-chain-computation" title="Permanent link">&para;</a></h3>
@@ -1865,13 +1902,17 @@
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="k">return</span> <span class="n">visited</span><span class="p">[</span><span class="n">visited</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">current</span><span class="p">):]</span>
 </code></pre></div>
 <ul>
-<li><strong>Pros</strong>:</li>
+<li><strong>Pros</strong>:<ul>
 <li>No overhead during normal execution</li>
 <li>Chain only computed when error occurs</li>
-<li><strong>Cons</strong>:</li>
+</ul>
+</li>
+<li><strong>Cons</strong>:<ul>
 <li>Complex re-traversal logic</li>
 <li>May not find exact same cycle (if nested expansion)</li>
 <li>Requires parsing variable references again</li>
+</ul>
+</li>
 <li><strong>Rejection reason</strong>: Complexity outweighs benefits; expansion already maintains stack</li>
 </ul>
 <h3 id="set-based-cycle-detection-only">Set-Based Cycle Detection Only<a class="headerlink" href="#set-based-cycle-detection-only" title="Permanent link">&para;</a></h3>
@@ -1881,22 +1922,28 @@
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="k">raise</span> <span class="n">CircularReferenceError</span><span class="p">(</span><span class="n">var_name</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">visited</span><span class="p">))</span>
 </code></pre></div>
 <ul>
-<li><strong>Pros</strong>:</li>
+<li><strong>Pros</strong>:<ul>
 <li>Fast O(1) lookup</li>
 <li>Simple implementation</li>
-<li><strong>Cons</strong>:</li>
+</ul>
+</li>
+<li><strong>Cons</strong>:<ul>
 <li>Set is unordered; can't show reference chain in correct order</li>
 <li>Cycle path is lost (which variables led to which)</li>
 <li>Error message is confusing: "Circular reference in {C, A, B, D}" (no order)</li>
+</ul>
+</li>
 <li><strong>Rejection reason</strong>: Order is critical for understanding the problem</li>
 </ul>
 <h2 id="future-direction">Future Direction<a class="headerlink" href="#future-direction" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Cycle visualization</strong>: For complex cycles, consider:</li>
+<li>
+<p><strong>Cycle visualization</strong>: For complex cycles, consider:</p>
+<ul>
 <li>ASCII art diagram showing the cycle</li>
 <li>Graphviz DOT format for automated visualization</li>
-<li>
-<p>Suggestion of which variable to change</p>
+<li>Suggestion of which variable to change</li>
+</ul>
 </li>
 <li>
 <p><strong>Cycle length limits</strong>: If cycles exceed N variables, truncate display:</p>
@@ -1905,23 +1952,27 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>&quot;Circular reference: A -&gt; B -&gt; ... -&gt; Y -&gt; Z -&gt; A (50 variables in cycle)&quot;
 </code></pre></div>
 <ul>
-<li><strong>Interactive debugging</strong>: If running in interactive environment:</li>
-<li>Highlight cycle variables in configuration file</li>
 <li>
-<p>Suggest breaking the cycle with environment override</p>
+<p><strong>Interactive debugging</strong>: If running in interactive environment:</p>
+<ul>
+<li>Highlight cycle variables in configuration file</li>
+<li>Suggest breaking the cycle with environment override</li>
+</ul>
 </li>
 <li>
 <p><strong>Multiple cycle detection</strong>: Currently stops at first cycle found:</p>
-</li>
+<ul>
 <li>Consider detecting all cycles in a configuration</li>
-<li>
-<p>Report all cycles together for comprehensive fix</p>
+<li>Report all cycles together for comprehensive fix</li>
+</ul>
 </li>
 <li>
 <p><strong>Performance monitoring</strong>: Track cycle detection overhead:</p>
-</li>
+<ul>
 <li>If stack management becomes bottleneck, optimize</li>
 <li>Consider specialized data structure for large configurations</li>
+</ul>
+</li>
 </ul>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1929,8 +1980,8 @@
 <li>Implementation: <code>src/envresolve/exceptions.py::CircularReferenceError</code></li>
 <li>Implementation: <code>src/envresolve/services/expansion.py::_resolve</code></li>
 <li>Test cases: <code>tests/unit/test_expansion.py::test_circular_reference_raises_error</code></li>
-<li>Graph cycle detection algorithms: https://en.wikipedia.org/wiki/Cycle_detection</li>
-<li>Error message best practices: https://developers.google.com/tech-writing/error-messages</li>
+<li>Graph cycle detection algorithms: <a href="https://en.wikipedia.org/wiki/Cycle_detection">https://en.wikipedia.org/wiki/Cycle_detection</a></li>
+<li>Error message best practices: <a href="https://developers.google.com/tech-writing/error-messages">https://developers.google.com/tech-writing/error-messages</a></li>
 </ul>
 
 

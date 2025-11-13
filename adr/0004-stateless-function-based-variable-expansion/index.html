@@ -1490,6 +1490,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0019-do-not-implement-validation-helpers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0019-do-not-implement-validation-helpers.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1764,11 +1787,13 @@
 </code></pre></div>
 <ul>
 <li><strong>Pros</strong>: Less repetition when using the same env multiple times</li>
-<li><strong>Cons</strong>:</li>
+<li><strong>Cons</strong>:<ul>
 <li>Unnecessary object creation for one-time use</li>
 <li>Hidden state makes testing more complex</li>
 <li>Need to create new objects to switch env dicts</li>
 <li>Violates "functions over classes" principle when state is not needed</li>
+</ul>
+</li>
 <li><strong>Rejection reason</strong>: Adds complexity without sufficient benefit. State is not needed for this operation.</li>
 </ul>
 <h3 id="factory-functions">Factory Functions<a class="headerlink" href="#factory-functions" title="Permanent link">&para;</a></h3>

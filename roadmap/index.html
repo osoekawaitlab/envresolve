@@ -463,13 +463,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#current-version-010" class="md-nav__link">
+  <a href="#current-version-017" class="md-nav__link">
     <span class="md-ellipsis">
-      Current Version: 0.1.0
+      Current Version: 0.1.7
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Current Version: 0.1.0">
+    <nav class="md-nav" aria-label="Current Version: 0.1.7">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1403,6 +1403,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0019-do-not-implement-validation-helpers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    0019-do-not-implement-validation-helpers.md
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1445,13 +1468,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#current-version-010" class="md-nav__link">
+  <a href="#current-version-017" class="md-nav__link">
     <span class="md-ellipsis">
-      Current Version: 0.1.0
+      Current Version: 0.1.7
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Current Version: 0.1.0">
+    <nav class="md-nav" aria-label="Current Version: 0.1.7">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1530,7 +1553,7 @@
 
 
 <h1 id="roadmap">Roadmap<a class="headerlink" href="#roadmap" title="Permanent link">&para;</a></h1>
-<h2 id="current-version-010">Current Version: 0.1.0<a class="headerlink" href="#current-version-010" title="Permanent link">&para;</a></h2>
+<h2 id="current-version-017">Current Version: 0.1.7<a class="headerlink" href="#current-version-017" title="Permanent link">&para;</a></h2>
 <h3 id="completed-features">Completed Features<a class="headerlink" href="#completed-features" title="Permanent link">&para;</a></h3>
 <ul>
 <li>✅ Variable expansion with <code>${VAR}</code> and <code>$VAR</code> syntax</li>
@@ -1538,18 +1561,18 @@
 <li>✅ Nested variable expansion</li>
 <li>✅ Support for <code>os.environ</code>, <code>.env</code> files, and custom dictionaries</li>
 <li>✅ Secret URI resolution with Azure Key Vault provider (<code>resolve_secret</code>, <code>load_env</code>)</li>
+<li>✅ Variable ignore patterns (Phase 1): <code>ignore_keys</code> parameter for exact string matching</li>
 </ul>
 <h2 id="planned-features">Planned Features<a class="headerlink" href="#planned-features" title="Permanent link">&para;</a></h2>
 <h3 id="v01x-in-progress">v0.1.x (In Progress)<a class="headerlink" href="#v01x-in-progress" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Validation helpers for string-based API (<code>is_resolved</code>, <code>needs_expansion</code>, <code>is_secret_uri</code>)</li>
-<li>Optional metadata/query helpers for resolved values</li>
 <li>Structured logging hooks for resolution diagnostics</li>
-<li>Variable ignore patterns for error handling:</li>
-<li>Function parameter: <code>ignore_keys</code>, <code>ignore_patterns</code></li>
-<li>Pattern matching support (e.g., <code>PS*</code>, <code>PROMPT*</code>)</li>
-<li>Environment variable configuration: <code>ENVRESOLVE_IGNORE</code></li>
-<li>Use case: Skip system variables like <code>$PS1</code>, <code>%PROMPT%</code> that contain <code>$</code> characters</li>
+<li>Variable ignore patterns (Phase 2 &amp; 3):<ul>
+<li>✅ Phase 1: <code>ignore_keys</code> parameter with exact string matching</li>
+<li>Phase 2: <code>ignore_patterns</code> parameter with glob-style matching (e.g., <code>PS*</code>, <code>PROMPT*</code>)</li>
+<li>Phase 3: <code>ENVRESOLVE_IGNORE</code> environment variable configuration</li>
+</ul>
+</li>
 </ul>
 <h3 id="v02x">v0.2.x<a class="headerlink" href="#v02x" title="Permanent link">&para;</a></h3>
 <ul>
@@ -1559,11 +1582,13 @@
 </ul>
 <h3 id="v03x">v0.3.x+<a class="headerlink" href="#v03x" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Additional secret providers:</li>
+<li>Additional secret providers:<ul>
 <li>AWS Secrets Manager / SSM Parameter Store</li>
 <li>Google Secret Manager</li>
 <li>HashiCorp Vault</li>
 <li>Local: 1Password, Bitwarden, pass, sops</li>
+</ul>
+</li>
 <li>Async support for concurrent secret resolution</li>
 </ul>
 
