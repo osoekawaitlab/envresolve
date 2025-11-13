@@ -340,6 +340,39 @@ print(resolved["PLAIN"])       # plain-value
 assert "BAD_KEY" not in resolved  # Skipped due to error
 ```
 
+#### Ignoring Specific Variables
+
+Use `ignore_keys` to skip variable expansion and secret resolution for specific keys. This is useful when certain variables should be preserved as-is:
+
+```python
+import os
+import envresolve
+
+os.environ["CONFIG"] = "${UNDEFINED_VAR}"  # Contains undefined variable reference
+os.environ["API_KEY"] = "akv://vault/api-key"
+
+# Skip expansion for CONFIG
+resolved = envresolve.resolve_os_environ(ignore_keys=["CONFIG"])
+
+print(resolved["CONFIG"])     # Output: ${UNDEFINED_VAR} (unchanged)
+print(resolved["API_KEY"])    # Resolved secret value
+```
+
+Ignored variables are included in the result as-is without any processing.
+
+**When to use `ignore_keys`:**
+
+- Skip specific variables while maintaining strict error checking for others
+- Preserve variables containing literal `$` characters that shouldn't be expanded
+- Temporarily exclude problematic variables during debugging
+
+**Difference from `stop_on_expansion_error=False`:**
+
+- `ignore_keys`: Selectively excludes specific variables by name
+- `stop_on_expansion_error=False`: Suppresses all expansion errors globally
+
+Use `ignore_keys` when you know exactly which variables to skip, and `stop_on_expansion_error=False` when you want lenient error handling across all variables.
+
 ## Error Handling
 
 When working with external services, it's important to handle potential errors like missing dependencies, incorrect configuration, or network issues.

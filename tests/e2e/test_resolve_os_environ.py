@@ -505,3 +505,27 @@ def test_resolve_os_environ_keys_and_prefix_both_specified(
     assert exc_info.value.arg1 == "keys"
     assert exc_info.value.arg2 == "prefix"
     assert "mutually exclusive" in str(exc_info.value).lower()
+
+
+@pytest.mark.e2e
+@pytest.mark.usefixtures("resolve_mocks")
+def test_resolve_os_environ_with_ignore_keys(mocker: MockFixture) -> None:
+    """Test resolve_os_environ with ignore_keys parameter.
+
+    Acceptance criteria:
+    - ignore_keys parameter skips expansion for specified keys
+    - Ignored variables are included in result as-is
+    """
+    mocker.patch.dict(
+        os.environ,
+        {
+            "CONFIG": "${UNDEFINED_VAR}",  # Would cause VariableNotFoundError
+            "VALID": "hello",
+        },
+        clear=True,
+    )
+
+    result = envresolve.resolve_os_environ(ignore_keys=["CONFIG"])
+
+    assert result["CONFIG"] == "${UNDEFINED_VAR}"  # Unchanged, not expanded
+    assert result["VALID"] == "hello"
