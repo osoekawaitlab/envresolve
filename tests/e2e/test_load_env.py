@@ -389,3 +389,23 @@ def test_load_env_both_errors_raised(temp_env_dir: Path, mocker: MockerFixture) 
     # Should raise expansion error (first in the file)
     with pytest.raises(envresolve.VariableNotFoundError):
         envresolve.load_env(dotenv_path=env_file, export=False)
+
+
+def test_load_env_with_ignore_keys(temp_env_dir: Path, mocker: MockerFixture) -> None:
+    """Test load_env() with ignore_keys parameter.
+
+    Acceptance criteria:
+    - ignore_keys parameter skips expansion for specified keys
+    - Ignored variables are included in result as-is
+    """
+    env_file = temp_env_dir / ".env"
+    env_file.write_text("CONFIG=${UNDEFINED_VAR}\nVALID=hello\n")
+
+    mocker.patch.dict("os.environ", {"PATH": "/usr/bin"}, clear=True)
+
+    result = envresolve.load_env(
+        dotenv_path=env_file, export=False, ignore_keys=["CONFIG"]
+    )
+
+    assert result["CONFIG"] == "${UNDEFINED_VAR}"  # Unchanged, not expanded
+    assert result["VALID"] == "hello"

@@ -441,3 +441,60 @@ def test_register_azure_kv_provider_idempotent() -> None:
     # Should not raise
     envresolve.register_azure_kv_provider()
     envresolve.register_azure_kv_provider()
+
+
+def test_resolve_os_environ_with_ignore_keys(mocker: MockFixture) -> None:
+    """Test that ignore_keys skips expansion for specified keys."""
+    resolver = EnvResolver()
+
+    mocker.patch.dict(
+        os.environ,
+        {
+            "CONFIG": "${UNDEFINED_VAR}",  # Would cause VariableNotFoundError
+            "VALID": "hello",
+        },
+        clear=True,
+    )
+
+    result = resolver.resolve_os_environ(ignore_keys=["CONFIG"])
+
+    # CONFIG should be unchanged (not expanded)
+    assert result["CONFIG"] == "${UNDEFINED_VAR}"
+    # VALID should be processed normally
+    assert result["VALID"] == "hello"
+
+
+def test_resolve_os_environ_with_empty_ignore_keys(mocker: MockFixture) -> None:
+    """Test that empty ignore_keys list processes all variables normally."""
+    resolver = EnvResolver()
+
+    mocker.patch.dict(
+        os.environ,
+        {"VAR1": "value1", "VAR2": "value2"},
+        clear=True,
+    )
+
+    result = resolver.resolve_os_environ(ignore_keys=[])
+
+    assert result == {"VAR1": "value1", "VAR2": "value2"}
+
+
+def test_resolve_os_environ_with_nonexistent_ignore_keys(
+    mocker: MockFixture,
+) -> None:
+    """Test that nonexistent keys in ignore_keys are silently skipped."""
+    resolver = EnvResolver()
+
+    mocker.patch.dict(
+        os.environ,
+        {"VAR1": "value1", "VAR2": "value2"},
+        clear=True,
+    )
+
+    result = resolver.resolve_os_environ(ignore_keys=["NONEXISTENT", "VAR1"])
+
+    # Only VAR1 should be in result (VAR2 is not ignored)
+    assert "VAR1" in result
+    assert "VAR2" in result
+    # NONEXISTENT should not appear (doesn't exist in os.environ)
+    assert "NONEXISTENT" not in result

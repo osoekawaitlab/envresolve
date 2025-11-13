@@ -126,7 +126,7 @@ class EnvResolver:
         resolver = self._get_resolver()
         return resolver.resolve(value, env)
 
-    def load_env(
+    def load_env(  # noqa: PLR0913
         self,
         dotenv_path: str | Path | None = None,
         *,
@@ -134,6 +134,7 @@ class EnvResolver:
         override: bool = False,
         stop_on_expansion_error: bool = True,
         stop_on_resolution_error: bool = True,
+        ignore_keys: list[str] | None = None,
     ) -> dict[str, str]:
         """Load environment variables from a .env file and resolve secret URIs.
 
@@ -155,6 +156,9 @@ class EnvResolver:
             stop_on_resolution_error: If False, skip variables with resolution errors
                 (e.g., SecretResolutionError). Useful for resilience against transient
                 secret store failures. (default: True)
+            ignore_keys: List of keys to skip expansion for. These keys are included
+                in the result as-is without variable expansion or secret resolution.
+                (default: None)
 
         Returns:
             Dictionary of resolved environment variables
@@ -186,19 +190,21 @@ class EnvResolver:
         # Resolve each variable
         resolved: dict[str, str] = {}
         for key, value in env_dict.items():
-            try:
-                resolved[key] = self.resolve_with_env(value, complete_env)
-            except VariableNotFoundError:
-                if stop_on_expansion_error:
-                    raise
-                # Skip this variable on expansion error
+            # Skip expansion for ignored keys
+            if ignore_keys and key in ignore_keys:
+                resolved[key] = value
                 continue
-            except SecretResolutionError:
-                if stop_on_resolution_error:
-                    raise
-                # Skip this variable on resolution error
+
+            resolved_value = self._resolve_variable(
+                value,
+                complete_env,
+                stop_on_expansion_error=stop_on_expansion_error,
+                stop_on_resolution_error=stop_on_resolution_error,
+            )
+            if resolved_value is None:
                 continue
-            # CircularReferenceError is always raised (configuration error)
+
+            resolved[key] = resolved_value
 
         # Export to os.environ if requested
         if export:
@@ -218,16 +224,29 @@ class EnvResolver:
             return {k: v for k, v in os.environ.items() if k.startswith(prefix)}
         return dict(os.environ)
 
-    def _resolve_environ_variable(
+    def _resolve_variable(
         self,
         value: str,
+        env: dict[str, str] | None = None,
         *,
         stop_on_expansion_error: bool,
         stop_on_resolution_error: bool,
     ) -> str | None:
-        """Resolve a single environment variable, handling errors granularly."""
+        """Resolve a single variable, handling errors granularly.
+
+        Args:
+            value: Value to resolve (may contain variables or be a secret URI)
+            env: Environment dict for variable expansion. If None, uses os.environ.
+            stop_on_expansion_error: If False, return None on VariableNotFoundError
+            stop_on_resolution_error: If False, return None on SecretResolutionError
+
+        Returns:
+            Resolved value, or None if error occurred and corresponding flag is False
+        """
+        if env is None:
+            env = dict(os.environ)
         try:
-            return self.resolve_with_env(value, dict(os.environ))
+            return self.resolve_with_env(value, env)
         except VariableNotFoundError:
             if stop_on_expansion_error:
                 raise
@@ -238,7 +257,7 @@ class EnvResolver:
             return None
         # CircularReferenceError is always raised as it's a configuration error.
 
-    def resolve_os_environ(
+    def resolve_os_environ(  # noqa: PLR0913
         self,
         keys: list[str] | None = None,
         prefix: str | None = None,
@@ -246,6 +265,7 @@ class EnvResolver:
         overwrite: bool = True,
         stop_on_expansion_error: bool = True,
         stop_on_resolution_error: bool = True,
+        ignore_keys: list[str] | None = None,
     ) -> dict[str, str]:
         """Resolve secret URIs in os.environ."""
         if keys is not None and prefix is not None:
@@ -257,7 +277,14 @@ class EnvResolver:
         resolved: dict[str, str] = {}
 
         for key, value in target_env.items():
-            resolved_value = self._resolve_environ_variable(
+            # Skip expansion for ignored keys
+            if ignore_keys and key in ignore_keys:
+                resolved[key] = value
+                if overwrite:
+                    os.environ[key] = value
+                continue
+
+            resolved_value = self._resolve_variable(
                 value,
                 stop_on_expansion_error=stop_on_expansion_error,
                 stop_on_resolution_error=stop_on_resolution_error,
@@ -347,13 +374,14 @@ def resolve_secret(uri: str) -> str:
     return _default_resolver.resolve_secret(uri)
 
 
-def load_env(
+def load_env(  # noqa: PLR0913
     dotenv_path: str | Path | None = None,
     *,
     export: bool = True,
     override: bool = False,
     stop_on_expansion_error: bool = True,
     stop_on_resolution_error: bool = True,
+    ignore_keys: list[str] | None = None,
 ) -> dict[str, str]:
     """Load environment variables from a .env file and resolve secret URIs.
 
@@ -374,6 +402,9 @@ def load_env(
         stop_on_resolution_error: If False, skip variables with resolution errors
             (e.g., SecretResolutionError). Useful for resilience against transient
             secret store failures. (default: True)
+        ignore_keys: List of keys to skip expansion for. These keys are included
+            in the result as-is without variable expansion or secret resolution.
+            (default: None)
 
     Returns:
         Dictionary of resolved environment variables
@@ -393,6 +424,8 @@ def load_env(
         >>> resolved = envresolve.load_env(export=True)  # doctest: +SKIP
         >>> # Load specific file without exporting
         >>> resolved = envresolve.load_env("custom.env", export=False)  # doctest: +SKIP
+        >>> # Skip expansion for system variables
+        >>> resolved = envresolve.load_env(ignore_keys=["PS1"])  # doctest: +SKIP
     """
     return _default_resolver.load_env(
         dotenv_path,
@@ -400,16 +433,18 @@ def load_env(
         override=override,
         stop_on_expansion_error=stop_on_expansion_error,
         stop_on_resolution_error=stop_on_resolution_error,
+        ignore_keys=ignore_keys,
     )
 
 
-def resolve_os_environ(
+def resolve_os_environ(  # noqa: PLR0913
     keys: list[str] | None = None,
     prefix: str | None = None,
     *,
     overwrite: bool = True,
     stop_on_expansion_error: bool = True,
     stop_on_resolution_error: bool = True,
+    ignore_keys: list[str] | None = None,
 ) -> dict[str, str]:
     """Resolve secret URIs in os.environ.
 
@@ -428,6 +463,9 @@ def resolve_os_environ(
         stop_on_resolution_error: If False, skip variables with resolution errors
             (e.g., SecretResolutionError). Useful for resilience against transient
             secret store failures. (default: True)
+        ignore_keys: List of keys to skip expansion for. These keys are included
+            in the result as-is without variable expansion or secret resolution.
+            (default: None)
 
     Returns:
         Dictionary of resolved values
@@ -449,6 +487,10 @@ def resolve_os_environ(
         >>> resolved = envresolve.resolve_os_environ()  # doctest: +SKIP
         >>> # Resolve specific keys only
         >>> resolved = envresolve.resolve_os_environ(keys=["API_KEY"])  # doctest: +SKIP
+        >>> # Skip expansion for system variables
+        >>> resolved = envresolve.resolve_os_environ(
+        ...     ignore_keys=["PS1"]
+        ... )  # doctest: +SKIP
     """
     return _default_resolver.resolve_os_environ(
         keys=keys,
@@ -456,4 +498,5 @@ def resolve_os_environ(
         overwrite=overwrite,
         stop_on_expansion_error=stop_on_expansion_error,
         stop_on_resolution_error=stop_on_resolution_error,
+        ignore_keys=ignore_keys,
     )

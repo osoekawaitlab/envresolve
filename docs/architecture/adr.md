@@ -217,6 +217,17 @@ Decided not to implement validation helpers and metadata query helpers due to la
 
 ---
 
+### ADR 0020: Add ignore_keys Parameter for Selective Variable Exclusion
+
+**Status**: Accepted
+**Date**: 2025-11-13
+
+Added `ignore_keys` parameter to selectively skip variable expansion for specified keys.
+
+[View Full ADR](../adr/0020-ignore-keys-for-selective-exclusion.md)
+
+---
+
 ## ADR Template
 
 All ADRs follow a consistent template defined in [ADR 0000: ADR Template](../adr/0000-adr-template.md).
