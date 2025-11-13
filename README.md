@@ -133,6 +133,11 @@ resolved = envresolve.resolve_os_environ(keys=["API_KEY"])
 os.environ["DEV_API_KEY"] = "akv://dev-vault/api-key"
 os.environ["DEV_DB_URL"] = "akv://dev-vault/db-url"
 resolved = envresolve.resolve_os_environ(prefix="DEV_")
+
+# Ignore specific variables (e.g., shell prompt templates)
+os.environ["PS1"] = "${USER}@${HOST}$ "  # Should not be expanded
+os.environ["API_KEY"] = "akv://vault/api-key"
+resolved = envresolve.resolve_os_environ(ignore_keys=["PS1"])
 ```
 
 ## Installation

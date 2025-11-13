@@ -10,7 +10,7 @@ Accepted
 
 ## Context
 
-System environment variables (`$PS1`, `$PS2`, `%PROMPT%`) contain literal `$` characters (e.g., `PS1="\u@\h:\w\$ "`). When processing these with `resolve_os_environ()`, the `$` triggers unintended variable expansion, causing `VariableNotFoundError`.
+System environment variables (`$PS1`, `$PS2`, `%PROMPT%`) contain literal `$` characters (e.g., `PS1="${USER}@${HOST}$ "`). When processing these with `resolve_os_environ()`, the `$` triggers unintended variable expansion, causing `VariableNotFoundError`.
 
 The existing `stop_on_expansion_error=False` suppresses all expansion errors, preventing detection of legitimate typos in configuration.
 
@@ -27,12 +27,14 @@ Variables in `ignore_keys` skip expansion/resolution and are included as-is. Pha
 
 ## Rationale
 
-**Phase 1: List-based exact matching**
+### Phase 1: List-based exact matching
+
 - Solves the immediate problem (system variables)
 - Simple mental model
 - Foundation for future pattern matching
 
-**Why not patterns from the start:**
+### Why not patterns from the start
+
 - Increases scope and complexity
 - List-based approach provides immediate value
 - Patterns can be added incrementally without breaking changes
@@ -48,7 +50,7 @@ Variables in `ignore_keys` skip expansion/resolution and are included as-is. Pha
 ### Concerns
 
 - Manual specification required for each key
-  - **Mitigation**: Phase 2 will add glob patterns
+    - **Mitigation**: Phase 2 will add glob patterns
 
 ## Alternatives
 

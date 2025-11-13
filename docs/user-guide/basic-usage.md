@@ -348,13 +348,13 @@ Use `ignore_keys` to skip variable expansion and secret resolution for specific 
 import os
 import envresolve
 
-os.environ["CONFIG"] = "${UNDEFINED_VAR}"  # Contains undefined variable reference
+os.environ["PS1"] = "${USER}@${HOST}$ "  # Shell prompt template
 os.environ["API_KEY"] = "akv://vault/api-key"
 
-# Skip expansion for CONFIG
-resolved = envresolve.resolve_os_environ(ignore_keys=["CONFIG"])
+# Skip expansion for PS1
+resolved = envresolve.resolve_os_environ(ignore_keys=["PS1"])
 
-print(resolved["CONFIG"])     # Output: ${UNDEFINED_VAR} (unchanged)
+print(resolved["PS1"])        # Output: ${USER}@${HOST}$  (unchanged)
 print(resolved["API_KEY"])    # Resolved secret value
 ```
 
