@@ -238,17 +238,19 @@ def test_load_env_filters_none_values(temp_env_dir: Path) -> None:
 def test_load_env_expansion_error_raised_by_default(
     temp_env_dir: Path, mocker: MockerFixture
 ) -> None:
-    """Test load_env() raises VariableNotFoundError by default."""
+    """Test load_env() raises EnvironmentVariableResolutionError by default."""
     env_file = temp_env_dir / ".env"
     env_file.write_text("VALID=hello\nINVALID=${NONEXISTENT}\n")
 
     # Clear os.environ to ensure NONEXISTENT doesn't exist anywhere
     mocker.patch.dict("os.environ", {"PATH": "/usr/bin"}, clear=True)
 
-    with pytest.raises(envresolve.VariableNotFoundError) as exc_info:
+    with pytest.raises(envresolve.EnvironmentVariableResolutionError) as exc_info:
         envresolve.load_env(dotenv_path=env_file, export=False)
 
     assert "NONEXISTENT" in str(exc_info.value)
+    assert exc_info.value.context_key == "INVALID"
+    assert isinstance(exc_info.value.original_error, envresolve.VariableNotFoundError)
 
 
 def test_load_env_expansion_error_suppressed(
@@ -288,7 +290,7 @@ def test_load_env_circular_reference_error_raised_by_default(
 def test_load_env_resolution_error_raised_by_default(
     temp_env_dir: Path, mocker: MockerFixture
 ) -> None:
-    """Test load_env() raises SecretResolutionError by default."""
+    """Test load_env() raises EnvironmentVariableResolutionError by default."""
     env_file = temp_env_dir / ".env"
     env_file.write_text("VALID=hello\nSECRET=akv://test-vault/secret\n")
 
@@ -301,10 +303,12 @@ def test_load_env_resolution_error_raised_by_default(
 
     mocker.patch.dict("os.environ", {"PATH": "/usr/bin"}, clear=True)
 
-    with pytest.raises(envresolve.SecretResolutionError) as exc_info:
+    with pytest.raises(envresolve.EnvironmentVariableResolutionError) as exc_info:
         envresolve.load_env(dotenv_path=env_file, export=False)
 
     assert "Failed to fetch secret" in str(exc_info.value)
+    assert exc_info.value.context_key == "SECRET"
+    assert isinstance(exc_info.value.original_error, envresolve.SecretResolutionError)
 
 
 def test_load_env_resolution_error_suppressed(
@@ -378,7 +382,7 @@ def test_load_env_both_errors_suppressed(
 def test_load_env_both_errors_raised(temp_env_dir: Path, mocker: MockerFixture) -> None:
     """Test load_env() raises first error encountered.
 
-    Tests that both flags set to True (default) raise the first error.
+    Tests that both flags set to True (default) raise the first error wrapped.
     """
     env_file = temp_env_dir / ".env"
     # Put expansion error first
@@ -386,9 +390,12 @@ def test_load_env_both_errors_raised(temp_env_dir: Path, mocker: MockerFixture) 
 
     mocker.patch.dict("os.environ", {"PATH": "/usr/bin"}, clear=True)
 
-    # Should raise expansion error (first in the file)
-    with pytest.raises(envresolve.VariableNotFoundError):
+    # Should raise expansion error (first in the file), wrapped
+    with pytest.raises(envresolve.EnvironmentVariableResolutionError) as exc_info:
         envresolve.load_env(dotenv_path=env_file, export=False)
+
+    assert exc_info.value.context_key == "EXPANSION_ERROR"
+    assert isinstance(exc_info.value.original_error, envresolve.VariableNotFoundError)
 
 
 def test_load_env_with_ignore_keys(temp_env_dir: Path, mocker: MockerFixture) -> None:
@@ -409,3 +416,30 @@ def test_load_env_with_ignore_keys(temp_env_dir: Path, mocker: MockerFixture) ->
 
     assert result["CONFIG"] == "${UNDEFINED_VAR}"  # Unchanged, not expanded
     assert result["VALID"] == "hello"
+
+
+def test_load_env_wraps_expansion_error_with_context(
+    temp_env_dir: Path, mocker: MockerFixture
+) -> None:
+    """Test that load_env() wraps VariableNotFoundError with context.
+
+    Acceptance criteria:
+    - EnvironmentVariableResolutionError includes context_key
+    - Original VariableNotFoundError is preserved
+    - Error message includes both variable name and context
+    """
+    env_file = temp_env_dir / ".env"
+    env_file.write_text("VAR1=hello\nVAR2=${UNDEFINED}\nVAR3=world\n")
+
+    mocker.patch.dict("os.environ", {"PATH": "/usr/bin"}, clear=True)
+
+    with pytest.raises(envresolve.EnvironmentVariableResolutionError) as exc_info:
+        envresolve.load_env(dotenv_path=env_file, export=False)
+
+    # Check attributes
+    assert exc_info.value.context_key == "VAR2"
+    assert isinstance(exc_info.value.original_error, envresolve.VariableNotFoundError)
+
+    # Check error message includes context
+    assert "VAR2" in str(exc_info.value)
+    assert "UNDEFINED" in str(exc_info.value)

@@ -102,3 +102,26 @@ class MutuallyExclusiveArgumentsError(EnvResolveError, TypeError):
             f"Specify either '{arg1}' or '{arg2}', but not both."
         )
         super().__init__(msg)
+
+
+class EnvironmentVariableResolutionError(EnvResolveError):
+    """Raised when an error occurs during environment variable resolution.
+
+    This exception wraps underlying errors (VariableNotFoundError,
+    SecretResolutionError, etc.) and provides context about which
+    environment variable was being processed.
+    """
+
+    def __init__(
+        self, message: str, context_key: str, original_error: Exception
+    ) -> None:
+        """Initialize EnvironmentVariableResolutionError.
+
+        Args:
+            message: Error message describing what went wrong
+            context_key: The environment variable name being processed
+            original_error: The underlying exception that caused this error
+        """
+        self.context_key = context_key
+        self.original_error = original_error
+        super().__init__(message)
