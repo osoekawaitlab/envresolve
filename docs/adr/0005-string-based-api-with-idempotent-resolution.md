@@ -1,8 +1,4 @@
-# Architecture Decision Record (ADR)
-
-## Title
-
-Use String-Based API with Idempotent Resolution Instead of Data Models
+# ADR 0005: Use String-Based API with Idempotent Resolution Instead of Data Models
 
 ## Status
 

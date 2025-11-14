@@ -1,8 +1,4 @@
-# Architecture Decision Record (ADR)
-
-## Title
-
-Iterative URI Resolution with Cycle Detection
+# ADR 0010: Iterative URI Resolution with Cycle Detection
 
 ## Status
 

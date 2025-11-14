@@ -1,8 +1,4 @@
-# Architecture Decision Record (ADR)
-
-## Title
-
-Use Custom Exception Hierarchy Instead of Built-in Exceptions
+# ADR 0002: Use Custom Exception Hierarchy Instead of Built-in Exceptions
 
 ## Status
 

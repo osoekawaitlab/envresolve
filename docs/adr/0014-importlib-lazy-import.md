@@ -1,8 +1,4 @@
-# Architecture Decision Record (ADR)
-
-## Title
-
-Use `importlib` for Lazy Optional Dependency Loading with Rich Errors
+# ADR 0014: Use `importlib` for Lazy Optional Dependency Loading with Rich Errors
 
 ## Status
 

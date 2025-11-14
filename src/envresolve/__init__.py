@@ -9,6 +9,7 @@ from envresolve.api import (
 from envresolve.application.expanders import DotEnvExpander, EnvExpander
 from envresolve.exceptions import (
     CircularReferenceError,
+    EnvironmentVariableResolutionError,
     EnvResolveError,
     MutuallyExclusiveArgumentsError,
     ProviderRegistrationError,
@@ -18,13 +19,14 @@ from envresolve.exceptions import (
 )
 from envresolve.services.expansion import expand_variables
 
-__version__ = "0.1.7"
+__version__ = "0.1.8"
 
 __all__ = [
     "CircularReferenceError",
     "DotEnvExpander",
     "EnvExpander",
     "EnvResolveError",
+    "EnvironmentVariableResolutionError",
     "MutuallyExclusiveArgumentsError",
     "ProviderRegistrationError",
     "SecretResolutionError",

@@ -1,0 +1,16 @@
+nav:
+  - Home: index.md
+  - Roadmap: roadmap.md
+  - User Guide:
+      - Installation: user-guide/installation.md
+      - Basic Usage: user-guide/basic-usage.md
+  - API Reference:
+      - Public API: api-reference/public_api.md
+      - Providers: api-reference/providers.md
+      - Exceptions: api-reference/exceptions.md
+  - Developer Guide:
+      - Contributing: developer-guide/contributing.md
+      - Live Tests: developer-guide/live-tests.md
+  - Architecture:
+      - Overview: architecture/adr.md
+      - Records: adr/

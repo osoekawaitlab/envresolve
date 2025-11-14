@@ -1,8 +1,4 @@
-# Architecture Decision Record (ADR)
-
-## Title
-
-Use Regular Expressions for Variable Expansion
+# ADR 0001: Use Regular Expressions for Variable Expansion
 
 ## Status
 

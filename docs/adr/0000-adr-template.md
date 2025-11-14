@@ -1,8 +1,4 @@
-# Architecture Decision Record (ADR)
-
-## Title
-
-Short title of the architectural decision
+# ADR 0000: This is ADR Template and Short Title of the Architectural Decision Goes Here
 
 ## Status
 

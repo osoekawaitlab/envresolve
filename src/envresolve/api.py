@@ -9,6 +9,7 @@ from dotenv import dotenv_values, find_dotenv
 
 from envresolve.application.resolver import SecretResolver
 from envresolve.exceptions import (
+    EnvironmentVariableResolutionError,
     MutuallyExclusiveArgumentsError,
     ProviderRegistrationError,
     SecretResolutionError,
@@ -164,11 +165,9 @@ class EnvResolver:
             Dictionary of resolved environment variables
 
         Raises:
+            EnvironmentVariableResolutionError: If a variable resolution error occurs
+                (wraps VariableNotFoundError or SecretResolutionError with context)
             URIParseError: If a URI format is invalid
-            SecretResolutionError: If secret resolution fails
-                (when stop_on_resolution_error=True)
-            VariableNotFoundError: If a referenced variable is not found
-                (when stop_on_expansion_error=True)
             CircularReferenceError: If a circular variable reference is detected
         """
         # Load .env file
@@ -195,12 +194,20 @@ class EnvResolver:
                 resolved[key] = value
                 continue
 
-            resolved_value = self._resolve_variable(
-                value,
-                complete_env,
-                stop_on_expansion_error=stop_on_expansion_error,
-                stop_on_resolution_error=stop_on_resolution_error,
-            )
+            try:
+                resolved_value = self._resolve_variable(
+                    value,
+                    complete_env,
+                    stop_on_expansion_error=stop_on_expansion_error,
+                    stop_on_resolution_error=stop_on_resolution_error,
+                )
+            except (VariableNotFoundError, SecretResolutionError) as e:
+                msg = f"Failed to resolve environment variable '{key}': {e}"
+                raise EnvironmentVariableResolutionError(
+                    msg,
+                    context_key=key,
+                    original_error=e,
+                ) from e
             if resolved_value is None:
                 continue
 
@@ -267,7 +274,15 @@ class EnvResolver:
         stop_on_resolution_error: bool = True,
         ignore_keys: list[str] | None = None,
     ) -> dict[str, str]:
-        """Resolve secret URIs in os.environ."""
+        """Resolve secret URIs in os.environ.
+
+        Raises:
+            EnvironmentVariableResolutionError: If a variable resolution error occurs
+                (wraps VariableNotFoundError or SecretResolutionError with context)
+            MutuallyExclusiveArgumentsError: If both keys and prefix are specified
+            URIParseError: If the URI format is invalid
+            CircularReferenceError: If a circular variable reference is detected
+        """
         if keys is not None and prefix is not None:
             arg1 = "keys"
             arg2 = "prefix"
@@ -284,11 +299,19 @@ class EnvResolver:
                     os.environ[key] = value
                 continue
 
-            resolved_value = self._resolve_variable(
-                value,
-                stop_on_expansion_error=stop_on_expansion_error,
-                stop_on_resolution_error=stop_on_resolution_error,
-            )
+            try:
+                resolved_value = self._resolve_variable(
+                    value,
+                    stop_on_expansion_error=stop_on_expansion_error,
+                    stop_on_resolution_error=stop_on_resolution_error,
+                )
+            except (VariableNotFoundError, SecretResolutionError) as e:
+                msg = f"Failed to resolve environment variable '{key}': {e}"
+                raise EnvironmentVariableResolutionError(
+                    msg,
+                    context_key=key,
+                    original_error=e,
+                ) from e
             if resolved_value is None:
                 continue
 
@@ -410,11 +433,9 @@ def load_env(  # noqa: PLR0913
         Dictionary of resolved environment variables
 
     Raises:
+        EnvironmentVariableResolutionError: If a variable resolution error occurs
+            (wraps VariableNotFoundError or SecretResolutionError with context)
         URIParseError: If a URI format is invalid
-        SecretResolutionError: If secret resolution fails
-            (when stop_on_resolution_error=True)
-        VariableNotFoundError: If a referenced variable is not found
-            (when stop_on_expansion_error=True)
         CircularReferenceError: If a circular variable reference is detected
 
     Examples:
@@ -471,13 +492,11 @@ def resolve_os_environ(  # noqa: PLR0913
         Dictionary of resolved values
 
     Raises:
+        EnvironmentVariableResolutionError: If a variable resolution error occurs
+            (wraps VariableNotFoundError or SecretResolutionError with context)
         MutuallyExclusiveArgumentsError: If both keys and prefix are specified
         URIParseError: If the URI format is invalid
-        VariableNotFoundError: If a referenced variable is not found
-            (when stop_on_expansion_error=True)
         CircularReferenceError: If a circular variable reference is detected
-        SecretResolutionError: If secret resolution fails
-            (when stop_on_resolution_error=True)
 
     Examples:
         >>> import envresolve

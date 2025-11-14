@@ -1,8 +1,4 @@
-# Architecture Decision Record (ADR)
-
-## Title
-
-Use Manual Provider Registration with Global Registry
+# ADR 0009: Use Manual Provider Registration with Global Registry
 
 ## Status
 

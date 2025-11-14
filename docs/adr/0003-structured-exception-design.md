@@ -1,8 +1,4 @@
-# Architecture Decision Record (ADR)
-
-## Title
-
-Use Structured Exceptions with Data Attributes
+# ADR 0003: Use Structured Exceptions with Data Attributes
 
 ## Status
 

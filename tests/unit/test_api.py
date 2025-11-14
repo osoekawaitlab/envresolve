@@ -10,6 +10,7 @@ from pytest_mock import MockFixture
 import envresolve
 from envresolve.api import EnvResolver
 from envresolve.exceptions import (
+    EnvironmentVariableResolutionError,
     EnvResolveError,
     MutuallyExclusiveArgumentsError,
     ProviderRegistrationError,
@@ -245,9 +246,13 @@ def test_resolve_os_environ_with_stop_on_error_true() -> None:
             },
             clear=True,
         ),
-        pytest.raises(SecretResolutionError),
+        pytest.raises(EnvironmentVariableResolutionError) as exc_info,
     ):
         resolver.resolve_os_environ(stop_on_resolution_error=True)
+
+    # Verify the wrapper exception has correct attributes
+    assert exc_info.value.context_key == "FAILING"
+    assert isinstance(exc_info.value.original_error, SecretResolutionError)
 
 
 def test_resolve_os_environ_with_empty_environ(

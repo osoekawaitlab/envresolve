@@ -228,6 +228,17 @@ Added `ignore_keys` parameter to selectively skip variable expansion for specifi
 
 ---
 
+### ADR 0021: Exception Wrapping for Variable Resolution Context
+
+**Status**: Accepted
+**Date**: 2025-11-14
+
+Wrap resolution errors with `EnvironmentVariableResolutionError` to provide context about which environment variable failed.
+
+[View Full ADR](../adr/0021-exception-wrapping-for-context.md)
+
+---
+
 ## ADR Template
 
 All ADRs follow a consistent template defined in [ADR 0000: ADR Template](../adr/0000-adr-template.md).

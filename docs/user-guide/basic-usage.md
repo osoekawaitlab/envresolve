@@ -317,9 +317,7 @@ assert os.environ["API_KEY"] == "akv://prod-vault/api-key"
 
 #### Continuing on Errors
 
-Use `stop_on_error=False` to continue resolving other variables even if a **secret resolution error** occurs. This allows the function to skip over individual secrets that might be misconfigured or inaccessible, without halting the entire process.
-
-    Note that this only applies to expected resolution errors (like `SecretResolutionError`); other unexpected errors (like programming mistakes) will still stop the process regardless of this flag.
+Use `stop_on_expansion_error=False` and `stop_on_resolution_error=False` to control error handling granularly:
 
 ```python
 import os
@@ -329,16 +327,30 @@ envresolve.register_azure_kv_provider()
 
 os.environ["GOOD_KEY"] = "akv://prod-vault/valid-secret"
 os.environ["BAD_KEY"] = "akv://prod-vault/missing-secret"  # Doesn't exist
+os.environ["MISSING_VAR"] = "${UNDEFINED}"
 os.environ["PLAIN"] = "plain-value"
 
-# Continue on errors instead of raising
-resolved = envresolve.resolve_os_environ(stop_on_error=False)
+# Skip variables with missing references, but still raise on secret resolution errors
+resolved = envresolve.resolve_os_environ(stop_on_expansion_error=False)
+
+# Skip variables with secret resolution errors, but still raise on undefined variables
+resolved = envresolve.resolve_os_environ(stop_on_resolution_error=False)
+
+# Skip both types of errors
+resolved = envresolve.resolve_os_environ(
+    stop_on_expansion_error=False,
+    stop_on_resolution_error=False
+)
 
 # Successfully resolved variables are in the result
 print(resolved["GOOD_KEY"])    # Resolved value
 print(resolved["PLAIN"])       # plain-value
-assert "BAD_KEY" not in resolved  # Skipped due to error
+assert "BAD_KEY" not in resolved  # Skipped due to secret resolution error
+assert "MISSING_VAR" not in resolved  # Skipped due to expansion error
 ```
+
+!!! note "CircularReferenceError is always raised"
+    `CircularReferenceError` is always raised regardless of these flags, as it indicates a configuration error that cannot be resolved.
 
 #### Ignoring Specific Variables
 
@@ -403,6 +415,28 @@ except SecretResolutionError as e:
 ```
 
 This pattern ensures that your application can gracefully handle both setup-time (missing dependencies) and run-time (secret access) errors.
+
+### Environment Variable Resolution Errors
+
+When `load_env()` or `resolve_os_environ()` fails, `EnvironmentVariableResolutionError` indicates which variable was being processed:
+
+```python
+import envresolve
+
+try:
+    envresolve.load_env(dotenv_path=".env", export=False)
+except envresolve.EnvironmentVariableResolutionError as e:
+    print(f"Failed variable: {e.context_key}")
+    print(f"Cause: {e.original_error}")
+
+    # Access original error details
+    if isinstance(e.original_error, envresolve.VariableNotFoundError):
+        print(f"Missing: {e.original_error.variable_name}")
+    elif isinstance(e.original_error, envresolve.SecretResolutionError):
+        print(f"Failed URI: {e.original_error.uri}")
+```
+
+The exception has two attributes: `context_key` (variable name) and `original_error` (underlying exception). `CircularReferenceError` is not wrapped
 
 ### Circular Reference Detection
 

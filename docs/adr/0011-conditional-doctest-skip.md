@@ -1,8 +1,4 @@
-# Architecture Decision Record (ADR)
-
-## Title
-
-Conditional Doctest Skip Based on Optional Dependencies
+# ADR 0011: Conditional Doctest Skip Based on Optional Dependencies
 
 ## Status
 

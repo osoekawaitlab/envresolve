@@ -247,10 +247,11 @@ def test_resolve_os_environ_with_overwrite_false(
 def test_resolve_os_environ_expansion_error_raised_by_default(
     mocker: MockFixture,
 ) -> None:
-    """Test resolve_os_environ raises VariableNotFoundError by default.
+    """Test resolve_os_environ raises EnvironmentVariableResolutionError by default.
 
     Acceptance criteria:
-    - Raise VariableNotFoundError when referenced variable is not found
+    - Raise EnvironmentVariableResolutionError when referenced variable is not found
+    - Wrapper exception includes context_key and original_error
     """
     mocker.patch.dict(
         os.environ,
@@ -261,8 +262,11 @@ def test_resolve_os_environ_expansion_error_raised_by_default(
         clear=True,
     )
 
-    with pytest.raises(envresolve.VariableNotFoundError) as exc_info:
+    with pytest.raises(envresolve.EnvironmentVariableResolutionError) as exc_info:
         envresolve.resolve_os_environ()
+
+    assert exc_info.value.context_key == "INVALID"
+    assert isinstance(exc_info.value.original_error, envresolve.VariableNotFoundError)
 
     assert "NONEXISTENT" in str(exc_info.value)
 
@@ -322,10 +326,11 @@ def test_resolve_os_environ_circular_reference_error_raised_by_default(
 def test_resolve_os_environ_resolution_error_raised_by_default(
     resolve_mocks: ResolveOsEnvironMocks, mocker: MockFixture
 ) -> None:
-    """Test resolve_os_environ raises SecretResolutionError by default.
+    """Test resolve_os_environ raises EnvironmentVariableResolutionError by default.
 
     Acceptance criteria:
-    - Raise SecretResolutionError when secret resolution fails
+    - Raise EnvironmentVariableResolutionError when secret resolution fails
+    - Wrapper exception includes context_key and original_error
     """
 
     def get_secret_by_name_with_error(
@@ -349,8 +354,11 @@ def test_resolve_os_environ_resolution_error_raised_by_default(
         clear=True,
     )
 
-    with pytest.raises(envresolve.SecretResolutionError):
+    with pytest.raises(envresolve.EnvironmentVariableResolutionError) as exc_info:
         envresolve.resolve_os_environ()
+
+    assert exc_info.value.context_key == "SECRET"
+    assert isinstance(exc_info.value.original_error, envresolve.SecretResolutionError)
 
 
 @pytest.mark.e2e
@@ -452,10 +460,10 @@ def test_resolve_os_environ_both_errors_suppressed(
 def test_resolve_os_environ_both_errors_raised(
     mocker: MockFixture,
 ) -> None:
-    """Test resolve_os_environ raises first error when both flags are True (default).
+    """Test resolve_os_environ raises first error wrapped when both flags are True.
 
     Acceptance criteria:
-    - Raise first error encountered when both flags are True
+    - Raise first error encountered wrapped in EnvironmentVariableResolutionError
     """
     mocker.patch.dict(
         os.environ,
@@ -466,9 +474,12 @@ def test_resolve_os_environ_both_errors_raised(
         clear=True,
     )
 
-    # Should raise expansion error (first in environ)
-    with pytest.raises(envresolve.VariableNotFoundError):
+    # Should raise expansion error (first in environ), wrapped
+    with pytest.raises(envresolve.EnvironmentVariableResolutionError) as exc_info:
         envresolve.resolve_os_environ()
+
+    assert exc_info.value.context_key == "EXPANSION_ERROR"
+    assert isinstance(exc_info.value.original_error, envresolve.VariableNotFoundError)
 
 
 @pytest.mark.e2e
@@ -529,3 +540,41 @@ def test_resolve_os_environ_with_ignore_keys(mocker: MockFixture) -> None:
 
     assert result["CONFIG"] == "${UNDEFINED_VAR}"  # Unchanged, not expanded
     assert result["VALID"] == "hello"
+
+
+def test_resolve_os_environ_wraps_resolution_error_with_context(
+    mocker: MockFixture,
+) -> None:
+    """Test that resolve_os_environ() wraps SecretResolutionError with context.
+
+    Acceptance criteria:
+    - EnvironmentVariableResolutionError includes context_key
+    - Original SecretResolutionError is preserved
+    - Error message includes both secret URI and context
+    """
+    # Register mock provider that fails
+    mock_provider = MagicMock(spec=envresolve.providers.base.SecretProvider)
+    mock_provider.resolve.side_effect = envresolve.SecretResolutionError(
+        "Secret not found", "akv://vault/missing-secret"
+    )
+    envresolve.register_azure_kv_provider(provider=mock_provider)
+
+    mocker.patch.dict(
+        os.environ,
+        {
+            "API_KEY": "akv://vault/api-key",
+            "DB_PASSWORD": "akv://vault/missing-secret",
+        },
+        clear=True,
+    )
+
+    with pytest.raises(envresolve.EnvironmentVariableResolutionError) as exc_info:
+        envresolve.resolve_os_environ()
+
+    # Check attributes
+    assert exc_info.value.context_key in ["API_KEY", "DB_PASSWORD"]
+    assert isinstance(exc_info.value.original_error, envresolve.SecretResolutionError)
+
+    # Check error message includes context
+    assert exc_info.value.context_key in str(exc_info.value)
+    assert "akv://vault/" in str(exc_info.value)

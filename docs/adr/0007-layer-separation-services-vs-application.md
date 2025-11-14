@@ -1,8 +1,4 @@
-# Architecture Decision Record (ADR)
-
-## Title
-
-Separate Services Layer (Pure Logic) from Application Layer (Environment Integration)
+# ADR 0007: Separate Services Layer (Pure Logic) from Application Layer (Environment Integration)
 
 ## Status
 
