@@ -140,6 +140,30 @@ os.environ["API_KEY"] = "akv://vault/api-key"
 resolved = envresolve.resolve_os_environ(ignore_keys=["PS1"])
 ```
 
+### Error Handling
+
+Resolution errors include context about which environment variable failed:
+
+```python
+import envresolve
+
+try:
+    envresolve.load_env(dotenv_path=".env", export=False)
+except envresolve.EnvironmentVariableResolutionError as e:
+    print(f"Failed variable: {e.context_key}")
+    print(f"Cause: {e.original_error}")
+```
+
+Control error behavior:
+
+```python
+# Skip variables with expansion errors
+resolved = envresolve.load_env(stop_on_expansion_error=False)
+
+# Skip variables with secret resolution errors
+resolved = envresolve.load_env(stop_on_resolution_error=False)
+```
+
 ## Installation
 
 ```bash
