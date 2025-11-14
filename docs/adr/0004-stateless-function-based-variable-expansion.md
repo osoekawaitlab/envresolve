@@ -1,8 +1,4 @@
-# Architecture Decision Record (ADR)
-
-## Title
-
-Use Stateless Function for Variable Expansion Core Logic
+# ADR 0004: Use Stateless Function for Variable Expansion Core Logic
 
 ## Status
 

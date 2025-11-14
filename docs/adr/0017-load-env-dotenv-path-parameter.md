@@ -1,8 +1,4 @@
-# Architecture Decision Record (ADR)
-
-## Title
-
-Align `load_env()` Parameter Signature with python-dotenv's `load_dotenv()`
+# ADR 0017: Align `load_env()` Parameter Signature with python-dotenv's `load_dotenv()`
 
 ## Status
 

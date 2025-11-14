@@ -1,8 +1,4 @@
-# Architecture Decision Record (ADR)
-
-## Title
-
-Manage Azure Live Test Infrastructure with Terraform
+# ADR 0015: Manage Azure Live Test Infrastructure with Terraform
 
 ## Status
 

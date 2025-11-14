@@ -1,8 +1,4 @@
-# Architecture Decision Record (ADR)
-
-## Title
-
-Use Pytest Marker to Isolate Azure-Dependent Tests
+# ADR 0012: Use Pytest Marker to Isolate Azure-Dependent Tests
 
 ## Status
 

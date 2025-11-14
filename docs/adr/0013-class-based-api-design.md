@@ -1,8 +1,4 @@
-# Architecture Decision Record (ADR)
-
-## Title
-
-Encapsulate Resolution State in `EnvResolver` Class with Module Facade
+# ADR 0013: Encapsulate Resolution State in `EnvResolver` Class with Module Facade
 
 ## Status
 

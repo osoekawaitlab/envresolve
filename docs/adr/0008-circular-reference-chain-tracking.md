@@ -1,8 +1,4 @@
-# Architecture Decision Record (ADR)
-
-## Title
-
-Track and Report Full Reference Chain in Circular Reference Errors
+# ADR 0008: Track and Report Full Reference Chain in Circular Reference Errors
 
 ## Status
 

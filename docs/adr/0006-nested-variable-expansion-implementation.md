@@ -1,8 +1,4 @@
-# Architecture Decision Record (ADR)
-
-## Title
-
-Two-Phase Iterative Algorithm for Nested Variable Expansion
+# ADR 0006: Two-Phase Iterative Algorithm for Nested Variable Expansion
 
 ## Status
 

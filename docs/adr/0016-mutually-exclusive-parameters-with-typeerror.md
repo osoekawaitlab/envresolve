@@ -1,8 +1,4 @@
-# Architecture Decision Record (ADR)
-
-## Title
-
-Use TypeError-based Custom Exception for Mutually Exclusive Parameters
+# ADR 0016: Use TypeError-based Custom Exception for Mutually Exclusive Parameters
 
 ## Status
 
