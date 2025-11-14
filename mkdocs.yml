@@ -98,3 +98,5 @@ nav:
           - 0017-load-env-dotenv-path-parameter.md: adr/0017-load-env-dotenv-path-parameter.md
           - 0018-granular-error-handling.md: adr/0018-granular-error-handling.md
           - 0019-do-not-implement-validation-helpers.md: adr/0019-do-not-implement-validation-helpers.md
+          - 0020-ignore-keys-for-selective-exclusion.md: adr/0020-ignore-keys-for-selective-exclusion.md
+          - 0021-exception-wrapping-for-context.md: adr/0021-exception-wrapping-for-context.md
