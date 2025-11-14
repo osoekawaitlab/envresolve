@@ -10,13 +10,11 @@
       
       
       
-        <link rel="canonical" href="https://github.com/osoekawaitlab/envresolve/architecture/adr/">
+        <link rel="canonical" href="https://github.com/osoekawaitlab/envresolve/adr/0021-exception-wrapping-for-context/">
       
       
-        <link rel="prev" href="../../developer-guide/live-tests/">
+        <link rel="prev" href="../0020-ignore-keys-for-selective-exclusion/">
       
-      
-        <link rel="next" href="../../adr/0000-adr-template/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -24,7 +22,7 @@
     
     
       
-        <title>Overview - envresolve</title>
+        <title>ADR 0021: Exception Wrapping for Variable Resolution Context - envresolve</title>
       
     
     
@@ -78,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#architecture-decision-records-adrs" class="md-skip">
+        <a href="#adr-0021-exception-wrapping-for-variable-resolution-context" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Overview
+              ADR 0021: Exception Wrapping for Variable Resolution Context
             
           </span>
         </div>
@@ -327,7 +325,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+        <a href="../../architecture/adr/" class="md-tabs__link">
           
   
   
@@ -797,32 +795,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Overview
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../architecture/adr/" class="md-nav__link">
         
   
   
@@ -833,257 +809,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#what-are-adrs" class="md-nav__link">
-    <span class="md-ellipsis">
-      What are ADRs?
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#current-adrs" class="md-nav__link">
-    <span class="md-ellipsis">
-      Current ADRs
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Current ADRs">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#adr-0001-variable-expansion-with-regular-expressions" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0001: Variable Expansion with Regular Expressions
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0002-custom-exception-hierarchy" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0002: Custom Exception Hierarchy
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0003-structured-exception-design" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0003: Structured Exception Design
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0004-stateless-function-based-variable-expansion" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0004: Stateless Function-Based Variable Expansion
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0005-string-based-api-with-idempotent-resolution" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0005: String-Based API with Idempotent Resolution
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0006-nested-variable-expansion-implementation" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0006: Nested Variable Expansion Implementation
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0007-layer-separation-services-vs-application" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0007: Layer Separation (Services vs Application)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0008-circular-reference-chain-tracking" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0008: Circular Reference Chain Tracking
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0009-manual-provider-registration-pattern" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0009: Manual Provider Registration Pattern
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0010-iterative-uri-resolution" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0010: Iterative URI Resolution
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0011-conditional-doctest-skip" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0011: Conditional Doctest Skip
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0012-pytest-markers-for-azure-dependencies" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0012: Pytest Markers for Azure Dependencies
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0013-class-based-api-design" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0013: Class-Based API Design
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0014-importlib-lazy-import" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0014: Importlib Lazy Import
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0015-manage-azure-live-test-infrastructure-with-terraform" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0015: Manage Azure Live Test Infrastructure with Terraform
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0016-typeerror-based-custom-exception-for-mutually-exclusive-parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0016: TypeError-based Custom Exception for Mutually Exclusive Parameters
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0017-align-load_env-parameter-with-python-dotenv" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0017: Align load_env() Parameter with python-dotenv
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0018-granular-error-handling-for-variable-expansion-and-secret-resolution" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0018: Granular Error Handling for Variable Expansion and Secret Resolution
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0019-do-not-implement-validation-helper-functions-and-metadata-query-helpers" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0019: Do Not Implement Validation Helper Functions and Metadata Query Helpers
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0020-add-ignore_keys-parameter-for-selective-variable-exclusion" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0020: Add ignore_keys Parameter for Selective Variable Exclusion
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0021-exception-wrapping-for-variable-resolution-context" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0021: Exception Wrapping for Variable Resolution Context
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adr-template" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR Template
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#contributing" class="md-nav__link">
-    <span class="md-ellipsis">
-      Contributing
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1093,8 +818,10 @@
                 
   
   
+    
   
   
+  
     
     
     
@@ -1108,13 +835,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" checked>
         
           
           <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="">
@@ -1130,7 +855,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_6_2">
             <span class="md-nav__icon md-icon"></span>
             Records
@@ -1144,7 +869,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0000-adr-template/" class="md-nav__link">
+      <a href="../0000-adr-template/" class="md-nav__link">
         
   
   
@@ -1167,7 +892,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0001-variable-expansion-with-regex/" class="md-nav__link">
+      <a href="../0001-variable-expansion-with-regex/" class="md-nav__link">
         
   
   
@@ -1190,7 +915,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0002-custom-exception-hierarchy/" class="md-nav__link">
+      <a href="../0002-custom-exception-hierarchy/" class="md-nav__link">
         
   
   
@@ -1213,7 +938,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0003-structured-exception-design/" class="md-nav__link">
+      <a href="../0003-structured-exception-design/" class="md-nav__link">
         
   
   
@@ -1236,7 +961,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0004-stateless-function-based-variable-expansion/" class="md-nav__link">
+      <a href="../0004-stateless-function-based-variable-expansion/" class="md-nav__link">
         
   
   
@@ -1259,7 +984,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0005-string-based-api-with-idempotent-resolution/" class="md-nav__link">
+      <a href="../0005-string-based-api-with-idempotent-resolution/" class="md-nav__link">
         
   
   
@@ -1282,7 +1007,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0006-nested-variable-expansion-implementation/" class="md-nav__link">
+      <a href="../0006-nested-variable-expansion-implementation/" class="md-nav__link">
         
   
   
@@ -1305,7 +1030,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0007-layer-separation-services-vs-application/" class="md-nav__link">
+      <a href="../0007-layer-separation-services-vs-application/" class="md-nav__link">
         
   
   
@@ -1328,7 +1053,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0008-circular-reference-chain-tracking/" class="md-nav__link">
+      <a href="../0008-circular-reference-chain-tracking/" class="md-nav__link">
         
   
   
@@ -1351,7 +1076,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0009-manual-provider-registration-pattern/" class="md-nav__link">
+      <a href="../0009-manual-provider-registration-pattern/" class="md-nav__link">
         
   
   
@@ -1374,7 +1099,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0010-iterative-uri-resolution/" class="md-nav__link">
+      <a href="../0010-iterative-uri-resolution/" class="md-nav__link">
         
   
   
@@ -1397,7 +1122,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0011-conditional-doctest-skip/" class="md-nav__link">
+      <a href="../0011-conditional-doctest-skip/" class="md-nav__link">
         
   
   
@@ -1420,7 +1145,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0012-pytest-markers-for-azure-dependencies/" class="md-nav__link">
+      <a href="../0012-pytest-markers-for-azure-dependencies/" class="md-nav__link">
         
   
   
@@ -1443,7 +1168,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0013-class-based-api-design/" class="md-nav__link">
+      <a href="../0013-class-based-api-design/" class="md-nav__link">
         
   
   
@@ -1466,7 +1191,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0014-importlib-lazy-import/" class="md-nav__link">
+      <a href="../0014-importlib-lazy-import/" class="md-nav__link">
         
   
   
@@ -1489,7 +1214,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0015-terraform-managed-live-tests/" class="md-nav__link">
+      <a href="../0015-terraform-managed-live-tests/" class="md-nav__link">
         
   
   
@@ -1512,7 +1237,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0016-mutually-exclusive-parameters-with-typeerror/" class="md-nav__link">
+      <a href="../0016-mutually-exclusive-parameters-with-typeerror/" class="md-nav__link">
         
   
   
@@ -1535,7 +1260,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0017-load-env-dotenv-path-parameter/" class="md-nav__link">
+      <a href="../0017-load-env-dotenv-path-parameter/" class="md-nav__link">
         
   
   
@@ -1558,7 +1283,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0018-granular-error-handling/" class="md-nav__link">
+      <a href="../0018-granular-error-handling/" class="md-nav__link">
         
   
   
@@ -1581,7 +1306,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0019-do-not-implement-validation-helpers/" class="md-nav__link">
+      <a href="../0019-do-not-implement-validation-helpers/" class="md-nav__link">
         
   
   
@@ -1604,7 +1329,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0020-ignore-keys-for-selective-exclusion/" class="md-nav__link">
+      <a href="../0020-ignore-keys-for-selective-exclusion/" class="md-nav__link">
         
   
   
@@ -1624,10 +1349,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../adr/0021-exception-wrapping-for-context/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    ADR 0021: Exception Wrapping for Variable Resolution Context
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1638,6 +1385,179 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      Status
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#date" class="md-nav__link">
+    <span class="md-ellipsis">
+      Date
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Decision
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rationale
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Rationale">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#application-layer-wrapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      Application Layer Wrapping
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#new-exception-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      New Exception Type
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implications
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positive-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Positive Implications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Concerns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternatives
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modify-existing-exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Modify Existing Exceptions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-context-to-message-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      Add Context to Message Only
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-direction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Future Direction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1685,208 +1605,64 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-are-adrs" class="md-nav__link">
+  <a href="#status" class="md-nav__link">
     <span class="md-ellipsis">
-      What are ADRs?
+      Status
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#current-adrs" class="md-nav__link">
+  <a href="#date" class="md-nav__link">
     <span class="md-ellipsis">
-      Current ADRs
+      Date
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Current ADRs">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Decision
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rationale
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Rationale">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#adr-0001-variable-expansion-with-regular-expressions" class="md-nav__link">
+  <a href="#application-layer-wrapping" class="md-nav__link">
     <span class="md-ellipsis">
-      ADR 0001: Variable Expansion with Regular Expressions
+      Application Layer Wrapping
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#adr-0002-custom-exception-hierarchy" class="md-nav__link">
+  <a href="#new-exception-type" class="md-nav__link">
     <span class="md-ellipsis">
-      ADR 0002: Custom Exception Hierarchy
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0003-structured-exception-design" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0003: Structured Exception Design
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0004-stateless-function-based-variable-expansion" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0004: Stateless Function-Based Variable Expansion
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0005-string-based-api-with-idempotent-resolution" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0005: String-Based API with Idempotent Resolution
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0006-nested-variable-expansion-implementation" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0006: Nested Variable Expansion Implementation
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0007-layer-separation-services-vs-application" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0007: Layer Separation (Services vs Application)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0008-circular-reference-chain-tracking" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0008: Circular Reference Chain Tracking
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0009-manual-provider-registration-pattern" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0009: Manual Provider Registration Pattern
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0010-iterative-uri-resolution" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0010: Iterative URI Resolution
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0011-conditional-doctest-skip" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0011: Conditional Doctest Skip
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0012-pytest-markers-for-azure-dependencies" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0012: Pytest Markers for Azure Dependencies
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0013-class-based-api-design" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0013: Class-Based API Design
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0014-importlib-lazy-import" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0014: Importlib Lazy Import
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0015-manage-azure-live-test-infrastructure-with-terraform" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0015: Manage Azure Live Test Infrastructure with Terraform
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0016-typeerror-based-custom-exception-for-mutually-exclusive-parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0016: TypeError-based Custom Exception for Mutually Exclusive Parameters
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0017-align-load_env-parameter-with-python-dotenv" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0017: Align load_env() Parameter with python-dotenv
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0018-granular-error-handling-for-variable-expansion-and-secret-resolution" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0018: Granular Error Handling for Variable Expansion and Secret Resolution
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0019-do-not-implement-validation-helper-functions-and-metadata-query-helpers" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0019: Do Not Implement Validation Helper Functions and Metadata Query Helpers
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0020-add-ignore_keys-parameter-for-selective-variable-exclusion" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0020: Add ignore_keys Parameter for Selective Variable Exclusion
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adr-0021-exception-wrapping-for-variable-resolution-context" class="md-nav__link">
-    <span class="md-ellipsis">
-      ADR 0021: Exception Wrapping for Variable Resolution Context
+      New Exception Type
     </span>
   </a>
   
@@ -1898,18 +1674,84 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#adr-template" class="md-nav__link">
+  <a href="#implications" class="md-nav__link">
     <span class="md-ellipsis">
-      ADR Template
+      Implications
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positive-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Positive Implications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Concerns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternatives
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modify-existing-exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Modify Existing Exceptions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-context-to-message-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      Add Context to Message Only
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-direction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Future Direction
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#contributing" class="md-nav__link">
+  <a href="#references" class="md-nav__link">
     <span class="md-ellipsis">
-      Contributing
+      References
     </span>
   </a>
   
@@ -1934,147 +1776,79 @@
   
 
 
-<h1 id="architecture-decision-records-adrs">Architecture Decision Records (ADRs)<a class="headerlink" href="#architecture-decision-records-adrs" title="Permanent link">&para;</a></h1>
-<p>This page provides an overview of all architectural decisions made for envresolve.</p>
-<h2 id="what-are-adrs">What are ADRs?<a class="headerlink" href="#what-are-adrs" title="Permanent link">&para;</a></h2>
-<p>Architecture Decision Records document important architectural decisions along with their context and consequences. They help track the "why" behind design choices.</p>
-<h2 id="current-adrs">Current ADRs<a class="headerlink" href="#current-adrs" title="Permanent link">&para;</a></h2>
-<h3 id="adr-0001-variable-expansion-with-regular-expressions">ADR 0001: Variable Expansion with Regular Expressions<a class="headerlink" href="#adr-0001-variable-expansion-with-regular-expressions" title="Permanent link">&para;</a></h3>
-<p><strong>Status</strong>: Accepted
-<strong>Date</strong>: 2025-10-11</p>
-<p>Decided to use regular expressions for variable expansion instead of manual string parsing.</p>
-<p><a href="../../adr/0001-variable-expansion-with-regex/">View Full ADR</a></p>
-<hr />
-<h3 id="adr-0002-custom-exception-hierarchy">ADR 0002: Custom Exception Hierarchy<a class="headerlink" href="#adr-0002-custom-exception-hierarchy" title="Permanent link">&para;</a></h3>
-<p><strong>Status</strong>: Accepted
-<strong>Date</strong>: 2025-10-11</p>
-<p>Established a custom exception hierarchy with base exceptions for better error handling.</p>
-<p><a href="../../adr/0002-custom-exception-hierarchy/">View Full ADR</a></p>
-<hr />
-<h3 id="adr-0003-structured-exception-design">ADR 0003: Structured Exception Design<a class="headerlink" href="#adr-0003-structured-exception-design" title="Permanent link">&para;</a></h3>
-<p><strong>Status</strong>: Accepted
-<strong>Date</strong>: 2025-10-11</p>
-<p>Defined structured exception design for variable expansion errors.</p>
-<p><a href="../../adr/0003-structured-exception-design/">View Full ADR</a></p>
-<hr />
-<h3 id="adr-0004-stateless-function-based-variable-expansion">ADR 0004: Stateless Function-Based Variable Expansion<a class="headerlink" href="#adr-0004-stateless-function-based-variable-expansion" title="Permanent link">&para;</a></h3>
-<p><strong>Status</strong>: Accepted
-<strong>Date</strong>: 2025-10-11</p>
-<p>Chose a stateless function (<code>expand_variables()</code>) as the core API instead of a stateful class.</p>
-<p><a href="../../adr/0004-stateless-function-based-variable-expansion/">View Full ADR</a></p>
-<hr />
-<h3 id="adr-0005-string-based-api-with-idempotent-resolution">ADR 0005: String-Based API with Idempotent Resolution<a class="headerlink" href="#adr-0005-string-based-api-with-idempotent-resolution" title="Permanent link">&para;</a></h3>
-<p><strong>Status</strong>: Accepted
-<strong>Date</strong>: 2025-10-12</p>
-<p>Return <code>str</code> directly instead of data models, with idempotent resolution (safe to call multiple times).</p>
-<p><a href="../../adr/0005-string-based-api-with-idempotent-resolution/">View Full ADR</a></p>
-<hr />
-<h3 id="adr-0006-nested-variable-expansion-implementation">ADR 0006: Nested Variable Expansion Implementation<a class="headerlink" href="#adr-0006-nested-variable-expansion-implementation" title="Permanent link">&para;</a></h3>
-<p><strong>Status</strong>: Accepted
-<strong>Date</strong>: 2025-10-13</p>
-<p>Two-phase iterative algorithm: expand innermost <code>${...}</code> first, then simple <code>$VAR</code>.</p>
-<p><a href="../../adr/0006-nested-variable-expansion-implementation/">View Full ADR</a></p>
-<hr />
-<h3 id="adr-0007-layer-separation-services-vs-application">ADR 0007: Layer Separation (Services vs Application)<a class="headerlink" href="#adr-0007-layer-separation-services-vs-application" title="Permanent link">&para;</a></h3>
-<p><strong>Status</strong>: Accepted
-<strong>Date</strong>: 2025-10-13</p>
-<p>Separated pure business logic (services layer) from environment integration (application layer).</p>
-<p><a href="../../adr/0007-layer-separation-services-vs-application/">View Full ADR</a></p>
-<hr />
-<h3 id="adr-0008-circular-reference-chain-tracking">ADR 0008: Circular Reference Chain Tracking<a class="headerlink" href="#adr-0008-circular-reference-chain-tracking" title="Permanent link">&para;</a></h3>
-<p><strong>Status</strong>: Accepted
-<strong>Date</strong>: 2025-10-13</p>
-<p>Extended <code>CircularReferenceError</code> to include full reference chain (<code>chain: list[str]</code>) for better debugging.</p>
-<p><a href="../../adr/0008-circular-reference-chain-tracking/">View Full ADR</a></p>
-<hr />
-<h3 id="adr-0009-manual-provider-registration-pattern">ADR 0009: Manual Provider Registration Pattern<a class="headerlink" href="#adr-0009-manual-provider-registration-pattern" title="Permanent link">&para;</a></h3>
-<p><strong>Status</strong>: Accepted
-<strong>Date</strong>: 2025-10-13</p>
-<p>Users explicitly call <code>register_azure_kv_provider()</code> before resolving secrets.</p>
-<p><a href="../../adr/0009-manual-provider-registration-pattern/">View Full ADR</a></p>
-<hr />
-<h3 id="adr-0010-iterative-uri-resolution">ADR 0010: Iterative URI Resolution<a class="headerlink" href="#adr-0010-iterative-uri-resolution" title="Permanent link">&para;</a></h3>
-<p><strong>Status</strong>: Accepted
-<strong>Date</strong>: 2025-10-13</p>
-<p>Implemented iterative resolution with cycle detection to support URI-to-URI resolution chains.</p>
-<p><a href="../../adr/0010-iterative-uri-resolution/">View Full ADR</a></p>
-<hr />
-<h3 id="adr-0011-conditional-doctest-skip">ADR 0011: Conditional Doctest Skip<a class="headerlink" href="#adr-0011-conditional-doctest-skip" title="Permanent link">&para;</a></h3>
-<p><strong>Status</strong>: Accepted
-<strong>Date</strong>: 2025-10-13</p>
-<p>Pytest fixture-based conditional skipping for doctests requiring optional dependencies.</p>
-<p><a href="../../adr/0011-conditional-doctest-skip/">View Full ADR</a></p>
-<hr />
-<h3 id="adr-0012-pytest-markers-for-azure-dependencies">ADR 0012: Pytest Markers for Azure Dependencies<a class="headerlink" href="#adr-0012-pytest-markers-for-azure-dependencies" title="Permanent link">&para;</a></h3>
-<p><strong>Status</strong>: Accepted
-<strong>Date</strong>: 2025-10-13</p>
-<p>Introduced <code>@pytest.mark.azure</code> to isolate tests requiring optional Azure SDK dependencies.</p>
-<p><a href="../../adr/0012-pytest-markers-for-azure-dependencies/">View Full ADR</a></p>
-<hr />
-<h3 id="adr-0013-class-based-api-design">ADR 0013: Class-Based API Design<a class="headerlink" href="#adr-0013-class-based-api-design" title="Permanent link">&para;</a></h3>
-<p><strong>Status</strong>: Accepted
-<strong>Date</strong>: 2025-10-14</p>
-<p>Encapsulated resolution state in <code>EnvResolver</code> class with module-level facade for backward compatibility.</p>
-<p><a href="../../adr/0013-class-based-api-design/">View Full ADR</a></p>
-<hr />
-<h3 id="adr-0014-importlib-lazy-import">ADR 0014: Importlib Lazy Import<a class="headerlink" href="#adr-0014-importlib-lazy-import" title="Permanent link">&para;</a></h3>
-<p><strong>Status</strong>: Accepted
-<strong>Date</strong>: 2025-10-14</p>
-<p>Used <code>importlib.import_module</code> for lazy loading of optional Azure SDK dependencies with rich error messages.</p>
-<p><a href="../../adr/0014-importlib-lazy-import/">View Full ADR</a></p>
-<hr />
-<h3 id="adr-0015-manage-azure-live-test-infrastructure-with-terraform">ADR 0015: Manage Azure Live Test Infrastructure with Terraform<a class="headerlink" href="#adr-0015-manage-azure-live-test-infrastructure-with-terraform" title="Permanent link">&para;</a></h3>
-<p><strong>Status</strong>: Accepted
-<strong>Date</strong>: 2025-10-15</p>
-<p>Standardized live Azure Key Vault testing with Terraform-managed resources.</p>
-<p><a href="../../adr/0015-terraform-managed-live-tests/">View Full ADR</a></p>
-<hr />
-<h3 id="adr-0016-typeerror-based-custom-exception-for-mutually-exclusive-parameters">ADR 0016: TypeError-based Custom Exception for Mutually Exclusive Parameters<a class="headerlink" href="#adr-0016-typeerror-based-custom-exception-for-mutually-exclusive-parameters" title="Permanent link">&para;</a></h3>
-<p><strong>Status</strong>: Accepted
-<strong>Date</strong>: 2025-10-18</p>
-<p>Created <code>MutuallyExclusiveArgumentsError</code> inheriting from both <code>EnvResolveError</code> and <code>TypeError</code>.</p>
-<p><a href="../../adr/0016-mutually-exclusive-parameters-with-typeerror/">View Full ADR</a></p>
-<hr />
-<h3 id="adr-0017-align-load_env-parameter-with-python-dotenv">ADR 0017: Align load_env() Parameter with python-dotenv<a class="headerlink" href="#adr-0017-align-load_env-parameter-with-python-dotenv" title="Permanent link">&para;</a></h3>
-<p><strong>Status</strong>: Accepted
-<strong>Date</strong>: 2025-10-20</p>
-<p>Changed <code>load_env()</code> signature to match python-dotenv's <code>load_dotenv()</code> for zero-friction migration.</p>
-<p><a href="../../adr/0017-load-env-dotenv-path-parameter/">View Full ADR</a></p>
-<hr />
-<h3 id="adr-0018-granular-error-handling-for-variable-expansion-and-secret-resolution">ADR 0018: Granular Error Handling for Variable Expansion and Secret Resolution<a class="headerlink" href="#adr-0018-granular-error-handling-for-variable-expansion-and-secret-resolution" title="Permanent link">&para;</a></h3>
-<p><strong>Status</strong>: Accepted
-<strong>Date</strong>: 2025-10-21</p>
-<p>Split single <code>stop_on_error</code> flag into <code>stop_on_expansion_error</code> and <code>stop_on_resolution_error</code>.</p>
-<p><a href="../../adr/0018-granular-error-handling/">View Full ADR</a></p>
-<hr />
-<h3 id="adr-0019-do-not-implement-validation-helper-functions-and-metadata-query-helpers">ADR 0019: Do Not Implement Validation Helper Functions and Metadata Query Helpers<a class="headerlink" href="#adr-0019-do-not-implement-validation-helper-functions-and-metadata-query-helpers" title="Permanent link">&para;</a></h3>
-<p><strong>Status</strong>: Accepted
-<strong>Date</strong>: 2025-11-12</p>
-<p>Decided not to implement validation helpers and metadata query helpers due to lack of concrete use cases.</p>
-<p><a href="../../adr/0019-do-not-implement-validation-helpers/">View Full ADR</a></p>
-<hr />
-<h3 id="adr-0020-add-ignore_keys-parameter-for-selective-variable-exclusion">ADR 0020: Add ignore_keys Parameter for Selective Variable Exclusion<a class="headerlink" href="#adr-0020-add-ignore_keys-parameter-for-selective-variable-exclusion" title="Permanent link">&para;</a></h3>
-<p><strong>Status</strong>: Accepted
-<strong>Date</strong>: 2025-11-13</p>
-<p>Added <code>ignore_keys</code> parameter to selectively skip variable expansion for specified keys.</p>
-<p><a href="../../adr/0020-ignore-keys-for-selective-exclusion/">View Full ADR</a></p>
-<hr />
-<h3 id="adr-0021-exception-wrapping-for-variable-resolution-context">ADR 0021: Exception Wrapping for Variable Resolution Context<a class="headerlink" href="#adr-0021-exception-wrapping-for-variable-resolution-context" title="Permanent link">&para;</a></h3>
-<p><strong>Status</strong>: Accepted
-<strong>Date</strong>: 2025-11-14</p>
-<p>Wrap resolution errors with <code>EnvironmentVariableResolutionError</code> to provide context about which environment variable failed.</p>
-<p><a href="../../adr/0021-exception-wrapping-for-context/">View Full ADR</a></p>
-<hr />
-<h2 id="adr-template">ADR Template<a class="headerlink" href="#adr-template" title="Permanent link">&para;</a></h2>
-<p>All ADRs follow a consistent template defined in <a href="../../adr/0000-adr-template/">ADR 0000: ADR Template</a>.</p>
-<h2 id="contributing">Contributing<a class="headerlink" href="#contributing" title="Permanent link">&para;</a></h2>
-<p>When making significant architectural decisions, please:</p>
-<ol>
-<li>Review existing ADRs to ensure consistency</li>
-<li>Use the ADR template for new decisions</li>
-<li>Document both what you chose AND what you rejected</li>
-<li>Include the "why" behind your decision</li>
-</ol>
+<h1 id="adr-0021-exception-wrapping-for-variable-resolution-context">ADR 0021: Exception Wrapping for Variable Resolution Context<a class="headerlink" href="#adr-0021-exception-wrapping-for-variable-resolution-context" title="Permanent link">&para;</a></h1>
+<h2 id="status">Status<a class="headerlink" href="#status" title="Permanent link">&para;</a></h2>
+<p>Accepted</p>
+<h2 id="date">Date<a class="headerlink" href="#date" title="Permanent link">&para;</a></h2>
+<p>2025-11-14</p>
+<h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
+<p>When <code>load_env()</code> or <code>resolve_os_environ()</code> fails to resolve a variable, the error message doesn't indicate which environment variable was being processed. For example, with <code>VAR2=${UNDEFINED}</code>, the error says "Variable not found: UNDEFINED" but not that the problem occurred in <code>VAR2</code>.</p>
+<p>This makes debugging difficult when <code>.env</code> files have many variables or multiple variables reference the same underlying variable.</p>
+<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
+<p>Wrap <code>VariableNotFoundError</code> and <code>SecretResolutionError</code> with <code>EnvironmentVariableResolutionError</code> that includes:</p>
+<ul>
+<li><code>context_key</code>: The environment variable name being processed</li>
+<li><code>original_error</code>: The underlying exception</li>
+<li>Error message combining both pieces of information</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">except</span> <span class="p">(</span><span class="n">VariableNotFoundError</span><span class="p">,</span> <span class="n">SecretResolutionError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Failed to resolve environment variable &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="k">raise</span> <span class="n">EnvironmentVariableResolutionError</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">context_key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">original_error</span><span class="o">=</span><span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+</code></pre></div>
+<p>Wrapping occurs in <code>load_env()</code> and <code>resolve_os_environ()</code> at the application layer. <code>CircularReferenceError</code> is NOT wrapped as it already indicates the problematic variable chain.</p>
+<h2 id="rationale">Rationale<a class="headerlink" href="#rationale" title="Permanent link">&para;</a></h2>
+<h3 id="application-layer-wrapping">Application Layer Wrapping<a class="headerlink" href="#application-layer-wrapping" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Only <code>api.py</code> has the context (<code>key</code>); service layer doesn't know which variable it's processing</li>
+<li>Keeps service layer generic and reusable (ADR-0007)</li>
+<li>Exception chain (<code>from e</code>) preserves original error location</li>
+</ul>
+<h3 id="new-exception-type">New Exception Type<a class="headerlink" href="#new-exception-type" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Preserves existing exception contracts (service layer doesn't need application context)</li>
+<li>Provides both programmatic access (<code>context_key</code>, <code>original_error</code>) and human-readable messages</li>
+<li>Allows catching either the wrapper or original exception types</li>
+</ul>
+<h2 id="implications">Implications<a class="headerlink" href="#implications" title="Permanent link">&para;</a></h2>
+<h3 id="positive-implications">Positive Implications<a class="headerlink" href="#positive-implications" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Error messages clearly indicate which variable failed</li>
+<li>Programmatic error handling via attributes</li>
+<li>Works seamlessly with <code>stop_on_expansion_error</code> and <code>stop_on_resolution_error</code> (ADR-0018)</li>
+<li>Clean layer separation</li>
+</ul>
+<h3 id="concerns">Concerns<a class="headerlink" href="#concerns" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Breaking change for exception catching<ul>
+<li><strong>Mitigation</strong>: Most users don't catch these; can access <code>original_error</code> if needed</li>
+</ul>
+</li>
+<li>Wrapping logic duplicated in two methods<ul>
+<li><strong>Mitigation</strong>: Simple pattern; extraction would add complexity</li>
+</ul>
+</li>
+</ul>
+<h2 id="alternatives">Alternatives<a class="headerlink" href="#alternatives" title="Permanent link">&para;</a></h2>
+<h3 id="modify-existing-exceptions">Modify Existing Exceptions<a class="headerlink" href="#modify-existing-exceptions" title="Permanent link">&para;</a></h3>
+<p><strong>Pros</strong>: No new exception type</p>
+<p><strong>Cons</strong>: Violates layer separation, makes service layer less reusable</p>
+<p><strong>Rejected</strong>: Service layer shouldn't depend on application context</p>
+<h3 id="add-context-to-message-only">Add Context to Message Only<a class="headerlink" href="#add-context-to-message-only" title="Permanent link">&para;</a></h3>
+<p><strong>Pros</strong>: Simpler implementation</p>
+<p><strong>Cons</strong>: No programmatic access, still violates layer separation</p>
+<p><strong>Rejected</strong>: Doesn't enable programmatic error handling</p>
+<h2 id="future-direction">Future Direction<a class="headerlink" href="#future-direction" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Structured error reporting for all failed variables</li>
+<li>Batch error collection option</li>
+<li>Custom error formatters</li>
+</ul>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Issue #22: Add context to resolution errors</li>
+<li>ADR-0007: Layer Separation</li>
+<li>ADR-0018: Granular Error Handling</li>
+</ul>
 
 
 

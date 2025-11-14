@@ -13,6 +13,10 @@
         <link rel="canonical" href="https://github.com/osoekawaitlab/envresolve/adr/0020-ignore-keys-for-selective-exclusion/">
       
       
+        <link rel="prev" href="../0019-do-not-implement-validation-helpers/">
+      
+      
+        <link rel="next" href="../0021-exception-wrapping-for-context/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -317,10 +321,12 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../../architecture/adr/" class="md-tabs__link">
           
   
@@ -743,28 +749,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
-        
-          
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
             
   
   
@@ -777,7 +786,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             Architecture
@@ -811,28 +820,31 @@
                 
   
   
+    
   
   
+  
     
     
     
     
       
       
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
         
           
+          
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="">
             
   
   
@@ -845,7 +857,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_6_2">
             <span class="md-nav__icon md-icon"></span>
             Records
@@ -864,7 +876,7 @@
   
   
   <span class="md-ellipsis">
-    0000-adr-template.md
+    ADR 0000: This is ADR Template and Short Title of the Architectural Decision Goes Here
     
   </span>
   
@@ -887,7 +899,7 @@
   
   
   <span class="md-ellipsis">
-    0001-variable-expansion-with-regex.md
+    ADR 0001: Use Regular Expressions for Variable Expansion
     
   </span>
   
@@ -910,7 +922,7 @@
   
   
   <span class="md-ellipsis">
-    0002-custom-exception-hierarchy.md
+    ADR 0002: Use Custom Exception Hierarchy Instead of Built-in Exceptions
     
   </span>
   
@@ -933,7 +945,7 @@
   
   
   <span class="md-ellipsis">
-    0003-structured-exception-design.md
+    ADR 0003: Use Structured Exceptions with Data Attributes
     
   </span>
   
@@ -956,7 +968,7 @@
   
   
   <span class="md-ellipsis">
-    0004-stateless-function-based-variable-expansion.md
+    ADR 0004: Use Stateless Function for Variable Expansion Core Logic
     
   </span>
   
@@ -979,7 +991,7 @@
   
   
   <span class="md-ellipsis">
-    0005-string-based-api-with-idempotent-resolution.md
+    ADR 0005: Use String-Based API with Idempotent Resolution Instead of Data Models
     
   </span>
   
@@ -1002,7 +1014,7 @@
   
   
   <span class="md-ellipsis">
-    0006-nested-variable-expansion-implementation.md
+    ADR 0006: Two-Phase Iterative Algorithm for Nested Variable Expansion
     
   </span>
   
@@ -1025,7 +1037,7 @@
   
   
   <span class="md-ellipsis">
-    0007-layer-separation-services-vs-application.md
+    ADR 0007: Separate Services Layer (Pure Logic) from Application Layer (Environment Integration)
     
   </span>
   
@@ -1048,7 +1060,7 @@
   
   
   <span class="md-ellipsis">
-    0008-circular-reference-chain-tracking.md
+    ADR 0008: Track and Report Full Reference Chain in Circular Reference Errors
     
   </span>
   
@@ -1071,7 +1083,7 @@
   
   
   <span class="md-ellipsis">
-    0009-manual-provider-registration-pattern.md
+    ADR 0009: Use Manual Provider Registration with Global Registry
     
   </span>
   
@@ -1094,7 +1106,7 @@
   
   
   <span class="md-ellipsis">
-    0010-iterative-uri-resolution.md
+    ADR 0010: Iterative URI Resolution with Cycle Detection
     
   </span>
   
@@ -1117,7 +1129,7 @@
   
   
   <span class="md-ellipsis">
-    0011-conditional-doctest-skip.md
+    ADR 0011: Conditional Doctest Skip Based on Optional Dependencies
     
   </span>
   
@@ -1140,7 +1152,7 @@
   
   
   <span class="md-ellipsis">
-    0012-pytest-markers-for-azure-dependencies.md
+    ADR 0012: Use Pytest Marker to Isolate Azure-Dependent Tests
     
   </span>
   
@@ -1163,7 +1175,7 @@
   
   
   <span class="md-ellipsis">
-    0013-class-based-api-design.md
+    ADR 0013: Encapsulate Resolution State in EnvResolver Class with Module Facade
     
   </span>
   
@@ -1186,7 +1198,7 @@
   
   
   <span class="md-ellipsis">
-    0014-importlib-lazy-import.md
+    ADR 0014: Use importlib for Lazy Optional Dependency Loading with Rich Errors
     
   </span>
   
@@ -1209,7 +1221,7 @@
   
   
   <span class="md-ellipsis">
-    0015-terraform-managed-live-tests.md
+    ADR 0015: Manage Azure Live Test Infrastructure with Terraform
     
   </span>
   
@@ -1232,7 +1244,7 @@
   
   
   <span class="md-ellipsis">
-    0016-mutually-exclusive-parameters-with-typeerror.md
+    ADR 0016: Use TypeError-based Custom Exception for Mutually Exclusive Parameters
     
   </span>
   
@@ -1255,7 +1267,7 @@
   
   
   <span class="md-ellipsis">
-    0017-load-env-dotenv-path-parameter.md
+    ADR 0017: Align load_env() Parameter Signature with python-dotenv's load_dotenv()
     
   </span>
   
@@ -1278,7 +1290,7 @@
   
   
   <span class="md-ellipsis">
-    0018-granular-error-handling.md
+    ADR 0018: Granular Error Handling for Variable Expansion and Secret Resolution
     
   </span>
   
@@ -1301,7 +1313,257 @@
   
   
   <span class="md-ellipsis">
-    0019-do-not-implement-validation-helpers.md
+    ADR 0019: Do Not Implement Validation Helper Functions and Metadata Query Helpers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    ADR 0020: Add ignore_keys Parameter for Selective Variable Exclusion
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    ADR 0020: Add ignore_keys Parameter for Selective Variable Exclusion
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      Status
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#date" class="md-nav__link">
+    <span class="md-ellipsis">
+      Date
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Decision
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rationale
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Rationale">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-list-based-exact-matching" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 1: List-based exact matching
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-not-patterns-from-the-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why not patterns from the start
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implications
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positive-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Positive Implications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Concerns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternatives
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#glob-patterns-immediately" class="md-nav__link">
+    <span class="md-ellipsis">
+      Glob Patterns Immediately
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#callback-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      Callback Function
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automatic-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Automatic Detection
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-direction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Future Direction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0021-exception-wrapping-for-context/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ADR 0021: Exception Wrapping for Variable Resolution Context
     
   </span>
   
