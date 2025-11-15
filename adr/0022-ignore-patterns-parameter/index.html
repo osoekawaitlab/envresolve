@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://github.com/osoekawaitlab/envresolve/adr/0020-ignore-keys-for-selective-exclusion/">
+        <link rel="canonical" href="https://github.com/osoekawaitlab/envresolve/adr/0022-ignore-patterns-parameter/">
       
       
-        <link rel="prev" href="../0019-do-not-implement-validation-helpers/">
+        <link rel="prev" href="../0021-exception-wrapping-for-context/">
       
       
-        <link rel="next" href="../0021-exception-wrapping-for-context/">
+        <link rel="next" href="../0023-use-fnmatch-for-pattern-matching/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -24,7 +24,7 @@
     
     
       
-        <title>ADR 0020: Add ignore_keys Parameter for Selective Variable Exclusion - envresolve</title>
+        <title>ADR 0022: Add ignore_patterns Parameter for Pattern-Based Variable Exclusion - envresolve</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#adr-0020-add-ignore_keys-parameter-for-selective-variable-exclusion" class="md-skip">
+        <a href="#adr-0022-add-ignore_patterns-parameter-for-pattern-based-variable-exclusion" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ADR 0020: Add ignore_keys Parameter for Selective Variable Exclusion
+              ADR 0022: Add ignore_patterns Parameter for Pattern-Based Variable Exclusion
             
           </span>
         </div>
@@ -1328,6 +1328,52 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../0020-ignore-keys-for-selective-exclusion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ADR 0020: Add ignore_keys Parameter for Selective Variable Exclusion
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0021-exception-wrapping-for-context/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ADR 0021: Exception Wrapping for Variable Resolution Context
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -1345,7 +1391,7 @@
   
   
   <span class="md-ellipsis">
-    ADR 0020: Add ignore_keys Parameter for Selective Variable Exclusion
+    ADR 0022: Add ignore_patterns Parameter for Pattern-Based Variable Exclusion
     
   </span>
   
@@ -1358,7 +1404,7 @@
   
   
   <span class="md-ellipsis">
-    ADR 0020: Add ignore_keys Parameter for Selective Variable Exclusion
+    ADR 0022: Add ignore_patterns Parameter for Pattern-Based Variable Exclusion
     
   </span>
   
@@ -1423,30 +1469,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Rationale">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#phase-1-list-based-exact-matching" class="md-nav__link">
-    <span class="md-ellipsis">
-      Phase 1: List-based exact matching
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#why-not-patterns-from-the-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      Why not patterns from the start
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -1493,15 +1515,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#glob-patterns-immediately" class="md-nav__link">
-    <span class="md-ellipsis">
-      Glob Patterns Immediately
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#callback-function" class="md-nav__link">
     <span class="md-ellipsis">
       Callback Function
@@ -1511,9 +1524,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#automatic-detection" class="md-nav__link">
+  <a href="#extend-ignore_keys-to-accept-patterns" class="md-nav__link">
     <span class="md-ellipsis">
-      Automatic Detection
+      Extend ignore_keys to Accept Patterns
     </span>
   </a>
   
@@ -1546,52 +1559,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0021-exception-wrapping-for-context/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    ADR 0021: Exception Wrapping for Variable Resolution Context
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0022-ignore-patterns-parameter/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    ADR 0022: Add ignore_patterns Parameter for Pattern-Based Variable Exclusion
-    
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -1704,30 +1671,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Rationale">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#phase-1-list-based-exact-matching" class="md-nav__link">
-    <span class="md-ellipsis">
-      Phase 1: List-based exact matching
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#why-not-patterns-from-the-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      Why not patterns from the start
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -1774,15 +1717,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#glob-patterns-immediately" class="md-nav__link">
-    <span class="md-ellipsis">
-      Glob Patterns Immediately
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#callback-function" class="md-nav__link">
     <span class="md-ellipsis">
       Callback Function
@@ -1792,9 +1726,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#automatic-detection" class="md-nav__link">
+  <a href="#extend-ignore_keys-to-accept-patterns" class="md-nav__link">
     <span class="md-ellipsis">
-      Automatic Detection
+      Extend ignore_keys to Accept Patterns
     </span>
   </a>
   
@@ -1842,70 +1776,99 @@
   
 
 
-<h1 id="adr-0020-add-ignore_keys-parameter-for-selective-variable-exclusion">ADR 0020: Add ignore_keys Parameter for Selective Variable Exclusion<a class="headerlink" href="#adr-0020-add-ignore_keys-parameter-for-selective-variable-exclusion" title="Permanent link">&para;</a></h1>
+<h1 id="adr-0022-add-ignore_patterns-parameter-for-pattern-based-variable-exclusion">ADR 0022: Add ignore_patterns Parameter for Pattern-Based Variable Exclusion<a class="headerlink" href="#adr-0022-add-ignore_patterns-parameter-for-pattern-based-variable-exclusion" title="Permanent link">&para;</a></h1>
 <h2 id="status">Status<a class="headerlink" href="#status" title="Permanent link">&para;</a></h2>
 <p>Accepted</p>
 <h2 id="date">Date<a class="headerlink" href="#date" title="Permanent link">&para;</a></h2>
-<p>2025-11-13</p>
+<p>2025-11-15</p>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p>System environment variables (<code>$PS1</code>, <code>$PS2</code>, <code>%PROMPT%</code>) contain literal <code>$</code> characters (e.g., <code>PS1="${USER}@${HOST}$ "</code>). When processing these with <code>resolve_os_environ()</code>, the <code>$</code> triggers unintended variable expansion, causing <code>VariableNotFoundError</code>.</p>
-<p>The existing <code>stop_on_expansion_error=False</code> suppresses all expansion errors, preventing detection of legitimate typos in configuration.</p>
-<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p>Add <code>ignore_keys</code> parameter to <code>load_env()</code> and <code>resolve_os_environ()</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">load_env</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">ignore_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span> <span class="o">...</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">resolve_os_environ</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">ignore_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span> <span class="o">...</span>
+<p>ADR-0020 introduced <code>ignore_keys</code> parameter for exact string matching to exclude specific environment variables from expansion. However, users must list each variable individually:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">load_env</span><span class="p">(</span><span class="n">ignore_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;PS1&quot;</span><span class="p">,</span> <span class="s2">&quot;PS2&quot;</span><span class="p">,</span> <span class="s2">&quot;PS3&quot;</span><span class="p">,</span> <span class="s2">&quot;PS4&quot;</span><span class="p">])</span>  <span class="c1"># Verbose for related vars</span>
 </code></pre></div>
-<p>Variables in <code>ignore_keys</code> skip expansion/resolution and are included as-is. Phase 1 uses exact string matching only.</p>
+<p>For excluding multiple related variables (e.g., all shell prompt variables <code>PS*</code>, all Windows prompt variables <code>PROMPT*</code>), exact matching becomes verbose and error-prone. Users need pattern-based exclusion.</p>
+<p>This is <strong>Phase 2</strong> of the ignore functionality roadmap outlined in ADR-0020.</p>
+<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
+<p>Add <code>ignore_patterns</code> parameter to <code>load_env()</code> and <code>resolve_os_environ()</code> for pattern-based variable exclusion:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">load_env</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">ignore_patterns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span> <span class="o">...</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">resolve_os_environ</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">ignore_patterns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span> <span class="o">...</span>
+</code></pre></div>
+<p><strong>Pattern format is defined in ADR-0023 (implementation choice).</strong></p>
+<p><strong>Execution order:</strong></p>
+<ol>
+<li>Check <code>ignore_keys</code> (exact match)</li>
+<li>If not matched, check <code>ignore_patterns</code> (pattern match)</li>
+<li>If neither matched, perform resolution</li>
+</ol>
 <h2 id="rationale">Rationale<a class="headerlink" href="#rationale" title="Permanent link">&para;</a></h2>
-<h3 id="phase-1-list-based-exact-matching">Phase 1: List-based exact matching<a class="headerlink" href="#phase-1-list-based-exact-matching" title="Permanent link">&para;</a></h3>
+<p><strong>Why separate parameter from <code>ignore_keys</code>:</strong></p>
 <ul>
-<li>Solves the immediate problem (system variables)</li>
-<li>Simple mental model</li>
-<li>Foundation for future pattern matching</li>
+<li>Clear intent: exact match vs. pattern match</li>
+<li>Avoids ambiguity (a literal key name vs. a pattern)</li>
+<li>Both can be used together for flexibility</li>
 </ul>
-<h3 id="why-not-patterns-from-the-start">Why not patterns from the start<a class="headerlink" href="#why-not-patterns-from-the-start" title="Permanent link">&para;</a></h3>
+<p><strong>Why pattern-based approach:</strong></p>
 <ul>
-<li>Increases scope and complexity</li>
-<li>List-based approach provides immediate value</li>
-<li>Patterns can be added incrementally without breaking changes</li>
+<li>Concise for excluding related variables</li>
+<li>Reduces manual listing and error-proneness</li>
+<li>Covers real-world use cases (system variables, temporary variables, debug flags)</li>
 </ul>
 <h2 id="implications">Implications<a class="headerlink" href="#implications" title="Permanent link">&para;</a></h2>
 <h3 id="positive-implications">Positive Implications<a class="headerlink" href="#positive-implications" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Selective exclusion with strict error checking for other variables</li>
-<li>Complements granular error handling (ADR-0018)</li>
-<li>Non-breaking addition (optional parameter)</li>
+<li>Concise exclusion of related variables instead of listing each one</li>
+<li>Flexibility: combine exact and pattern matching</li>
+<li>Non-breaking: optional parameter, backward compatible</li>
+<li>Covers real-world use cases: <code>TEMP_*</code>, <code>DEBUG_*</code>, <code>PROMPT*</code></li>
 </ul>
 <h3 id="concerns">Concerns<a class="headerlink" href="#concerns" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Manual specification required for each key<ul>
-<li><strong>Mitigation</strong>: Phase 2 will add glob patterns</li>
+<li><strong>Pattern complexity</strong>: Users might write overly broad patterns<ul>
+<li>Mitigation: Documentation with best practices and examples</li>
+</ul>
+</li>
+<li><strong>Pattern format choice</strong>: Need to decide on pattern syntax<ul>
+<li>Addressed in ADR-0023 (implementation decision)</li>
 </ul>
 </li>
 </ul>
 <h2 id="alternatives">Alternatives<a class="headerlink" href="#alternatives" title="Permanent link">&para;</a></h2>
-<h3 id="glob-patterns-immediately">Glob Patterns Immediately<a class="headerlink" href="#glob-patterns-immediately" title="Permanent link">&para;</a></h3>
-<p><strong>Pros</strong>: More flexible, fewer manual specifications</p>
-<p><strong>Cons</strong>: More complex, increases initial scope</p>
-<p><strong>Rejected</strong>: Incremental approach provides faster value</p>
 <h3 id="callback-function">Callback Function<a class="headerlink" href="#callback-function" title="Permanent link">&para;</a></h3>
-<p><strong>Pros</strong>: Maximum flexibility</p>
-<p><strong>Cons</strong>: Overkill for typical use cases, harder to configure</p>
-<p><strong>Rejected</strong>: List-based approach covers 90% of use cases</p>
-<h3 id="automatic-detection">Automatic Detection<a class="headerlink" href="#automatic-detection" title="Permanent link">&para;</a></h3>
-<p><strong>Pros</strong>: Zero configuration</p>
-<p><strong>Cons</strong>: Magic behavior, platform-specific, users lose control</p>
-<p><strong>Rejected</strong>: Explicit configuration is more predictable</p>
+<p>Allow custom filter function:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">should_ignore</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="k">return</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;PS&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;PROMPT&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">load_env</span><span class="p">(</span><span class="n">ignore_filter</span><span class="o">=</span><span class="n">should_ignore</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Pros:</strong> Maximum flexibility</p>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Complex for simple cases</li>
+<li>Cannot be serialized to config files</li>
+<li>Overhead for typical scenarios</li>
+</ul>
+<p><strong>Rejected:</strong> Pattern-based approach is simpler and covers most needs. Callback can be Phase 4 if needed.</p>
+<h3 id="extend-ignore_keys-to-accept-patterns">Extend ignore_keys to Accept Patterns<a class="headerlink" href="#extend-ignore_keys-to-accept-patterns" title="Permanent link">&para;</a></h3>
+<p>Modify <code>ignore_keys</code> to auto-detect and handle patterns:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">load_env</span><span class="p">(</span><span class="n">ignore_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;EXACT_VAR&quot;</span><span class="p">,</span> <span class="s2">&quot;PS*&quot;</span><span class="p">])</span>  <span class="c1"># Mixed</span>
+</code></pre></div>
+<p><strong>Pros:</strong> Single parameter</p>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Ambiguous: Is <code>PS*</code> literal or pattern?</li>
+<li>Cannot exclude a variable literally named <code>PS*</code></li>
+<li>Less explicit</li>
+</ul>
+<p><strong>Rejected:</strong> Separate parameters provide clearer intent.</p>
 <h2 id="future-direction">Future Direction<a class="headerlink" href="#future-direction" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Phase 2</strong>: <code>ignore_patterns</code> with glob matching (<code>PS*</code>, <code>PROMPT*</code>)</li>
-<li><strong>Phase 3</strong>: <code>ENVRESOLVE_IGNORE</code> environment variable</li>
-<li><strong>Potential</strong>: Case-insensitive matching, regex patterns, invert logic</li>
+<li><strong>Phase 3</strong>: <code>ENVRESOLVE_IGNORE</code> environment variable for global configuration</li>
+<li><strong>Pattern format evolution</strong>: If users need more complex matching, consider additional pattern types (see ADR-0023)</li>
 </ul>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Issue #20: Add ignore_keys parameter</li>
-<li>ADR-0018: Granular Error Handling</li>
+<li>ADR-0020: Add ignore_keys Parameter for Selective Variable Exclusion (Phase 1)</li>
+<li>ADR-0023: Use fnmatch (Glob Patterns) for Pattern Matching Implementation</li>
+<li>Issue #25: Add ignore_patterns parameter with glob matching support</li>
 </ul>
 
 

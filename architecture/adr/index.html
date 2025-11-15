@@ -1057,6 +1057,24 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#adr-0022-add-ignore_patterns-parameter-for-pattern-based-variable-exclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0022: Add ignore_patterns Parameter for Pattern-Based Variable Exclusion
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0023-use-fnmatch-glob-patterns-for-pattern-matching-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0023: Use fnmatch (Glob Patterns) for Pattern Matching Implementation
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1643,6 +1661,52 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0022-ignore-patterns-parameter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ADR 0022: Add ignore_patterns Parameter for Pattern-Based Variable Exclusion
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0023-use-fnmatch-for-pattern-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ADR 0023: Use fnmatch (Glob Patterns) for Pattern Matching Implementation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1892,6 +1956,24 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#adr-0022-add-ignore_patterns-parameter-for-pattern-based-variable-exclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0022: Add ignore_patterns Parameter for Pattern-Based Variable Exclusion
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0023-use-fnmatch-glob-patterns-for-pattern-matching-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0023: Use fnmatch (Glob Patterns) for Pattern Matching Implementation
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2064,6 +2146,18 @@
 <strong>Date</strong>: 2025-11-14</p>
 <p>Wrap resolution errors with <code>EnvironmentVariableResolutionError</code> to provide context about which environment variable failed.</p>
 <p><a href="../../adr/0021-exception-wrapping-for-context/">View Full ADR</a></p>
+<hr />
+<h3 id="adr-0022-add-ignore_patterns-parameter-for-pattern-based-variable-exclusion">ADR 0022: Add ignore_patterns Parameter for Pattern-Based Variable Exclusion<a class="headerlink" href="#adr-0022-add-ignore_patterns-parameter-for-pattern-based-variable-exclusion" title="Permanent link">&para;</a></h3>
+<p><strong>Status</strong>: Accepted
+<strong>Date</strong>: 2025-11-15</p>
+<p>Added <code>ignore_patterns</code> parameter to selectively skip variable expansion using pattern matching.</p>
+<p><a href="../../adr/0022-ignore-patterns-parameter/">View Full ADR</a></p>
+<hr />
+<h3 id="adr-0023-use-fnmatch-glob-patterns-for-pattern-matching-implementation">ADR 0023: Use fnmatch (Glob Patterns) for Pattern Matching Implementation<a class="headerlink" href="#adr-0023-use-fnmatch-glob-patterns-for-pattern-matching-implementation" title="Permanent link">&para;</a></h3>
+<p><strong>Status</strong>: Accepted
+<strong>Date</strong>: 2025-11-15</p>
+<p>Use Python's <code>fnmatch</code> module for glob-style pattern matching in <code>ignore_patterns</code>.</p>
+<p><a href="../../adr/0023-use-fnmatch-for-pattern-matching/">View Full ADR</a></p>
 <hr />
 <h2 id="adr-template">ADR Template<a class="headerlink" href="#adr-template" title="Permanent link">&para;</a></h2>
 <p>All ADRs follow a consistent template defined in <a href="../../adr/0000-adr-template/">ADR 0000: ADR Template</a>.</p>

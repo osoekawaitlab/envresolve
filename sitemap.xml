@@ -2,130 +2,138 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/roadmap/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/adr/0000-adr-template/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/adr/0001-variable-expansion-with-regex/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/adr/0002-custom-exception-hierarchy/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/adr/0003-structured-exception-design/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/adr/0004-stateless-function-based-variable-expansion/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/adr/0005-string-based-api-with-idempotent-resolution/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/adr/0006-nested-variable-expansion-implementation/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/adr/0007-layer-separation-services-vs-application/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/adr/0008-circular-reference-chain-tracking/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/adr/0009-manual-provider-registration-pattern/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/adr/0010-iterative-uri-resolution/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/adr/0011-conditional-doctest-skip/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/adr/0012-pytest-markers-for-azure-dependencies/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/adr/0013-class-based-api-design/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/adr/0014-importlib-lazy-import/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/adr/0015-terraform-managed-live-tests/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/adr/0016-mutually-exclusive-parameters-with-typeerror/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/adr/0017-load-env-dotenv-path-parameter/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/adr/0018-granular-error-handling/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/adr/0019-do-not-implement-validation-helpers/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/adr/0020-ignore-keys-for-selective-exclusion/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/adr/0021-exception-wrapping-for-context/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/osoekawaitlab/envresolve/adr/0022-ignore-patterns-parameter/</loc>
+         <lastmod>2025-11-15</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/osoekawaitlab/envresolve/adr/0023-use-fnmatch-for-pattern-matching/</loc>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/api-reference/exceptions/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/api-reference/providers/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/api-reference/public_api/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/architecture/adr/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/developer-guide/contributing/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/developer-guide/live-tests/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/user-guide/basic-usage/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
     <url>
          <loc>https://github.com/osoekawaitlab/envresolve/user-guide/installation/</loc>
-         <lastmod>2025-11-14</lastmod>
+         <lastmod>2025-11-15</lastmod>
     </url>
 </urlset>
