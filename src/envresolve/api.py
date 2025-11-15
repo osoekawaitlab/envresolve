@@ -1,5 +1,6 @@
 """Public API for envresolve."""
 
+import fnmatch
 import importlib
 import os
 from pathlib import Path
@@ -136,6 +137,7 @@ class EnvResolver:
         stop_on_expansion_error: bool = True,
         stop_on_resolution_error: bool = True,
         ignore_keys: list[str] | None = None,
+        ignore_patterns: list[str] | None = None,
     ) -> dict[str, str]:
         """Load environment variables from a .env file and resolve secret URIs.
 
@@ -160,6 +162,9 @@ class EnvResolver:
             ignore_keys: List of keys to skip expansion for. These keys are included
                 in the result as-is without variable expansion or secret resolution.
                 (default: None)
+            ignore_patterns: List of glob patterns to match keys for skipping expansion.
+                Keys matching any pattern are included as-is without variable expansion
+                or secret resolution. Supports wildcards: *, ?, [seq]. (default: None)
 
         Returns:
             Dictionary of resolved environment variables
@@ -189,8 +194,8 @@ class EnvResolver:
         # Resolve each variable
         resolved: dict[str, str] = {}
         for key, value in env_dict.items():
-            # Skip expansion for ignored keys
-            if ignore_keys and key in ignore_keys:
+            # Skip expansion for ignored keys or patterns
+            if self._should_ignore_key(key, ignore_keys, ignore_patterns):
                 resolved[key] = value
                 continue
 
@@ -230,6 +235,29 @@ class EnvResolver:
         if prefix is not None:
             return {k: v for k, v in os.environ.items() if k.startswith(prefix)}
         return dict(os.environ)
+
+    def _should_ignore_key(
+        self, key: str, ignore_keys: list[str] | None, ignore_patterns: list[str] | None
+    ) -> bool:
+        """Check if a key should be ignored based on exact match or pattern match.
+
+        Args:
+            key: Environment variable key to check
+            ignore_keys: List of keys for exact matching
+            ignore_patterns: List of glob patterns for pattern matching
+
+        Returns:
+            True if the key should be ignored, False otherwise
+        """
+        # Check exact match
+        if ignore_keys and key in ignore_keys:
+            return True
+
+        # Check pattern match
+        return bool(
+            ignore_patterns
+            and any(fnmatch.fnmatch(key, pattern) for pattern in ignore_patterns)
+        )
 
     def _resolve_variable(
         self,
@@ -273,6 +301,7 @@ class EnvResolver:
         stop_on_expansion_error: bool = True,
         stop_on_resolution_error: bool = True,
         ignore_keys: list[str] | None = None,
+        ignore_patterns: list[str] | None = None,
     ) -> dict[str, str]:
         """Resolve secret URIs in os.environ.
 
@@ -292,8 +321,8 @@ class EnvResolver:
         resolved: dict[str, str] = {}
 
         for key, value in target_env.items():
-            # Skip expansion for ignored keys
-            if ignore_keys and key in ignore_keys:
+            # Skip expansion for ignored keys or patterns
+            if self._should_ignore_key(key, ignore_keys, ignore_patterns):
                 resolved[key] = value
                 if overwrite:
                     os.environ[key] = value
@@ -405,6 +434,7 @@ def load_env(  # noqa: PLR0913
     stop_on_expansion_error: bool = True,
     stop_on_resolution_error: bool = True,
     ignore_keys: list[str] | None = None,
+    ignore_patterns: list[str] | None = None,
 ) -> dict[str, str]:
     """Load environment variables from a .env file and resolve secret URIs.
 
@@ -428,6 +458,9 @@ def load_env(  # noqa: PLR0913
         ignore_keys: List of keys to skip expansion for. These keys are included
             in the result as-is without variable expansion or secret resolution.
             (default: None)
+        ignore_patterns: List of glob patterns to match keys for skipping expansion.
+            Keys matching any pattern are included as-is without variable expansion
+            or secret resolution. Supports wildcards: *, ?, [seq]. (default: None)
 
     Returns:
         Dictionary of resolved environment variables
@@ -455,6 +488,7 @@ def load_env(  # noqa: PLR0913
         stop_on_expansion_error=stop_on_expansion_error,
         stop_on_resolution_error=stop_on_resolution_error,
         ignore_keys=ignore_keys,
+        ignore_patterns=ignore_patterns,
     )
 
 
@@ -466,6 +500,7 @@ def resolve_os_environ(  # noqa: PLR0913
     stop_on_expansion_error: bool = True,
     stop_on_resolution_error: bool = True,
     ignore_keys: list[str] | None = None,
+    ignore_patterns: list[str] | None = None,
 ) -> dict[str, str]:
     """Resolve secret URIs in os.environ.
 
@@ -487,6 +522,9 @@ def resolve_os_environ(  # noqa: PLR0913
         ignore_keys: List of keys to skip expansion for. These keys are included
             in the result as-is without variable expansion or secret resolution.
             (default: None)
+        ignore_patterns: List of glob patterns to match keys for skipping expansion.
+            Keys matching any pattern are included as-is without variable expansion
+            or secret resolution. Supports wildcards: *, ?, [seq]. (default: None)
 
     Returns:
         Dictionary of resolved values
@@ -518,4 +556,5 @@ def resolve_os_environ(  # noqa: PLR0913
         stop_on_expansion_error=stop_on_expansion_error,
         stop_on_resolution_error=stop_on_resolution_error,
         ignore_keys=ignore_keys,
+        ignore_patterns=ignore_patterns,
     )

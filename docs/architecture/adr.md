@@ -239,6 +239,28 @@ Wrap resolution errors with `EnvironmentVariableResolutionError` to provide cont
 
 ---
 
+### ADR 0022: Add ignore_patterns Parameter for Pattern-Based Variable Exclusion
+
+**Status**: Accepted
+**Date**: 2025-11-15
+
+Added `ignore_patterns` parameter to selectively skip variable expansion using pattern matching.
+
+[View Full ADR](../adr/0022-ignore-patterns-parameter.md)
+
+---
+
+### ADR 0023: Use fnmatch (Glob Patterns) for Pattern Matching Implementation
+
+**Status**: Accepted
+**Date**: 2025-11-15
+
+Use Python's `fnmatch` module for glob-style pattern matching in `ignore_patterns`.
+
+[View Full ADR](../adr/0023-use-fnmatch-for-pattern-matching.md)
+
+---
+
 ## ADR Template
 
 All ADRs follow a consistent template defined in [ADR 0000: ADR Template](../adr/0000-adr-template.md).

@@ -443,3 +443,138 @@ def test_load_env_wraps_expansion_error_with_context(
     # Check error message includes context
     assert "VAR2" in str(exc_info.value)
     assert "UNDEFINED" in str(exc_info.value)
+
+
+def test_load_env_with_ignore_patterns(
+    temp_env_dir: Path, mocker: MockerFixture
+) -> None:
+    """Test load_env() with ignore_patterns parameter.
+
+    Acceptance criteria:
+    - ignore_patterns parameter skips expansion for keys matching glob patterns
+    - Ignored variables are included in result as-is
+    """
+    env_file = temp_env_dir / ".env"
+    env_file.write_text("PS1=${UNDEFINED}\nPS2=${ALSO_UNDEFINED}\nVALID=hello\n")
+
+    mocker.patch.dict("os.environ", {"PATH": "/usr/bin"}, clear=True)
+
+    result = envresolve.load_env(
+        dotenv_path=env_file, export=False, ignore_patterns=["PS*"]
+    )
+
+    assert result["PS1"] == "${UNDEFINED}"  # Unchanged, pattern matched
+    assert result["PS2"] == "${ALSO_UNDEFINED}"  # Unchanged, pattern matched
+    assert result["VALID"] == "hello"
+
+
+def test_load_env_with_multiple_ignore_patterns(
+    temp_env_dir: Path, mocker: MockerFixture
+) -> None:
+    """Test load_env() with multiple ignore patterns (real-world use case).
+
+    Acceptance criteria:
+    - Multiple patterns can be specified
+    - Variables matching any pattern are ignored
+    - Demonstrates real-world usage (TEMP_*, PROMPT*, DEBUG_*)
+    """
+    env_file = temp_env_dir / ".env"
+    env_file.write_text(
+        "TEMP_VAR=${UNDEFINED1}\n"
+        "TEMP_FILE=${UNDEFINED2}\n"
+        "PROMPT=${UNDEFINED3}\n"
+        "PROMPT_COMMAND=${UNDEFINED4}\n"
+        "DEBUG_MODE=${UNDEFINED5}\n"
+        "VALID_VAR=production\n"
+    )
+
+    mocker.patch.dict("os.environ", {"PATH": "/usr/bin"}, clear=True)
+
+    result = envresolve.load_env(
+        dotenv_path=env_file,
+        export=False,
+        ignore_patterns=["TEMP_*", "PROMPT*", "DEBUG_*"],
+    )
+
+    # All temporary, prompt, and debug variables should be unchanged
+    assert result["TEMP_VAR"] == "${UNDEFINED1}"
+    assert result["TEMP_FILE"] == "${UNDEFINED2}"
+    assert result["PROMPT"] == "${UNDEFINED3}"
+    assert result["PROMPT_COMMAND"] == "${UNDEFINED4}"
+    assert result["DEBUG_MODE"] == "${UNDEFINED5}"
+    # Valid variable should be processed
+    assert result["VALID_VAR"] == "production"
+
+
+def test_load_env_with_both_ignore_keys_and_patterns(
+    temp_env_dir: Path, mocker: MockerFixture
+) -> None:
+    """Test load_env() with both ignore_keys and ignore_patterns.
+
+    Acceptance criteria:
+    - ignore_keys and ignore_patterns work together
+    - Variables matching either are ignored
+    - Union of both exclusion methods
+    """
+    env_file = temp_env_dir / ".env"
+    env_file.write_text(
+        "SPECIFIC_VAR=${UNDEFINED1}\n"  # Exact match via ignore_keys
+        "PS1=${UNDEFINED2}\n"  # Pattern match via ignore_patterns
+        "PS2=${UNDEFINED3}\n"  # Pattern match via ignore_patterns
+        "VALID_VAR=hello\n"
+    )
+
+    mocker.patch.dict("os.environ", {"PATH": "/usr/bin"}, clear=True)
+
+    result = envresolve.load_env(
+        dotenv_path=env_file,
+        export=False,
+        ignore_keys=["SPECIFIC_VAR"],
+        ignore_patterns=["PS*"],
+    )
+
+    # SPECIFIC_VAR ignored by exact match
+    assert result["SPECIFIC_VAR"] == "${UNDEFINED1}"
+    # PS1 and PS2 ignored by pattern match
+    assert result["PS1"] == "${UNDEFINED2}"
+    assert result["PS2"] == "${UNDEFINED3}"
+    # VALID_VAR processed normally
+    assert result["VALID_VAR"] == "hello"
+
+
+def test_load_env_with_wildcard_free_pattern(
+    temp_env_dir: Path, mocker: MockerFixture
+) -> None:
+    """Test load_env() ignores exact matches with wildcard-free patterns."""
+    env_file = temp_env_dir / ".env"
+    env_file.write_text(
+        "VAR1=${UNDEFINED_VAR1}\n"  # Should be ignored by pattern
+        "VAR2=resolved_var2\n"  # Should NOT be ignored, and resolved
+        "VALID=hello\n"
+    )
+
+    mocker.patch.dict("os.environ", {"PATH": "/usr/bin"}, clear=True)
+
+    result = envresolve.load_env(
+        dotenv_path=env_file, export=False, ignore_patterns=["VAR1"]
+    )
+    assert result["VAR1"] == "${UNDEFINED_VAR1}"  # Ignored
+    assert result["VAR2"] == "resolved_var2"  # Resolved
+    assert result["VALID"] == "hello"
+
+
+def test_load_env_with_empty_ignore_patterns_list(
+    temp_env_dir: Path, mocker: MockerFixture
+) -> None:
+    """Verify empty ignore_patterns list ignores nothing."""
+    env_file = temp_env_dir / ".env"
+    env_file.write_text(
+        "PS1=resolved_ps1\n"  # Should NOT be ignored, and resolved
+        "VALID=hello\n"
+    )
+
+    mocker.patch.dict("os.environ", {"PATH": "/usr/bin"}, clear=True)
+
+    result = envresolve.load_env(dotenv_path=env_file, export=False, ignore_patterns=[])
+    assert result["PS1"] == "resolved_ps1"  # Resolved
+    assert result["VALID"] == "hello"
