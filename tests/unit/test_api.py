@@ -503,3 +503,26 @@ def test_resolve_os_environ_with_nonexistent_ignore_keys(
     assert "VAR2" in result
     # NONEXISTENT should not appear (doesn't exist in os.environ)
     assert "NONEXISTENT" not in result
+
+
+def test_resolve_os_environ_with_ignore_patterns(mocker: MockFixture) -> None:
+    """Test that ignore_patterns skips expansion for keys matching glob patterns."""
+    resolver = EnvResolver()
+
+    mocker.patch.dict(
+        os.environ,
+        {
+            "PS1": "${UNDEFINED_VAR}",  # Would cause VariableNotFoundError
+            "PS2": "${ALSO_UNDEFINED}",  # Would cause VariableNotFoundError
+            "VALID": "hello",
+        },
+        clear=True,
+    )
+
+    result = resolver.resolve_os_environ(ignore_patterns=["PS*"])
+
+    # PS1 and PS2 should be unchanged (pattern matched)
+    assert result["PS1"] == "${UNDEFINED_VAR}"
+    assert result["PS2"] == "${ALSO_UNDEFINED}"
+    # VALID should be processed normally
+    assert result["VALID"] == "hello"

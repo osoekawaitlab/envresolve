@@ -385,6 +385,83 @@ Ignored variables are included in the result as-is without any processing.
 
 Use `ignore_keys` when you know exactly which variables to skip, and `stop_on_expansion_error=False` when you want lenient error handling across all variables.
 
+#### Ignoring Variables by Pattern
+
+Use `ignore_patterns` to skip variables using glob-style pattern matching. This is useful when you want to exclude groups of related variables:
+
+```python
+import os
+import envresolve
+
+# Shell prompt variables
+os.environ["PS1"] = "${USER}@${HOST}$ "
+os.environ["PS2"] = "> "
+os.environ["PS4"] = "+ "
+os.environ["PROMPT"] = "${PWD}$ "
+os.environ["API_KEY"] = "akv://vault/api-key"
+
+# Ignore all prompt-related variables using patterns
+resolved = envresolve.resolve_os_environ(ignore_patterns=["PS*", "PROMPT*"])
+
+print(resolved["PS1"])        # Output: ${USER}@${HOST}$  (unchanged)
+print(resolved["PS2"])        # Output: >  (unchanged)
+print(resolved["PROMPT"])     # Output: ${PWD}$  (unchanged)
+print(resolved["API_KEY"])    # Resolved secret value
+```
+
+**Supported wildcards:**
+
+- `*` - matches any characters (e.g., `PS*` matches `PS1`, `PS2`, `PROMPT`)
+- `?` - matches single character (e.g., `PS?` matches `PS1`, but not `PS10`)
+- `[seq]` - matches any character in seq (e.g., `PS[12]` matches `PS1`, `PS2`)
+
+**Common use cases:**
+
+```python
+# System shell variables
+ignore_patterns=["PS*", "PROMPT*", "BASH_*"]
+
+# Temporary variables
+ignore_patterns=["TEMP_*", "TMP_*"]
+
+# Debug flags
+ignore_patterns=["DEBUG_*", "TRACE_*"]
+```
+
+**Best practices:**
+
+!!! warning "Avoid overly broad patterns"
+    Be specific with your patterns to avoid accidentally excluding variables you need:
+
+    ```python
+    # ❌ Too broad - excludes everything starting with 'A'
+    ignore_patterns=["A*"]
+
+    # ✅ Specific - only excludes AWS temporary credentials
+    ignore_patterns=["AWS_SESSION_*"]
+    ```
+
+!!! tip "Combining exact match and patterns"
+    Use both `ignore_keys` and `ignore_patterns` for maximum flexibility:
+
+    ```python
+    resolved = envresolve.resolve_os_environ(
+        ignore_keys=["SPECIFIC_VAR"],        # Exact match
+        ignore_patterns=["TEMP_*", "DEBUG_*"]  # Pattern match
+    )
+    ```
+
+**Execution order:**
+
+1. Check `ignore_keys` (exact match - fast path)
+2. If not matched, check `ignore_patterns` (pattern match)
+3. If neither matched, perform resolution
+
+**When to use `ignore_patterns` vs `ignore_keys`:**
+
+- `ignore_patterns`: Exclude groups of related variables (e.g., all `PS*` shell prompts)
+- `ignore_keys`: Exclude specific individual variables by exact name
+
 ## Error Handling
 
 When working with external services, it's important to handle potential errors like missing dependencies, incorrect configuration, or network issues.
