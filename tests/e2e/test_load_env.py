@@ -540,3 +540,41 @@ def test_load_env_with_both_ignore_keys_and_patterns(
     assert result["PS2"] == "${UNDEFINED3}"
     # VALID_VAR processed normally
     assert result["VALID_VAR"] == "hello"
+
+
+def test_load_env_with_wildcard_free_pattern(
+    temp_env_dir: Path, mocker: MockerFixture
+) -> None:
+    """Test load_env() ignores exact matches with wildcard-free patterns."""
+    env_file = temp_env_dir / ".env"
+    env_file.write_text(
+        "VAR1=${UNDEFINED_VAR1}\n"  # Should be ignored by pattern
+        "VAR2=resolved_var2\n"  # Should NOT be ignored, and resolved
+        "VALID=hello\n"
+    )
+
+    mocker.patch.dict("os.environ", {"PATH": "/usr/bin"}, clear=True)
+
+    result = envresolve.load_env(
+        dotenv_path=env_file, export=False, ignore_patterns=["VAR1"]
+    )
+    assert result["VAR1"] == "${UNDEFINED_VAR1}"  # Ignored
+    assert result["VAR2"] == "resolved_var2"  # Resolved
+    assert result["VALID"] == "hello"
+
+
+def test_load_env_with_empty_ignore_patterns_list(
+    temp_env_dir: Path, mocker: MockerFixture
+) -> None:
+    """Verify empty ignore_patterns list ignores nothing."""
+    env_file = temp_env_dir / ".env"
+    env_file.write_text(
+        "PS1=resolved_ps1\n"  # Should NOT be ignored, and resolved
+        "VALID=hello\n"
+    )
+
+    mocker.patch.dict("os.environ", {"PATH": "/usr/bin"}, clear=True)
+
+    result = envresolve.load_env(dotenv_path=env_file, export=False, ignore_patterns=[])
+    assert result["PS1"] == "resolved_ps1"  # Resolved
+    assert result["VALID"] == "hello"

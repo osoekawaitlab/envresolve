@@ -526,3 +526,43 @@ def test_resolve_os_environ_with_ignore_patterns(mocker: MockFixture) -> None:
     assert result["PS2"] == "${ALSO_UNDEFINED}"
     # VALID should be processed normally
     assert result["VALID"] == "hello"
+
+
+def test_resolve_os_environ_with_wildcard_free_pattern(mocker: MockFixture) -> None:
+    """Test that ignore_patterns with a wildcard-free pattern acts as an exact match."""
+    resolver = EnvResolver()
+
+    mocker.patch.dict(
+        os.environ,
+        {
+            "VAR1": "${UNDEFINED_VAR1}",  # Should be ignored by pattern
+            "VAR2": "resolved_var2",  # Should NOT be ignored, and resolved
+            "VALID": "hello",
+        },
+        clear=True,
+    )
+
+    result = resolver.resolve_os_environ(ignore_patterns=["VAR1"])
+    assert result["VAR1"] == "${UNDEFINED_VAR1}"  # Ignored
+    assert result["VAR2"] == "resolved_var2"  # Resolved
+    assert result["VALID"] == "hello"
+
+
+def test_resolve_os_environ_with_empty_ignore_patterns_list(
+    mocker: MockFixture,
+) -> None:
+    """Test that an empty ignore_patterns list means no patterns are ignored."""
+    resolver = EnvResolver()
+
+    mocker.patch.dict(
+        os.environ,
+        {
+            "PS1": "resolved_ps1",  # Should NOT be ignored, and resolved
+            "VALID": "hello",
+        },
+        clear=True,
+    )
+
+    result = resolver.resolve_os_environ(ignore_patterns=[])
+    assert result["PS1"] == "resolved_ps1"  # Resolved
+    assert result["VALID"] == "hello"
