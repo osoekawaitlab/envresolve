@@ -1,0 +1,44 @@
+# .github/release.yml
+changelog:
+  exclude:
+    authors:
+      - github-actions
+    labels:
+      - ignore-for-release
+      - duplicate
+      - invalid
+      - wontfix
+  categories:
+    - title: 🚀 Features
+      labels:
+        - feature
+        - enhancement
+    - title: 🐛 Fixes
+      labels:
+        - bug
+        - fix
+    - title: 🛠 Improvements
+      labels:
+        - improvement
+        - refactor
+        - perf
+    - title: 📚 Documentation
+      labels:
+        - docs
+        - documentation
+    - title: 🧪 Testing
+      labels:
+        - test
+        - testing
+    - title: 🔧 Maintenance
+      labels:
+        - maintenance
+        - chore
+        - dependencies
+    - title: 🔁 CI/CD & Infrastructure
+      labels:
+        - ci
+        - infrastructure
+    - title: Other Changes
+      labels:
+        - "*"
