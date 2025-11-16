@@ -26,7 +26,7 @@ git clone https://github.com/osoekawaitlab/envresolve.git
 cd envresolve
 
 # Install with development dependencies
-uv sync
+uv sync --all-extras --all-groups
 
 # Run tests
 nox -s tests
