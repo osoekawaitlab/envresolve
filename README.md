@@ -205,8 +205,12 @@ pip install uv
 git clone https://github.com/osoekawaitlab/envresolve.git
 cd envresolve
 
-# Install dependencies (including dev dependencies)
-uv pip install -e ".[azure]" --group=dev
+# Install dependencies and create virtual environment
+uv sync --all-extras --all-groups
+
+# Activate virtual environment
+source .venv/bin/activate  # On Unix/macOS
+# .venv\Scripts\activate   # On Windows
 ```
 
 ### Running Tests
@@ -270,7 +274,7 @@ See [Live Azure Tests documentation](https://osoekawaitlab.github.io/envresolve/
 nox -s docs_build
 
 # Serve documentation locally (with live reload)
-nox -s docs_serve      # Open http://localhost:8000
+mkdocs serve           # Open http://localhost:8000
 ```
 
 ### Contributing
