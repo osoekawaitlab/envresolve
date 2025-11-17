@@ -19,8 +19,6 @@
 ### v0.1.x (In Progress)
 
 - Structured logging hooks for resolution diagnostics
-- Variable ignore patterns (Phase 3):
-    - Phase 3: `ENVRESOLVE_IGNORE` environment variable configuration
 
 ### v0.2.x
 
@@ -36,3 +34,10 @@
     - HashiCorp Vault
     - Local: 1Password, Bitwarden, pass, sops
 - Async support for concurrent secret resolution
+
+### Rejected Features
+
+- ❌ Variable ignore patterns (Phase 3): `ENVRESOLVE_IGNORE_PATTERNS` environment variable
+    - **Reason**: Violates core design principle of explicit configuration (ADR-0028)
+    - **Alternative**: Application developers can read env vars and pass to API parameters
+    - See ADR-0028 for detailed rationale

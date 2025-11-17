@@ -261,6 +261,61 @@ Use Python's `fnmatch` module for glob-style pattern matching in `ignore_pattern
 
 ---
 
+### ADR 0024: Core Design Principle of 'Fine-Grained Control'
+
+**Status**: Accepted
+**Date**: 2025-11-17
+
+Adopt "Fine-Grained Control" as a core design principle, prioritizing explicit configuration over implicit behavior.
+
+[View Full ADR](../adr/0024-core-design-principle-of-fine-grained-control.md)
+
+---
+
+### ADR 0025: Strategy for Optional Dependencies and Extensibility
+
+**Status**: Accepted
+**Date**: 2025-11-17
+
+Define a formal strategy for optional dependencies using `extras` and lazy-loading to keep the core library lightweight.
+
+[View Full ADR](../adr/0025-strategy-for-optional-dependencies.md)
+
+---
+
+### ADR 0026: Strategy for Exception Handling and Error Reporting
+
+**Status**: Accepted
+**Date**: 2025-11-17
+
+Formalize the strategy for exception handling, including a custom hierarchy, granular types, and contextual wrapping.
+
+[View Full ADR](../adr/0026-strategy-for-exception-handling.md)
+
+---
+
+### ADR 0027: API Design for State Management (Class-Based Core with Default Instance Facade)
+
+**Status**: Accepted
+**Date**: 2025-11-17
+
+Adopt a hybrid API design with a stateful core class (`EnvResolver`) and default instance facade functions.
+
+[View Full ADR](../adr/0027-api-design-for-state-management.md)
+
+---
+
+### ADR 0028: Forbid All Implicit Configuration via Environment Variables
+
+**Status**: Accepted
+**Date**: 2025-11-17
+
+Decided to forbid any feature that implicitly alters library behavior based on environment variables, to uphold the principles of security and explicit configuration.
+
+[View Full ADR](../adr/0028-forbid-implicit-env-var-config.md)
+
+---
+
 ## ADR Template
 
 All ADRs follow a consistent template defined in [ADR 0000: ADR Template](../adr/0000-adr-template.md).
