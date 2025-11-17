@@ -30,7 +30,7 @@ Thank you for considering contributing to envresolve!
 4. Install dependencies:
 
     ```bash
-    uv sync
+    uv sync --all-extras --all-groups
     ```
 
 1. Run tests to verify setup:
@@ -206,3 +206,39 @@ Resources can be kept for reuse. Destroy only when done:
 cd infra/terraform
 terraform destroy
 ```
+
+## Release Process
+
+This checklist ensures all documentation and metadata are updated when creating a new release.
+
+### Pre-Release Checklist
+
+Before creating a release tag:
+
+- [ ] **Update version number** in `src/envresolve/__init__.py`
+- [ ] **Update roadmap** in `docs/roadmap.md`:
+    - Update "Current Version" number
+    - Move completed features from "Planned Features" to "Completed Features" with ✅
+    - Add version markers (e.g., `(v0.1.9)`) where appropriate
+- [ ] **Run all quality checks**: `nox -s check_all`
+- [ ] **Commit version changes**: `git commit -m "chore: bump version to vX.Y.Z"`
+- [ ] **Push to main**: Ensure CI passes
+
+### Release Creation
+
+- [ ] **Create and push tag**: `git tag vX.Y.Z && git push origin vX.Y.Z`
+- [ ] **Wait for CI/CD**:
+    - Tests run automatically
+    - Package builds and publishes to PyPI
+    - GitHub release is auto-created with generated notes
+- [ ] **Edit release notes**:
+    - Use `.github/release_template.md` as a guide
+    - Categorize changes by emoji sections (🚀 Features, 🐛 Fixes, etc.)
+    - Add code examples for new features
+    - Link to relevant issues/PRs
+
+### Post-Release
+
+- [ ] **Verify PyPI**: Check https://pypi.org/project/envresolve/
+- [ ] **Verify documentation**: Check https://osoekawaitlab.github.io/envresolve/
+- [ ] **Close milestone** (if applicable)
