@@ -223,6 +223,7 @@ Before creating a release tag:
 - [ ] **Run all quality checks**: `nox -s check_all`
 - [ ] **Commit version changes**: `git commit -m "chore: bump version to vX.Y.Z"`
 - [ ] **Push to main**: Ensure CI passes
+    - Documentation is automatically deployed to GitHub Pages on merge to main
 
 ### Release Creation
 
@@ -242,3 +243,56 @@ Before creating a release tag:
 - [ ] **Verify PyPI**: Check https://pypi.org/project/envresolve/
 - [ ] **Verify documentation**: Check https://osoekawaitlab.github.io/envresolve/
 - [ ] **Close milestone** (if applicable)
+
+## Release Note Labels
+
+Pull requests and issues use labels to automatically categorize changes in release notes. Applying the correct label ensures your contribution appears in the right section of the release.
+
+### Label Categories
+
+When creating a PR or issue, apply one of these labels:
+
+| Category | Labels | Use For |
+|----------|--------|---------|
+| 🚀 **Features** | `feature`, `enhancement` | New functionality or significant improvements to existing features |
+| 🐛 **Fixes** | `bug`, `fix` | Bug fixes and error corrections |
+| 🛠 **Improvements** | `improvement`, `refactor`, `perf` | Code refactoring, performance optimizations, and minor improvements |
+| 📚 **Documentation** | `docs`, `documentation` | Documentation updates, additions, or fixes |
+| 🧪 **Testing** | `test`, `testing` | Test additions, modifications, or test infrastructure changes |
+| 🔧 **Maintenance** | `maintenance`, `chore`, `dependencies` | Dependency updates, build configuration, and maintenance tasks |
+| 🔁 **CI/CD & Infrastructure** | `ci`, `infrastructure` | CI/CD pipeline changes and infrastructure configuration |
+
+### Examples
+
+- **Bug fix** → Apply `bug` or `fix` label
+- **New feature** → Apply `feature` or `enhancement` label
+- **Performance improvement** → Apply `improvement` or `perf` label
+- **Documentation update** → Apply `docs` or `documentation` label
+- **Test additions** → Apply `test` or `testing` label
+- **Dependency update** → Apply `dependencies` label
+
+### Excluded Labels
+
+The following labels do NOT appear in release notes:
+
+- `ignore-for-release` - Changes that should not be mentioned in releases
+- `duplicate` - Duplicate issues/PRs
+- `invalid` - Invalid issues/PRs
+- `wontfix` - Issues that will not be addressed
+
+### How Labels Affect Release Notes
+
+When a release is created, GitHub automatically generates release notes by grouping PRs according to their labels. Each PR appears under the category matching its label. This helps users quickly find relevant changes:
+
+```markdown
+## 🚀 Features
+- Add ignore_patterns parameter (#36)
+
+## 🐛 Fixes
+- Fix type error in resolver (#28)
+
+## 📚 Documentation
+- Update API documentation (#34)
+```
+
+**Tip**: If you're unsure which label to use, look at similar PRs or ask a maintainer.
