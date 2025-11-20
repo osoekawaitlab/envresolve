@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://github.com/osoekawaitlab/envresolve/adr/0023-use-fnmatch-for-pattern-matching/">
+        <link rel="canonical" href="https://github.com/osoekawaitlab/envresolve/adr/0027-api-design-for-state-management/">
       
       
-        <link rel="prev" href="../0022-ignore-patterns-parameter/">
+        <link rel="prev" href="../0026-strategy-for-exception-handling/">
       
       
-        <link rel="next" href="../0024-core-design-principle-of-fine-grained-control/">
+        <link rel="next" href="../0028-forbid-implicit-env-var-config/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -24,7 +24,7 @@
     
     
       
-        <title>ADR 0023: Use fnmatch (Glob Patterns) for Pattern Matching Implementation - envresolve</title>
+        <title>ADR 0027: API Design for State Management (Class-Based Core with Default Instance Facade) - envresolve</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#adr-0023-use-fnmatch-glob-patterns-for-pattern-matching-implementation" class="md-skip">
+        <a href="#adr-0027-api-design-for-state-management-class-based-core-with-default-instance-facade" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ADR 0023: Use fnmatch (Glob Patterns) for Pattern Matching Implementation
+              ADR 0027: API Design for State Management (Class-Based Core with Default Instance Facade)
             
           </span>
         </div>
@@ -1397,6 +1397,98 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../0023-use-fnmatch-for-pattern-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ADR 0023: Use fnmatch (Glob Patterns) for Pattern Matching Implementation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0024-core-design-principle-of-fine-grained-control/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ADR 0024: Core Design Principle of 'Fine-Grained Control'
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0025-strategy-for-optional-dependencies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ADR 0025: Strategy for Optional Dependencies and Extensibility
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0026-strategy-for-exception-handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ADR 0026: Strategy for Exception Handling and Error Reporting
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -1414,7 +1506,7 @@
   
   
   <span class="md-ellipsis">
-    ADR 0023: Use fnmatch (Glob Patterns) for Pattern Matching Implementation
+    ADR 0027: API Design for State Management (Class-Based Core with Default Instance Facade)
     
   </span>
   
@@ -1427,7 +1519,7 @@
   
   
   <span class="md-ellipsis">
-    ADR 0023: Use fnmatch (Glob Patterns) for Pattern Matching Implementation
+    ADR 0027: API Design for State Management (Class-Based Core with Default Instance Facade)
     
   </span>
   
@@ -1538,27 +1630,18 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#regex-patterns" class="md-nav__link">
+  <a href="#purely-function-based-api-with-explicit-state-passing" class="md-nav__link">
     <span class="md-ellipsis">
-      Regex Patterns
+      Purely Function-Based API with Explicit State Passing
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#custom-pattern-language" class="md-nav__link">
+  <a href="#purely-stateful-api" class="md-nav__link">
     <span class="md-ellipsis">
-      Custom Pattern Language
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#simple-string-methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      Simple String Methods
+      Purely Stateful API
     </span>
   </a>
   
@@ -1591,98 +1674,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0024-core-design-principle-of-fine-grained-control/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    ADR 0024: Core Design Principle of 'Fine-Grained Control'
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0025-strategy-for-optional-dependencies/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    ADR 0025: Strategy for Optional Dependencies and Extensibility
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0026-strategy-for-exception-handling/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    ADR 0026: Strategy for Exception Handling and Error Reporting
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0027-api-design-for-state-management/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    ADR 0027: API Design for State Management (Class-Based Core with Default Instance Facade)
-    
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -1841,27 +1832,18 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#regex-patterns" class="md-nav__link">
+  <a href="#purely-function-based-api-with-explicit-state-passing" class="md-nav__link">
     <span class="md-ellipsis">
-      Regex Patterns
+      Purely Function-Based API with Explicit State Passing
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#custom-pattern-language" class="md-nav__link">
+  <a href="#purely-stateful-api" class="md-nav__link">
     <span class="md-ellipsis">
-      Custom Pattern Language
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#simple-string-methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      Simple String Methods
+      Purely Stateful API
     </span>
   </a>
   
@@ -1909,163 +1891,58 @@
   
 
 
-<h1 id="adr-0023-use-fnmatch-glob-patterns-for-pattern-matching-implementation">ADR 0023: Use fnmatch (Glob Patterns) for Pattern Matching Implementation<a class="headerlink" href="#adr-0023-use-fnmatch-glob-patterns-for-pattern-matching-implementation" title="Permanent link">&para;</a></h1>
+<h1 id="adr-0027-api-design-for-state-management-class-based-core-with-default-instance-facade">ADR 0027: API Design for State Management (Class-Based Core with Default Instance Facade)<a class="headerlink" href="#adr-0027-api-design-for-state-management-class-based-core-with-default-instance-facade" title="Permanent link">&para;</a></h1>
 <h2 id="status">Status<a class="headerlink" href="#status" title="Permanent link">&para;</a></h2>
 <p>Accepted</p>
 <h2 id="date">Date<a class="headerlink" href="#date" title="Permanent link">&para;</a></h2>
-<p>2025-11-15</p>
+<p>2025-11-17</p>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p>ADR-0022 introduced <code>ignore_patterns</code> parameter for pattern-based variable exclusion. This ADR addresses the implementation choice: <strong>which pattern syntax to use for matching</strong>.</p>
-<p>Users need to specify patterns like:</p>
-<ul>
-<li><code>PS*</code> - all shell prompt variables</li>
-<li><code>TEMP_*</code> - all temporary variables</li>
-<li><code>DEBUG_*</code> - all debug flags</li>
-</ul>
-<p>We must choose a pattern matching format that is:</p>
-<ul>
-<li>Simple and familiar to users</li>
-<li>Sufficient for common use cases</li>
-<li>Maintainable (preferably standard library)</li>
-</ul>
+<p>The library's core functionality involves managing configuration state, such as registered secret providers, their settings, and resolution caches. The API design must address how this state is managed and exposed to users. A purely function-based API requiring explicit state passing can be verbose and cumbersome. Conversely, a purely class-based API offers excellent encapsulation but can introduce boilerplate for simple use cases.</p>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p>Use Python's <code>fnmatch</code> module for glob-style pattern matching.</p>
-<p><strong>Supported wildcards:</strong></p>
-<ul>
-<li><code>*</code> - matches any characters (e.g., <code>PS*</code> matches <code>PS1</code>, <code>PS2</code>, <code>PROMPT</code>)</li>
-<li><code>?</code> - matches single character (e.g., <code>PS?</code> matches <code>PS1</code>, but not <code>PS10</code>)</li>
-<li><code>[seq]</code> - matches any character in seq (e.g., <code>PS[12]</code> matches <code>PS1</code>, <code>PS2</code>)</li>
-</ul>
-<p><strong>Implementation:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">fnmatch</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">_should_ignore_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ignore_patterns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="k">if</span> <span class="n">ignore_patterns</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>        <span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span> <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">ignore_patterns</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="p">):</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        <span class="k">return</span> <span class="kc">True</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="k">return</span> <span class="kc">False</span>
-</code></pre></div>
+<p>We will adopt a hybrid API design that serves both simple and advanced use cases, formalizing the evolution from ADR-0004 to ADR-0013.</p>
+<ol>
+<li><strong>Stateful Core (<code>EnvResolver</code> Class)</strong>: The primary, state-holding component is the <code>EnvResolver</code> class. It encapsulates all configuration (e.g., the provider registry) and exposes methods for resolution (<code>resolve_secret</code>, <code>load_env</code>, <code>resolve_os_environ</code>). This class is the core API for advanced, repeated, or isolated use cases (e.g., in testing).</li>
+<li><strong>Default Instance Facade (Module-Level Functions)</strong>: For convenience and simple use cases, we will provide module-level facade functions (<code>envresolve.resolve_secret</code>, <code>envresolve.load_env</code>, <code>envresolve.resolve_os_environ</code>). These functions will operate on a default, shared instance of <code>EnvResolver</code> (stored as a module-level variable <code>_default_resolver</code>) that is instantiated at import time.</li>
+</ol>
 <h2 id="rationale">Rationale<a class="headerlink" href="#rationale" title="Permanent link">&para;</a></h2>
-<p><strong>Why glob patterns:</strong></p>
 <ul>
-<li><strong>Familiarity</strong>: Users know glob from <code>.gitignore</code>, shell wildcards, file patterns</li>
-<li><strong>Simplicity</strong>: Simpler syntax than regex (no need to escape special chars for basic cases)</li>
-<li><strong>Coverage</strong>: Covers 90% of use cases without complexity</li>
-<li><strong>Low learning curve</strong>: Most developers already understand <code>*</code> and <code>?</code></li>
-</ul>
-<p><strong>Why <code>fnmatch</code> module:</strong></p>
-<ul>
-<li><strong>Standard library</strong>: No external dependencies</li>
-<li><strong>Well-tested</strong>: Part of Python stdlib since early versions</li>
-<li><strong>Unix shell compatibility</strong>: Consistent with shell glob behavior</li>
-<li><strong>Well-documented</strong>: Official Python documentation available</li>
-</ul>
-<p><strong>Performance characteristics:</strong></p>
-<ul>
-<li>Fast enough for typical use cases (&lt; 100 patterns, &lt; 1000 variables)</li>
-<li>Linear scan of patterns is acceptable for this use case</li>
-<li>Exact match check (<code>ignore_keys</code>) happens first as fast path</li>
+<li><strong>Flexibility for Power Users</strong>: The stateful <code>EnvResolver</code> class offers power, encapsulation, and testability. Advanced users can create multiple, isolated resolver instances with different configurations.</li>
+<li><strong>Simplicity for Beginners</strong>: The default instance facade provides a simple, zero-setup entry point for users with basic needs, significantly lowering the barrier to entry. This allows for a "drop-in replacement" experience for tools like <code>python-dotenv</code>.</li>
+<li><strong>Clear Separation of Concerns</strong>: This hybrid model clearly separates the one-time action of <em>resolution</em> from the persistent state of <em>configuration</em>.</li>
+<li><strong>Shared State Benefits</strong>: The default instance allows state (such as registered providers) to be shared across multiple function calls, avoiding redundant provider registration.</li>
 </ul>
 <h2 id="implications">Implications<a class="headerlink" href="#implications" title="Permanent link">&para;</a></h2>
 <h3 id="positive-implications">Positive Implications<a class="headerlink" href="#positive-implications" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Users can write intuitive patterns: <code>PS*</code>, <code>TEMP_*</code>, <code>DEBUG_*</code></li>
-<li>No learning curve for developers familiar with shell globs</li>
-<li>Standard library means no dependency management</li>
-<li>Consistent behavior across platforms</li>
+<li>The library is approachable for beginners while remaining powerful and flexible for experts.</li>
+<li>The design is highly test-friendly, as <code>EnvResolver</code> instances can be created and configured on-the-fly within tests without affecting the default global instance.</li>
+<li>It provides a clear path for users to graduate from simple to advanced usage.</li>
+<li>Module-level functions share a single default instance, avoiding redundant provider registrations.</li>
 </ul>
 <h3 id="concerns">Concerns<a class="headerlink" href="#concerns" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Limited expressiveness</strong>: Cannot express complex patterns like "starts with PS and ends with digit"<ul>
-<li>Mitigation: Sufficient for 90% of use cases; regex can be Phase 3 if needed</li>
-</ul>
-</li>
-<li><strong>Performance with many patterns</strong>: O(n*m) for n variables and m patterns<ul>
-<li>Mitigation: Typical use has &lt; 10 patterns; acceptable performance</li>
-</ul>
-</li>
+<li><strong>Dual APIs</strong>: The existence of two ways to perform actions (instance methods vs. module functions) could potentially confuse some users.</li>
+<li><strong>Mitigation</strong>: The documentation must clearly explain the two approaches and provide guidance on when to use each. The recommendation will be: "Start with the simple module functions; use the <code>EnvResolver</code> class when you need to customize configuration, manage multiple configurations, or for better test isolation."</li>
+<li><strong>Global State</strong>: The default instance is shared across the application, which means provider registrations affect all subsequent calls to module-level functions.</li>
+<li><strong>Mitigation</strong>: This is the intended behavior for most use cases. Users who need isolation can create their own <code>EnvResolver</code> instances.</li>
 </ul>
 <h2 id="alternatives">Alternatives<a class="headerlink" href="#alternatives" title="Permanent link">&para;</a></h2>
-<h3 id="regex-patterns">Regex Patterns<a class="headerlink" href="#regex-patterns" title="Permanent link">&para;</a></h3>
-<p>Use Python's <code>re</code> module for regex matching:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span><span class="sa">r</span><span class="s2">&quot;^PS\d+$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;^PROMPT.*&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;^TEMP_.*&quot;</span><span class="p">]</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">):</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="k">return</span> <span class="kc">True</span>
-</code></pre></div>
-<p><strong>Pros:</strong></p>
+<h3 id="purely-function-based-api-with-explicit-state-passing">Purely Function-Based API with Explicit State Passing<a class="headerlink" href="#purely-function-based-api-with-explicit-state-passing" title="Permanent link">&para;</a></h3>
 <ul>
-<li>More powerful and expressive</li>
-<li>Can express complex patterns</li>
+<li><strong>Description</strong>: Only provide functions that accept all configuration as arguments on every call (e.g., <code>resolve(value, providers=...)</code>).</li>
+<li><strong>Reason for Rejection</strong>: This was the initial approach (ADR-0004) but was found to be extremely verbose and cumbersome for any use case involving a configured provider. It does not allow for a persistent, configured "resolver" object.</li>
 </ul>
-<p><strong>Cons:</strong></p>
+<h3 id="purely-stateful-api">Purely Stateful API<a class="headerlink" href="#purely-stateful-api" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Higher learning curve</strong>: Regex is complex for non-experts</li>
-<li><strong>Overkill</strong>: Most use cases don't need regex power</li>
-<li><strong>Error-prone</strong>: Easy to write incorrect regex patterns</li>
-<li><strong>Less readable</strong>: <code>^PS.*$</code> vs. <code>PS*</code></li>
+<li><strong>Description</strong>: Only provide the <code>EnvResolver</code> class and require users to instantiate it for all operations.</li>
+<li><strong>Reason for Rejection</strong>: This adds boilerplate and friction for simple, one-off use cases (e.g., resolving a single dictionary). It would harm the library's approachability and prevent it from serving as a simple, drop-in tool.</li>
 </ul>
-<p><strong>Rejected:</strong> Glob covers most use cases with simpler syntax. If complex patterns are needed, we can add regex support in Phase 3 without breaking glob patterns.</p>
-<h3 id="custom-pattern-language">Custom Pattern Language<a class="headerlink" href="#custom-pattern-language" title="Permanent link">&para;</a></h3>
-<p>Design a custom pattern syntax:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;starts_with:PS&quot;</span><span class="p">,</span> <span class="s2">&quot;ends_with:_TMP&quot;</span><span class="p">,</span> <span class="s2">&quot;contains:DEBUG&quot;</span><span class="p">]</span>
-</code></pre></div>
-<p><strong>Pros:</strong></p>
-<ul>
-<li>Tailored to exact needs</li>
-<li>Very explicit</li>
-</ul>
-<p><strong>Cons:</strong></p>
-<ul>
-<li><strong>New syntax to learn</strong>: No existing familiarity</li>
-<li><strong>Implementation complexity</strong>: Need to write parser</li>
-<li><strong>Maintenance burden</strong>: Custom code to maintain</li>
-<li><strong>Limited adoption</strong>: No ecosystem support</li>
-</ul>
-<p><strong>Rejected:</strong> Reinventing the wheel when glob patterns work well.</p>
-<h3 id="simple-string-methods">Simple String Methods<a class="headerlink" href="#simple-string-methods" title="Permanent link">&para;</a></h3>
-<p>Use only string prefix/suffix matching:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="n">prefixes</span><span class="p">):</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="k">return</span> <span class="kc">True</span>
-</code></pre></div>
-<p><strong>Pros:</strong></p>
-<ul>
-<li>Very simple, no dependencies</li>
-<li>Fast</li>
-</ul>
-<p><strong>Cons:</strong></p>
-<ul>
-<li><strong>Too limited</strong>: Cannot express "ends with" and "contains" patterns in one syntax</li>
-<li><strong>Multiple parameters needed</strong>: <code>ignore_prefixes</code>, <code>ignore_suffixes</code>, <code>ignore_contains</code></li>
-<li><strong>Less flexible</strong>: Cannot combine patterns like <code>PS[12]</code></li>
-</ul>
-<p><strong>Rejected:</strong> Too limited compared to glob patterns. Glob provides better expressiveness without complexity.</p>
 <h2 id="future-direction">Future Direction<a class="headerlink" href="#future-direction" title="Permanent link">&para;</a></h2>
-<ul>
-<li>
-<p><strong>Phase 3 (if needed)</strong>: Add regex pattern support via separate parameter (<code>ignore_regex</code>)</p>
-<ul>
-<li>Can coexist with glob patterns</li>
-<li>Users choose based on complexity needs</li>
-<li>Example: <code>ignore_patterns=["PS*"], ignore_regex=[r"^VAR\d{3}$"]</code></li>
-</ul>
-</li>
-<li>
-<p><strong>Performance optimization</strong>: If profiling shows issues:</p>
-<ul>
-<li>Compile patterns once and cache</li>
-<li>Use trie-based matching for large pattern sets</li>
-</ul>
-</li>
-</ul>
+<p>This hybrid pattern of a stateful core class with a default instance facade should be maintained. New functionality should be implemented as methods on <code>EnvResolver</code> first, and then exposed as a module-level facade if it serves a common, simple use case.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <ul>
-<li>ADR-0022: Add ignore_patterns Parameter for Pattern-Based Variable Exclusion</li>
-<li>Python fnmatch documentation: <a href="https://docs.python.org/3/library/fnmatch.html">https://docs.python.org/3/library/fnmatch.html</a></li>
-<li>Unix glob patterns: <a href="https://man7.org/linux/man-pages/man7/glob.7.html">https://man7.org/linux/man-pages/man7/glob.7.html</a></li>
-<li>Issue #25: Add ignore_patterns parameter with glob matching support</li>
+<li>ADR-0004: Stateless Function-Based Variable Expansion (Initial approach)</li>
+<li>ADR-0013: Class-Based API Design (Superseding decision establishing the class-based core)</li>
 </ul>
 
 

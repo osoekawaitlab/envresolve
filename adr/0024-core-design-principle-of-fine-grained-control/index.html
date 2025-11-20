@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://github.com/osoekawaitlab/envresolve/adr/0023-use-fnmatch-for-pattern-matching/">
+        <link rel="canonical" href="https://github.com/osoekawaitlab/envresolve/adr/0024-core-design-principle-of-fine-grained-control/">
       
       
-        <link rel="prev" href="../0022-ignore-patterns-parameter/">
+        <link rel="prev" href="../0023-use-fnmatch-for-pattern-matching/">
       
       
-        <link rel="next" href="../0024-core-design-principle-of-fine-grained-control/">
+        <link rel="next" href="../0025-strategy-for-optional-dependencies/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -24,7 +24,7 @@
     
     
       
-        <title>ADR 0023: Use fnmatch (Glob Patterns) for Pattern Matching Implementation - envresolve</title>
+        <title>ADR 0024: Core Design Principle of 'Fine-Grained Control' - envresolve</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#adr-0023-use-fnmatch-glob-patterns-for-pattern-matching-implementation" class="md-skip">
+        <a href="#adr-0024-core-design-principle-of-fine-grained-control" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ADR 0023: Use fnmatch (Glob Patterns) for Pattern Matching Implementation
+              ADR 0024: Core Design Principle of 'Fine-Grained Control'
             
           </span>
         </div>
@@ -1397,6 +1397,29 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../0023-use-fnmatch-for-pattern-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ADR 0023: Use fnmatch (Glob Patterns) for Pattern Matching Implementation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -1414,7 +1437,7 @@
   
   
   <span class="md-ellipsis">
-    ADR 0023: Use fnmatch (Glob Patterns) for Pattern Matching Implementation
+    ADR 0024: Core Design Principle of 'Fine-Grained Control'
     
   </span>
   
@@ -1427,7 +1450,7 @@
   
   
   <span class="md-ellipsis">
-    ADR 0023: Use fnmatch (Glob Patterns) for Pattern Matching Implementation
+    ADR 0024: Core Design Principle of 'Fine-Grained Control'
     
   </span>
   
@@ -1538,27 +1561,9 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#regex-patterns" class="md-nav__link">
+  <a href="#convention-over-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      Regex Patterns
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#custom-pattern-language" class="md-nav__link">
-    <span class="md-ellipsis">
-      Custom Pattern Language
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#simple-string-methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      Simple String Methods
+      Convention over Configuration
     </span>
   </a>
   
@@ -1591,29 +1596,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0024-core-design-principle-of-fine-grained-control/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    ADR 0024: Core Design Principle of 'Fine-Grained Control'
-    
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -1841,27 +1823,9 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#regex-patterns" class="md-nav__link">
+  <a href="#convention-over-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      Regex Patterns
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#custom-pattern-language" class="md-nav__link">
-    <span class="md-ellipsis">
-      Custom Pattern Language
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#simple-string-methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      Simple String Methods
+      Convention over Configuration
     </span>
   </a>
   
@@ -1909,163 +1873,56 @@
   
 
 
-<h1 id="adr-0023-use-fnmatch-glob-patterns-for-pattern-matching-implementation">ADR 0023: Use fnmatch (Glob Patterns) for Pattern Matching Implementation<a class="headerlink" href="#adr-0023-use-fnmatch-glob-patterns-for-pattern-matching-implementation" title="Permanent link">&para;</a></h1>
+<h1 id="adr-0024-core-design-principle-of-fine-grained-control">ADR 0024: Core Design Principle of 'Fine-Grained Control'<a class="headerlink" href="#adr-0024-core-design-principle-of-fine-grained-control" title="Permanent link">&para;</a></h1>
 <h2 id="status">Status<a class="headerlink" href="#status" title="Permanent link">&para;</a></h2>
 <p>Accepted</p>
 <h2 id="date">Date<a class="headerlink" href="#date" title="Permanent link">&para;</a></h2>
-<p>2025-11-15</p>
+<p>2025-11-17</p>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p>ADR-0022 introduced <code>ignore_patterns</code> parameter for pattern-based variable exclusion. This ADR addresses the implementation choice: <strong>which pattern syntax to use for matching</strong>.</p>
-<p>Users need to specify patterns like:</p>
-<ul>
-<li><code>PS*</code> - all shell prompt variables</li>
-<li><code>TEMP_*</code> - all temporary variables</li>
-<li><code>DEBUG_*</code> - all debug flags</li>
-</ul>
-<p>We must choose a pattern matching format that is:</p>
-<ul>
-<li>Simple and familiar to users</li>
-<li>Sufficient for common use cases</li>
-<li>Maintainable (preferably standard library)</li>
-</ul>
+<p>This library is designed to serve a wide range of scenarios, from simple environment variable expansion to complex, multi-provider secret resolution. In such a diverse landscape, implicit or "magical" behaviors can lead to user confusion, unpredictable outcomes, and security risks, especially when handling sensitive data. Users must be able to understand, predict, and explicitly manage how the library behaves in their specific environment.</p>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p>Use Python's <code>fnmatch</code> module for glob-style pattern matching.</p>
-<p><strong>Supported wildcards:</strong></p>
-<ul>
-<li><code>*</code> - matches any characters (e.g., <code>PS*</code> matches <code>PS1</code>, <code>PS2</code>, <code>PROMPT</code>)</li>
-<li><code>?</code> - matches single character (e.g., <code>PS?</code> matches <code>PS1</code>, but not <code>PS10</code>)</li>
-<li><code>[seq]</code> - matches any character in seq (e.g., <code>PS[12]</code> matches <code>PS1</code>, <code>PS2</code>)</li>
-</ul>
-<p><strong>Implementation:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">fnmatch</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">_should_ignore_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ignore_patterns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="k">if</span> <span class="n">ignore_patterns</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>        <span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span> <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">ignore_patterns</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="p">):</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        <span class="k">return</span> <span class="kc">True</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="k">return</span> <span class="kc">False</span>
-</code></pre></div>
+<p>We will adopt <strong>"Fine-Grained Control"</strong> as a core design principle for all API and feature development.</p>
+<p>This principle dictates that we should:</p>
+<ol>
+<li><strong>Prioritize explicit configuration over implicit conventions.</strong></li>
+<li><strong>Provide clear mechanisms for users to override or extend default behaviors.</strong></li>
+<li><strong>Ensure the library's actions are transparent and easy to reason about.</strong></li>
+</ol>
 <h2 id="rationale">Rationale<a class="headerlink" href="#rationale" title="Permanent link">&para;</a></h2>
-<p><strong>Why glob patterns:</strong></p>
 <ul>
-<li><strong>Familiarity</strong>: Users know glob from <code>.gitignore</code>, shell wildcards, file patterns</li>
-<li><strong>Simplicity</strong>: Simpler syntax than regex (no need to escape special chars for basic cases)</li>
-<li><strong>Coverage</strong>: Covers 90% of use cases without complexity</li>
-<li><strong>Low learning curve</strong>: Most developers already understand <code>*</code> and <code>?</code></li>
-</ul>
-<p><strong>Why <code>fnmatch</code> module:</strong></p>
-<ul>
-<li><strong>Standard library</strong>: No external dependencies</li>
-<li><strong>Well-tested</strong>: Part of Python stdlib since early versions</li>
-<li><strong>Unix shell compatibility</strong>: Consistent with shell glob behavior</li>
-<li><strong>Well-documented</strong>: Official Python documentation available</li>
-</ul>
-<p><strong>Performance characteristics:</strong></p>
-<ul>
-<li>Fast enough for typical use cases (&lt; 100 patterns, &lt; 1000 variables)</li>
-<li>Linear scan of patterns is acceptable for this use case</li>
-<li>Exact match check (<code>ignore_keys</code>) happens first as fast path</li>
+<li><strong>Predictability</strong>: Explicit configuration makes the library's behavior deterministic and easier for users to understand, reducing unexpected side effects.</li>
+<li><strong>Flexibility</strong>: It empowers users to adapt the library for complex or non-standard requirements without "fighting the framework."</li>
+<li><strong>Security</strong>: When dealing with secrets, explicit control is paramount. It minimizes the risk of accidental secret exposure through unforeseen or magical behavior.</li>
+<li><strong>Maintainability</strong>: APIs that are explicit and clear are easier to evolve and maintain over the long term, often with fewer breaking changes.</li>
 </ul>
 <h2 id="implications">Implications<a class="headerlink" href="#implications" title="Permanent link">&para;</a></h2>
 <h3 id="positive-implications">Positive Implications<a class="headerlink" href="#positive-implications" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Users can write intuitive patterns: <code>PS*</code>, <code>TEMP_*</code>, <code>DEBUG_*</code></li>
-<li>No learning curve for developers familiar with shell globs</li>
-<li>Standard library means no dependency management</li>
-<li>Consistent behavior across platforms</li>
+<li><strong>Increased User Trust</strong>: Users will have more confidence in a library that behaves predictably.</li>
+<li><strong>Enhanced Robustness</strong>: Applications built with this library will be more robust as their configuration is explicit.</li>
+<li><strong>Easier Debugging</strong>: When issues arise, the cause is more likely to be found in explicit configuration rather than hidden, implicit behavior.</li>
+<li><strong>Clear Guidance</strong>: This principle will serve as a clear guide for future API design and contribution discussions.</li>
 </ul>
 <h3 id="concerns">Concerns<a class="headerlink" href="#concerns" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Limited expressiveness</strong>: Cannot express complex patterns like "starts with PS and ends with digit"<ul>
-<li>Mitigation: Sufficient for 90% of use cases; regex can be Phase 3 if needed</li>
-</ul>
-</li>
-<li><strong>Performance with many patterns</strong>: O(n*m) for n variables and m patterns<ul>
-<li>Mitigation: Typical use has &lt; 10 patterns; acceptable performance</li>
-</ul>
-</li>
+<li><strong>API Verbosity</strong>: A commitment to this principle can lead to more verbose APIs compared to "convention over configuration" frameworks.</li>
+<li><strong>Mitigation</strong>: We will mitigate this by providing sensible defaults and creating simple, stateless facade functions (e.g., <code>resolve_os_environ</code>) for the most common use cases, offering a simpler entry point without sacrificing underlying control.</li>
 </ul>
 <h2 id="alternatives">Alternatives<a class="headerlink" href="#alternatives" title="Permanent link">&para;</a></h2>
-<h3 id="regex-patterns">Regex Patterns<a class="headerlink" href="#regex-patterns" title="Permanent link">&para;</a></h3>
-<p>Use Python's <code>re</code> module for regex matching:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span><span class="sa">r</span><span class="s2">&quot;^PS\d+$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;^PROMPT.*&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;^TEMP_.*&quot;</span><span class="p">]</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">):</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="k">return</span> <span class="kc">True</span>
-</code></pre></div>
-<p><strong>Pros:</strong></p>
+<h3 id="convention-over-configuration">Convention over Configuration<a class="headerlink" href="#convention-over-configuration" title="Permanent link">&para;</a></h3>
 <ul>
-<li>More powerful and expressive</li>
-<li>Can express complex patterns</li>
+<li><strong>Description</strong>: A design paradigm where the framework makes numerous assumptions to reduce boilerplate code for standard use cases.</li>
+<li><strong>Pros</strong>: Can make common tasks very quick and simple.</li>
+<li><strong>Cons</strong>: Can be opaque, difficult to debug, and inflexible when requirements deviate from the convention.</li>
+<li><strong>Reason for Rejection</strong>: The domain of environment and secret management is too sensitive and varied for a one-size-fits-all set of conventions. The risk of unexpected behavior with secrets outweighs the benefit of reduced boilerplate.</li>
 </ul>
-<p><strong>Cons:</strong></p>
-<ul>
-<li><strong>Higher learning curve</strong>: Regex is complex for non-experts</li>
-<li><strong>Overkill</strong>: Most use cases don't need regex power</li>
-<li><strong>Error-prone</strong>: Easy to write incorrect regex patterns</li>
-<li><strong>Less readable</strong>: <code>^PS.*$</code> vs. <code>PS*</code></li>
-</ul>
-<p><strong>Rejected:</strong> Glob covers most use cases with simpler syntax. If complex patterns are needed, we can add regex support in Phase 3 without breaking glob patterns.</p>
-<h3 id="custom-pattern-language">Custom Pattern Language<a class="headerlink" href="#custom-pattern-language" title="Permanent link">&para;</a></h3>
-<p>Design a custom pattern syntax:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;starts_with:PS&quot;</span><span class="p">,</span> <span class="s2">&quot;ends_with:_TMP&quot;</span><span class="p">,</span> <span class="s2">&quot;contains:DEBUG&quot;</span><span class="p">]</span>
-</code></pre></div>
-<p><strong>Pros:</strong></p>
-<ul>
-<li>Tailored to exact needs</li>
-<li>Very explicit</li>
-</ul>
-<p><strong>Cons:</strong></p>
-<ul>
-<li><strong>New syntax to learn</strong>: No existing familiarity</li>
-<li><strong>Implementation complexity</strong>: Need to write parser</li>
-<li><strong>Maintenance burden</strong>: Custom code to maintain</li>
-<li><strong>Limited adoption</strong>: No ecosystem support</li>
-</ul>
-<p><strong>Rejected:</strong> Reinventing the wheel when glob patterns work well.</p>
-<h3 id="simple-string-methods">Simple String Methods<a class="headerlink" href="#simple-string-methods" title="Permanent link">&para;</a></h3>
-<p>Use only string prefix/suffix matching:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="n">prefixes</span><span class="p">):</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="k">return</span> <span class="kc">True</span>
-</code></pre></div>
-<p><strong>Pros:</strong></p>
-<ul>
-<li>Very simple, no dependencies</li>
-<li>Fast</li>
-</ul>
-<p><strong>Cons:</strong></p>
-<ul>
-<li><strong>Too limited</strong>: Cannot express "ends with" and "contains" patterns in one syntax</li>
-<li><strong>Multiple parameters needed</strong>: <code>ignore_prefixes</code>, <code>ignore_suffixes</code>, <code>ignore_contains</code></li>
-<li><strong>Less flexible</strong>: Cannot combine patterns like <code>PS[12]</code></li>
-</ul>
-<p><strong>Rejected:</strong> Too limited compared to glob patterns. Glob provides better expressiveness without complexity.</p>
 <h2 id="future-direction">Future Direction<a class="headerlink" href="#future-direction" title="Permanent link">&para;</a></h2>
-<ul>
-<li>
-<p><strong>Phase 3 (if needed)</strong>: Add regex pattern support via separate parameter (<code>ignore_regex</code>)</p>
-<ul>
-<li>Can coexist with glob patterns</li>
-<li>Users choose based on complexity needs</li>
-<li>Example: <code>ignore_patterns=["PS*"], ignore_regex=[r"^VAR\d{3}$"]</code></li>
-</ul>
-</li>
-<li>
-<p><strong>Performance optimization</strong>: If profiling shows issues:</p>
-<ul>
-<li>Compile patterns once and cache</li>
-<li>Use trie-based matching for large pattern sets</li>
-</ul>
-</li>
-</ul>
+<p>This ADR should be referenced in future architectural decisions as a primary justification for design choices that favor explicitness and user control.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<p>This principle is exemplified in the following decisions:</p>
 <ul>
-<li>ADR-0022: Add ignore_patterns Parameter for Pattern-Based Variable Exclusion</li>
-<li>Python fnmatch documentation: <a href="https://docs.python.org/3/library/fnmatch.html">https://docs.python.org/3/library/fnmatch.html</a></li>
-<li>Unix glob patterns: <a href="https://man7.org/linux/man-pages/man7/glob.7.html">https://man7.org/linux/man-pages/man7/glob.7.html</a></li>
-<li>Issue #25: Add ignore_patterns parameter with glob matching support</li>
+<li>ADR-0009: Manual Provider Registration Pattern</li>
+<li>ADR-0018: Granular Error Handling for Variable Expansion and Secret Resolution</li>
 </ul>
 
 
