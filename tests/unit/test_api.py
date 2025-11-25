@@ -44,7 +44,11 @@ def test_dotenv_expander_is_exported() -> None:
 class MockProvider:
     """Simple mock provider for testing."""
 
-    def resolve(self, parsed_uri: ParsedURI) -> str:
+    def resolve(
+        self,
+        parsed_uri: ParsedURI,
+        logger: logging.Logger | None = None,  # noqa: ARG002
+    ) -> str:
         """Return a resolved value based on secret name."""
         return f"resolved-{parsed_uri['secret']}"
 
@@ -77,6 +81,35 @@ def test_set_logger_accepts_logger_parameter() -> None:
 
     # Should accept None
     envresolve.set_logger(None)
+
+
+def test_resolve_secret_accepts_logger_parameter() -> None:
+    """Test that resolve_secret accepts an optional logger parameter."""
+    logger = MagicMock(spec=logging.Logger)
+
+    # Should accept logger parameter
+    result = envresolve.resolve_secret("plain-string", logger=logger)
+    assert result == "plain-string"
+
+    # Should work without logger parameter
+    result = envresolve.resolve_secret("plain-string")
+    assert result == "plain-string"
+
+
+def test_env_resolver_resolve_secret_accepts_logger_parameter() -> None:
+    """Test that EnvResolver.resolve_secret accepts an optional logger parameter."""
+    constructor_logger = MagicMock(spec=logging.Logger)
+    method_logger = MagicMock(spec=logging.Logger)
+
+    resolver = EnvResolver(logger=constructor_logger)
+
+    # Should accept logger parameter
+    result = resolver.resolve_secret("plain-string", logger=method_logger)
+    assert result == "plain-string"
+
+    # Should work without logger parameter (uses constructor logger)
+    result = resolver.resolve_secret("plain-string")
+    assert result == "plain-string"
 
 
 @pytest.fixture
@@ -218,7 +251,11 @@ def test_resolve_os_environ_with_stop_on_error_false() -> None:
 
     # Create a provider that fails for specific secrets
     class FailingProvider:
-        def resolve(self, parsed_uri: ParsedURI) -> str:
+        def resolve(
+            self,
+            parsed_uri: ParsedURI,
+            logger: logging.Logger | None = None,  # noqa: ARG002
+        ) -> str:
             if parsed_uri["secret"] == "failing-secret":  # noqa: S105
                 uri = f"akv://{parsed_uri['vault']}/{parsed_uri['secret']}"
                 msg = "Simulated resolution failure"
@@ -258,7 +295,11 @@ def test_resolve_os_environ_with_stop_on_error_true() -> None:
 
     # Create a provider that fails for specific secrets
     class FailingProvider:
-        def resolve(self, parsed_uri: ParsedURI) -> str:
+        def resolve(
+            self,
+            parsed_uri: ParsedURI,
+            logger: logging.Logger | None = None,  # noqa: ARG002
+        ) -> str:
             if parsed_uri["secret"] == "failing-secret":  # noqa: S105
                 uri = f"akv://{parsed_uri['vault']}/{parsed_uri['secret']}"
                 msg = "Simulated resolution failure"
@@ -323,7 +364,11 @@ def test_resolve_os_environ_propagates_unexpected_errors() -> None:
 
     # Create a provider that raises a non-domain error
     class UnexpectedErrorProvider:
-        def resolve(self, parsed_uri: ParsedURI) -> str:
+        def resolve(
+            self,
+            parsed_uri: ParsedURI,
+            logger: logging.Logger | None = None,  # noqa: ARG002
+        ) -> str:
             mesg = "Unexpected internal error for {}".format(parsed_uri["secret"])
             raise ValueError(mesg)
 

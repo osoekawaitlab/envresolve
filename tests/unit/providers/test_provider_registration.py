@@ -32,7 +32,8 @@ def test_register_azure_kv_provider_with_custom_provider() -> None:
             vault="test-vault",
             secret="test-secret",  # noqa: S106
             version=None,
-        )
+        ),
+        logger=None,
     )
 
 

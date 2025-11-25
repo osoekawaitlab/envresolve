@@ -98,7 +98,7 @@ class EnvResolver:
         # Reset resolver to pick up new providers
         self._resolver = None
 
-    def resolve_secret(self, uri: str) -> str:
+    def resolve_secret(self, uri: str, logger: logging.Logger | None = None) -> str:
         """Resolve a secret URI to its value.
 
         This function supports:
@@ -108,6 +108,8 @@ class EnvResolver:
 
         Args:
             uri: Secret URI or plain string to resolve
+            logger: Optional logger for diagnostic messages. If provided, overrides
+                the logger set in the constructor.
 
         Returns:
             Resolved secret value or the original string if not a secret URI
@@ -118,8 +120,9 @@ class EnvResolver:
             VariableNotFoundError: If a referenced variable is not found
             CircularReferenceError: If a circular variable reference is detected
         """
+        effective_logger = logger if logger is not None else self._logger
         resolver = self._get_resolver()
-        return resolver.resolve(uri)
+        return resolver.resolve(uri, logger=effective_logger)
 
     def resolve_with_env(self, value: str, env: dict[str, str]) -> str:
         """Expand variables and resolve secret URIs with custom environment.
@@ -144,6 +147,7 @@ class EnvResolver:
         stop_on_resolution_error: bool = True,
         ignore_keys: list[str] | None = None,
         ignore_patterns: list[str] | None = None,
+        logger: logging.Logger | None = None,  # noqa: ARG002
     ) -> dict[str, str]:
         """Load environment variables from a .env file and resolve secret URIs.
 
@@ -171,6 +175,8 @@ class EnvResolver:
             ignore_patterns: List of glob patterns to match keys for skipping expansion.
                 Keys matching any pattern are included as-is without variable expansion
                 or secret resolution. Supports wildcards: *, ?, [seq]. (default: None)
+            logger: Optional logger for diagnostic messages. If provided, overrides
+                the logger set in the constructor.
 
         Returns:
             Dictionary of resolved environment variables
@@ -181,6 +187,8 @@ class EnvResolver:
             URIParseError: If a URI format is invalid
             CircularReferenceError: If a circular variable reference is detected
         """
+        # TODO(#40): Use logger for diagnostic messages  # noqa: FIX002
+
         # Load .env file
         # When dotenv_path is None, use find_dotenv with usecwd=True
         if dotenv_path is None:
@@ -308,8 +316,23 @@ class EnvResolver:
         stop_on_resolution_error: bool = True,
         ignore_keys: list[str] | None = None,
         ignore_patterns: list[str] | None = None,
+        logger: logging.Logger | None = None,  # noqa: ARG002
     ) -> dict[str, str]:
         """Resolve secret URIs in os.environ.
+
+        Args:
+            keys: List of specific environment variable keys to resolve
+            prefix: Prefix to filter environment variables
+            overwrite: If True, overwrite existing os.environ variables
+            stop_on_expansion_error: If False, skip variables with expansion errors
+            stop_on_resolution_error: If False, skip variables with resolution errors
+            ignore_keys: List of keys to skip expansion for
+            ignore_patterns: List of glob patterns to match keys for skipping expansion
+            logger: Optional logger for diagnostic messages. If provided, overrides
+                the logger set in the constructor.
+
+        Returns:
+            Dictionary of resolved environment variables
 
         Raises:
             EnvironmentVariableResolutionError: If a variable resolution error occurs
@@ -318,6 +341,8 @@ class EnvResolver:
             URIParseError: If the URI format is invalid
             CircularReferenceError: If a circular variable reference is detected
         """
+        # TODO(#40): Use logger for diagnostic messages  # noqa: FIX002
+
         if keys is not None and prefix is not None:
             arg1 = "keys"
             arg2 = "prefix"
@@ -418,7 +443,7 @@ def register_azure_kv_provider(provider: "SecretProvider | None" = None) -> None
     _default_resolver.register_azure_kv_provider(provider=provider)
 
 
-def resolve_secret(uri: str) -> str:
+def resolve_secret(uri: str, logger: logging.Logger | None = None) -> str:
     """Resolve a secret URI to its value.
 
     This function supports:
@@ -428,6 +453,8 @@ def resolve_secret(uri: str) -> str:
 
     Args:
         uri: Secret URI or plain string to resolve
+        logger: Optional logger for diagnostic messages. If provided, overrides
+            the global default logger set by set_logger().
 
     Returns:
         Resolved secret value or the original string if not a secret URI
@@ -452,7 +479,8 @@ def resolve_secret(uri: str) -> str:
         >>> # envresolve.register_azure_kv_provider()
         >>> # secret = envresolve.resolve_secret("akv://my-vault/db-password")
     """
-    return _default_resolver.resolve_secret(uri)
+    effective_logger = logger if logger is not None else _default_resolver._logger  # noqa: SLF001
+    return _default_resolver.resolve_secret(uri, logger=effective_logger)
 
 
 def load_env(  # noqa: PLR0913
@@ -464,6 +492,7 @@ def load_env(  # noqa: PLR0913
     stop_on_resolution_error: bool = True,
     ignore_keys: list[str] | None = None,
     ignore_patterns: list[str] | None = None,
+    logger: logging.Logger | None = None,
 ) -> dict[str, str]:
     """Load environment variables from a .env file and resolve secret URIs.
 
@@ -490,6 +519,8 @@ def load_env(  # noqa: PLR0913
         ignore_patterns: List of glob patterns to match keys for skipping expansion.
             Keys matching any pattern are included as-is without variable expansion
             or secret resolution. Supports wildcards: *, ?, [seq]. (default: None)
+        logger: Optional logger for diagnostic messages. If provided, overrides
+            the global default logger set by set_logger().
 
     Returns:
         Dictionary of resolved environment variables
@@ -510,6 +541,7 @@ def load_env(  # noqa: PLR0913
         >>> # Skip expansion for system variables
         >>> resolved = envresolve.load_env(ignore_keys=["PS1"])  # doctest: +SKIP
     """
+    effective_logger = logger if logger is not None else _default_resolver._logger  # noqa: SLF001
     return _default_resolver.load_env(
         dotenv_path,
         export=export,
@@ -518,6 +550,7 @@ def load_env(  # noqa: PLR0913
         stop_on_resolution_error=stop_on_resolution_error,
         ignore_keys=ignore_keys,
         ignore_patterns=ignore_patterns,
+        logger=effective_logger,
     )
 
 
@@ -530,6 +563,7 @@ def resolve_os_environ(  # noqa: PLR0913
     stop_on_resolution_error: bool = True,
     ignore_keys: list[str] | None = None,
     ignore_patterns: list[str] | None = None,
+    logger: logging.Logger | None = None,
 ) -> dict[str, str]:
     """Resolve secret URIs in os.environ.
 
@@ -554,6 +588,8 @@ def resolve_os_environ(  # noqa: PLR0913
         ignore_patterns: List of glob patterns to match keys for skipping expansion.
             Keys matching any pattern are included as-is without variable expansion
             or secret resolution. Supports wildcards: *, ?, [seq]. (default: None)
+        logger: Optional logger for diagnostic messages. If provided, overrides
+            the global default logger set by set_logger().
 
     Returns:
         Dictionary of resolved values
@@ -578,6 +614,7 @@ def resolve_os_environ(  # noqa: PLR0913
         ...     ignore_keys=["PS1"]
         ... )  # doctest: +SKIP
     """
+    effective_logger = logger if logger is not None else _default_resolver._logger  # noqa: SLF001
     return _default_resolver.resolve_os_environ(
         keys=keys,
         prefix=prefix,
@@ -586,4 +623,5 @@ def resolve_os_environ(  # noqa: PLR0913
         stop_on_resolution_error=stop_on_resolution_error,
         ignore_keys=ignore_keys,
         ignore_patterns=ignore_patterns,
+        logger=effective_logger,
     )

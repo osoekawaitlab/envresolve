@@ -316,6 +316,17 @@ Decided to forbid any feature that implicitly alters library behavior based on e
 
 ---
 
+### ADR 0029: Logger Propagation Through Layers
+
+**Status**: Accepted
+**Date**: 2025-11-25
+
+Pass logger instances explicitly as parameters through all layers rather than mutating instance state, ensuring thread-safe logger override behavior.
+
+[View Full ADR](../adr/0029-logger-propagation-through-layers.md)
+
+---
+
 ## ADR Template
 
 All ADRs follow a consistent template defined in [ADR 0000: ADR Template](../adr/0000-adr-template.md).

@@ -8,6 +8,7 @@ This module coordinates the resolution process:
 5. Iterative resolution (for nested URIs and variable expansion)
 """
 
+import logging
 import os
 from typing import TYPE_CHECKING
 
@@ -31,7 +32,12 @@ class SecretResolver:
         """
         self._providers = providers
 
-    def resolve(self, uri: str, env: dict[str, str] | None = None) -> str:
+    def resolve(
+        self,
+        uri: str,
+        env: dict[str, str] | None = None,
+        logger: logging.Logger | None = None,
+    ) -> str:
         """Resolve a URI to its secret value with iterative resolution.
 
         This method performs iterative resolution to handle:
@@ -46,6 +52,7 @@ class SecretResolver:
         Args:
             uri: The URI to resolve (may contain variables)
             env: Environment dict for variable expansion (defaults to os.environ)
+            logger: Optional logger for diagnostic messages
 
         Returns:
             Resolved secret value, or the original string if not a secret URI
@@ -85,7 +92,7 @@ class SecretResolver:
 
             # Step 4: Get provider and resolve
             provider = self._get_provider(parsed_uri)
-            resolved = provider.resolve(parsed_uri)
+            resolved = provider.resolve(parsed_uri, logger=logger)
 
             # Check if resolution produced a change
             if resolved == current:

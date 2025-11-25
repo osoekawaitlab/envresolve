@@ -1,5 +1,6 @@
 """Azure Key Vault provider implementation."""
 
+import logging
 from typing import TYPE_CHECKING
 
 from azure.core.exceptions import AzureError
@@ -47,12 +48,17 @@ class AzureKVProvider:
             )
         return self._clients[vault_name]
 
-    def resolve(self, parsed_uri: ParsedURI) -> str:
+    def resolve(
+        self,
+        parsed_uri: ParsedURI,
+        logger: logging.Logger | None = None,  # noqa: ARG002
+    ) -> str:
         """Resolve a secret from Azure Key Vault.
 
         Args:
             parsed_uri: Parsed URI dictionary containing vault, secret,
                 and optional version
+            logger: Optional logger for diagnostic messages
 
         Returns:
             The secret value as a string

@@ -1,5 +1,6 @@
 """Unit tests for SecretResolver."""
 
+import logging
 import os
 from unittest.mock import MagicMock
 
@@ -18,7 +19,11 @@ class MockProvider:
         self.secret_map = secret_map
         self.resolve_calls: list[ParsedURI] = []
 
-    def resolve(self, parsed_uri: ParsedURI) -> str:
+    def resolve(
+        self,
+        parsed_uri: ParsedURI,
+        logger: logging.Logger | None = None,  # noqa: ARG002
+    ) -> str:
         """Resolve a secret from the mock storage."""
         self.resolve_calls.append(parsed_uri)
         secret_name = parsed_uri["secret"]
@@ -170,7 +175,10 @@ def test_resolver_stops_when_value_stabilizes() -> None:
     # (shouldn't happen in practice, but tests idempotency)
     call_count = 0
 
-    def stable_resolver(_parsed_uri: ParsedURI) -> str:
+    def stable_resolver(
+        _parsed_uri: ParsedURI,
+        logger: logging.Logger | None = None,  # noqa: ARG001
+    ) -> str:
         nonlocal call_count
         call_count += 1
         if call_count == 1:
