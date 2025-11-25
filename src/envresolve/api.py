@@ -2,6 +2,7 @@
 
 import fnmatch
 import importlib
+import logging
 import os
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -28,10 +29,15 @@ class EnvResolver:
     eliminating the need for module-level global variables.
     """
 
-    def __init__(self) -> None:
-        """Initialize an empty provider registry."""
+    def __init__(self, logger: logging.Logger | None = None) -> None:
+        """Initialize an empty provider registry.
+
+        Args:
+            logger: Optional logger for diagnostic messages. If None, no logging occurs.
+        """
         self._providers: dict[str, SecretProvider] = {}
         self._resolver: SecretResolver | None = None
+        self._logger = logger
 
     def _get_resolver(self) -> SecretResolver:
         """Get or create the resolver instance.
@@ -359,6 +365,29 @@ class EnvResolver:
 
 # Default instance for module-level API
 _default_resolver = EnvResolver()
+
+
+def set_logger(logger: logging.Logger | None) -> None:
+    """Set the default logger for the global facade functions.
+
+    This function configures the logger used by the default EnvResolver instance
+    that backs the module-level facade functions (resolve_secret, load_env, etc.).
+
+    Args:
+        logger: Logger instance for diagnostic messages. If None, logging is disabled.
+
+    Examples:
+        >>> import envresolve
+        >>> import logging
+        >>> # Set up logging
+        >>> logger = logging.getLogger(__name__)
+        >>> envresolve.set_logger(logger)
+        >>> # Now all module-level functions will use this logger
+        >>> envresolve.resolve_secret("akv://vault/secret")  # doctest: +SKIP
+        >>> # Disable logging
+        >>> envresolve.set_logger(None)
+    """
+    _default_resolver._logger = logger  # noqa: SLF001
 
 
 def register_azure_kv_provider(provider: "SecretProvider | None" = None) -> None:

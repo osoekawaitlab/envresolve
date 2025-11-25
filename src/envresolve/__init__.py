@@ -5,6 +5,7 @@ from envresolve.api import (
     register_azure_kv_provider,
     resolve_os_environ,
     resolve_secret,
+    set_logger,
 )
 from envresolve.application.expanders import DotEnvExpander, EnvExpander
 from envresolve.exceptions import (
@@ -37,4 +38,5 @@ __all__ = [
     "register_azure_kv_provider",
     "resolve_os_environ",
     "resolve_secret",
+    "set_logger",
 ]

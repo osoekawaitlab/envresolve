@@ -1,5 +1,6 @@
 """Unit tests for the public API layer."""
 
+import logging
 import os
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -46,6 +47,36 @@ class MockProvider:
     def resolve(self, parsed_uri: ParsedURI) -> str:
         """Return a resolved value based on secret name."""
         return f"resolved-{parsed_uri['secret']}"
+
+
+def test_env_resolver_accepts_logger_parameter() -> None:
+    """Test that EnvResolver accepts an optional logger parameter in constructor."""
+    logger = MagicMock(spec=logging.Logger)
+
+    # Should accept logger parameter
+    resolver_with_logger = EnvResolver(logger=logger)
+    assert resolver_with_logger is not None
+
+    # Should work without logger parameter
+    resolver_without_logger = EnvResolver()
+    assert resolver_without_logger is not None
+
+
+def test_set_logger_function_exists() -> None:
+    """Test that set_logger function exists in the module."""
+    assert hasattr(envresolve, "set_logger")
+    assert callable(envresolve.set_logger)
+
+
+def test_set_logger_accepts_logger_parameter() -> None:
+    """Test that set_logger accepts a logger parameter."""
+    logger = MagicMock(spec=logging.Logger)
+
+    # Should accept logger
+    envresolve.set_logger(logger)
+
+    # Should accept None
+    envresolve.set_logger(None)
 
 
 @pytest.fixture
