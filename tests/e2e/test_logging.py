@@ -6,6 +6,10 @@ Tests verify acceptance criteria from issue #40:
 """
 
 import logging
+import os
+
+import pytest
+from pytest_mock import MockerFixture
 
 import envresolve
 from envresolve.api import EnvResolver
@@ -91,3 +95,36 @@ def test_env_resolver_methods_accept_logger_parameter() -> None:
     # (basic smoke test - actual logging will be tested when implementation is complete)
     os_result = resolver.resolve_os_environ(logger=method_logger)
     assert isinstance(os_result, dict)
+
+
+def test_variable_expansion_is_logged(
+    caplog: pytest.LogCaptureFixture,
+    mocker: MockerFixture,
+) -> None:
+    """Test that variable expansion is logged with appropriate detail.
+
+    Acceptance criteria: Variable expansion is logged with appropriate detail
+
+    This test verifies that when resolve_secret() performs variable expansion
+    (plain text without secret URI), the expansion is logged at DEBUG level.
+    """
+    logger = logging.getLogger("test_expansion")
+
+    # Set up environment variables for expansion
+    mocker.patch.dict(os.environ, {"FOO": "bar", "BAZ": "qux"}, clear=True)
+
+    # Test variable expansion through resolve_secret (plain text, no URI)
+    with caplog.at_level(logging.DEBUG, logger="test_expansion"):
+        result = envresolve.resolve_secret("prefix-${FOO}-${BAZ}-suffix", logger=logger)
+
+        # Result should have variables expanded
+        assert result == "prefix-bar-qux-suffix"
+
+        # Should have logged the variable expansion
+        assert len(caplog.records) > 0
+        # Verify the log messages mention the variable names
+        assert any("FOO" in record.message for record in caplog.records)
+        assert any("BAZ" in record.message for record in caplog.records)
+        # Verify they were logged at DEBUG level
+        debug_records = [r for r in caplog.records if r.levelname == "DEBUG"]
+        assert len(debug_records) > 0

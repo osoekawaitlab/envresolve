@@ -1,5 +1,6 @@
 """Variable expansion service."""
 
+import logging
 import re
 
 from envresolve.exceptions import CircularReferenceError, VariableNotFoundError
@@ -8,7 +9,9 @@ INNER_CURLY_PATTERN = re.compile(r"\$\{([^{}]+)\}")
 SIMPLE_VAR_PATTERN = re.compile(r"\$([A-Za-z_][A-Za-z0-9_]*)\b")
 
 
-def expand_variables(text: str, env: dict[str, str]) -> str:
+def expand_variables(
+    text: str, env: dict[str, str], logger: logging.Logger | None = None
+) -> str:
     """Expand ${VAR} and $VAR in text using provided environment dictionary.
 
     This function expands variables recursively to support nested variables and
@@ -19,6 +22,7 @@ def expand_variables(text: str, env: dict[str, str]) -> str:
     Args:
         text: The text containing variables to expand
         env: Dictionary of variable name to value mappings
+        logger: Optional logger for diagnostic messages
 
     Returns:
         The text with all variables expanded
@@ -35,10 +39,15 @@ def expand_variables(text: str, env: dict[str, str]) -> str:
         >>> expand_variables("akv://${VAULT}/${SECRET}", {"VAULT": "v", "SECRET": "s"})
         'akv://v/s'
     """
-    return _expand_text(text, env, [])
+    return _expand_text(text, env, [], logger)
 
 
-def _resolve(var_name: str, env: dict[str, str], stack: list[str]) -> str:
+def _resolve(
+    var_name: str,
+    env: dict[str, str],
+    stack: list[str],
+    logger: logging.Logger | None,
+) -> str:
     if var_name in stack:
         cycle_start = stack.index(var_name)
         cycle = [*stack[cycle_start:], var_name]
@@ -47,14 +56,22 @@ def _resolve(var_name: str, env: dict[str, str], stack: list[str]) -> str:
     if var_name not in env:
         raise VariableNotFoundError(var_name)
 
+    if logger is not None:
+        logger.debug("Expanding variable: %s", var_name)
+
     stack.append(var_name)
     try:
-        return _expand_text(env[var_name], env, stack)
+        return _expand_text(env[var_name], env, stack, logger)
     finally:
         stack.pop()
 
 
-def _expand_text(value: str, env: dict[str, str], stack: list[str]) -> str:
+def _expand_text(
+    value: str,
+    env: dict[str, str],
+    stack: list[str],
+    logger: logging.Logger | None,
+) -> str:
     current = value
 
     while True:
@@ -63,7 +80,7 @@ def _expand_text(value: str, env: dict[str, str], stack: list[str]) -> str:
         def replace_curly(match: re.Match[str]) -> str:
             nonlocal curly_changed
             curly_changed = True
-            return _resolve(match.group(1), env, stack)
+            return _resolve(match.group(1), env, stack, logger)
 
         next_value = INNER_CURLY_PATTERN.sub(replace_curly, current)
         if curly_changed:
@@ -75,7 +92,7 @@ def _expand_text(value: str, env: dict[str, str], stack: list[str]) -> str:
         def replace_simple(match: re.Match[str]) -> str:
             nonlocal simple_changed
             simple_changed = True
-            return _resolve(match.group(1), env, stack)
+            return _resolve(match.group(1), env, stack, logger)
 
         next_value = SIMPLE_VAR_PATTERN.sub(replace_simple, current)
         if simple_changed:

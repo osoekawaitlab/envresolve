@@ -80,7 +80,7 @@ class SecretResolver:
             seen.add(current)
 
             # Step 1: Expand variables
-            expanded = expand_variables(current, env)
+            expanded = expand_variables(current, env, logger=logger)
 
             # Step 2: Check if it's a secret URI
             if not is_secret_uri(expanded):

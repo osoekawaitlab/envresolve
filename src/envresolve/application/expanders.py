@@ -1,5 +1,6 @@
 """Application-level expander classes for environment and .env file integration."""
 
+import logging
 import os
 from pathlib import Path
 
@@ -15,11 +16,12 @@ class BaseExpander:
         """Initialize with empty environment dictionary."""
         self.env: dict[str, str] = {}
 
-    def expand(self, text: str) -> str:
+    def expand(self, text: str, logger: logging.Logger | None = None) -> str:
         """Expand variables in text using the loaded environment.
 
         Args:
             text: The text containing variables to expand
+            logger: Optional logger for diagnostic messages
 
         Returns:
             The text with all variables expanded
@@ -28,7 +30,7 @@ class BaseExpander:
             CircularReferenceError: If a circular reference is detected
             VariableNotFoundError: If a referenced variable is not found
         """
-        return expand_variables(text, self.env)
+        return expand_variables(text, self.env, logger=logger)
 
 
 class EnvExpander(BaseExpander):

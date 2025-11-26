@@ -1,5 +1,8 @@
 """Unit tests for expand_variables function."""
 
+import logging
+from unittest.mock import MagicMock
+
 import pytest
 
 from envresolve.exceptions import CircularReferenceError, VariableNotFoundError
@@ -85,3 +88,14 @@ def test_expand_nested_curly_braces() -> None:
     env = {"NESTED": "BAR", "VAR_BAR": "value"}
     result = expand_variables("${VAR_${NESTED}}", env)
     assert result == "value"
+
+
+def test_expand_variables_accepts_logger_parameter() -> None:
+    """Test that expand_variables accepts optional logger parameter."""
+    logger = MagicMock(spec=logging.Logger)
+
+    result = expand_variables("${FOO}", {"FOO": "bar"}, logger=logger)
+
+    assert result == "bar"
+    # Logger should have been called to log the expansion
+    logger.debug.assert_called()
