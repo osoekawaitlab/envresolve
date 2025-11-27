@@ -327,6 +327,17 @@ Pass logger instances explicitly as parameters through all layers rather than mu
 
 ---
 
+### ADR 0030: Logging Information Disclosure Boundaries
+
+**Status**: Accepted
+**Date**: 2025-11-26
+
+Default logging exposes only operation types and error categories, without specific values. Exceptions contain full details for application-level logging decisions.
+
+[View Full ADR](../adr/0030-logging-information-disclosure-boundaries.md)
+
+---
+
 ## ADR Template
 
 All ADRs follow a consistent template defined in [ADR 0000: ADR Template](../adr/0000-adr-template.md).
