@@ -69,6 +69,7 @@ class SecretResolver:
         # Track seen values to detect circular references
         seen: set[str] = set()
         current = uri
+        secret_uri_found = False
 
         while True:
             # Check for circular reference
@@ -85,18 +86,32 @@ class SecretResolver:
             # Step 2: Check if it's a secret URI
             if not is_secret_uri(expanded):
                 # Not a secret URI - this is the final value
+                if secret_uri_found and logger is not None:
+                    logger.debug("Secret resolution completed")
                 return expanded
+
+            # Mark that we found at least one secret URI
+            secret_uri_found = True
 
             # Step 3: Parse URI
             parsed_uri = parse_secret_uri(expanded)
 
             # Step 4: Get provider and resolve
-            provider = self._get_provider(parsed_uri)
-            resolved = provider.resolve(parsed_uri, logger=logger)
+            try:
+                provider = self._get_provider(parsed_uri)
+                resolved = provider.resolve(parsed_uri, logger=logger)
+            except SecretResolutionError:
+                if logger is not None:
+                    # Use logger.error instead of logger.exception to avoid exposing
+                    # URIs, vault names, secret names in traceback (ADR-0030)
+                    logger.error("Secret resolution failed: provider error")  # noqa: TRY400
+                raise
 
             # Check if resolution produced a change
             if resolved == current:
                 # No change - we've reached a stable value
+                if logger is not None:
+                    logger.debug("Secret resolution completed")
                 return resolved
 
             # Continue with the resolved value

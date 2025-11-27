@@ -13,6 +13,8 @@ from pytest_mock import MockerFixture
 
 import envresolve
 from envresolve.api import EnvResolver
+from envresolve.models import ParsedURI
+from envresolve.providers.base import SecretProvider
 
 
 def test_env_resolver_accepts_optional_logger_parameter() -> None:
@@ -178,6 +180,97 @@ def test_variable_expansion_error_is_logged(
 
         # Should NOT log specific variable names (ADR-0030)
         assert not any("MISSING_VAR" in record.message for record in caplog.records)
+
+        # Verify they were logged at ERROR level
+        error_records = [r for r in caplog.records if r.levelname == "ERROR"]
+        assert len(error_records) > 0
+
+
+def test_secret_resolution_is_logged(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    """Test that secret resolution is logged with operation type and status.
+
+    Acceptance criteria: Operations are logged with type, status, and error category
+
+    This test verifies that when resolve_secret() resolves a secret URI,
+    the operation is logged at DEBUG level with operation type and status,
+    but without exposing specific values (vault names, secret names, URIs)
+    per ADR-0030.
+    """
+    logger = logging.getLogger("test_resolution")
+
+    # Mock Azure KV provider
+    class MockProvider(SecretProvider):
+        def resolve(
+            self, parsed_uri: ParsedURI, logger: logging.Logger | None = None  # noqa: ARG002
+        ) -> str:
+            return "mock-secret-value"
+
+    # Register mock provider
+    envresolve.register_azure_kv_provider(provider=MockProvider())
+
+    # Test secret resolution through resolve_secret
+    with caplog.at_level(logging.DEBUG, logger="test_resolution"):
+        result = envresolve.resolve_secret("akv://my-vault/db-password", logger=logger)
+
+        # Result should be the mocked secret value
+        assert result == "mock-secret-value"
+
+        # Should have logged the secret resolution operation
+        assert len(caplog.records) > 0
+
+        # Verify operation-level logging (ADR-0030: operation type and status only)
+        messages = [record.message.lower() for record in caplog.records]
+
+        # Should log completion status
+        assert any(
+            "secret resolution" in msg and "completed" in msg for msg in messages
+        )
+
+        # Should NOT log specific values (ADR-0030)
+        assert not any("my-vault" in record.message for record in caplog.records)
+        assert not any("db-password" in record.message for record in caplog.records)
+        assert not any("akv://" in record.message for record in caplog.records)
+
+        # Verify they were logged at DEBUG level
+        debug_records = [r for r in caplog.records if r.levelname == "DEBUG"]
+        assert len(debug_records) > 0
+
+
+def test_secret_resolution_error_is_logged(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    """Test that secret resolution errors are logged with error category.
+
+    Acceptance criteria: Operations are logged with type, status, and error category
+
+    This test verifies that when secret resolution fails, the error is logged
+    with the error category but without exposing specific values per ADR-0030.
+    """
+    logger = logging.getLogger("test_resolution_error")
+
+    # Test secret resolution failure (no provider registered)
+    with caplog.at_level(logging.ERROR, logger="test_resolution_error"):
+        # Expect SecretResolutionError to be raised
+        with pytest.raises(envresolve.SecretResolutionError):
+            envresolve.resolve_secret("akv://my-vault/db-password", logger=logger)
+
+        # Should have logged the error
+        assert len(caplog.records) > 0
+
+        # Verify error-level logging with category
+        messages = [record.message.lower() for record in caplog.records]
+
+        # Should log error category
+        assert any(
+            "secret resolution" in msg and "provider error" in msg for msg in messages
+        )
+
+        # Should NOT log specific values (ADR-0030)
+        assert not any("my-vault" in record.message for record in caplog.records)
+        assert not any("db-password" in record.message for record in caplog.records)
+        assert not any("akv://" in record.message for record in caplog.records)
 
         # Verify they were logged at ERROR level
         error_records = [r for r in caplog.records if r.levelname == "ERROR"]
