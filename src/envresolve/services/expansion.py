@@ -9,6 +9,20 @@ INNER_CURLY_PATTERN = re.compile(r"\$\{([^{}]+)\}")
 SIMPLE_VAR_PATTERN = re.compile(r"\$([A-Za-z_][A-Za-z0-9_]*)\b")
 
 
+def _log_error(logger: logging.Logger | None, message: str) -> None:
+    """Log an error message if logger is provided.
+
+    Uses logger.error instead of logger.exception to avoid exposing
+    sensitive information in tracebacks (ADR-0030).
+
+    Args:
+        logger: Optional logger instance
+        message: Error message to log
+    """
+    if logger is not None:
+        logger.error(message)
+
+
 def expand_variables(
     text: str, env: dict[str, str], logger: logging.Logger | None = None
 ) -> str:
@@ -39,7 +53,18 @@ def expand_variables(
         >>> expand_variables("akv://${VAULT}/${SECRET}", {"VAULT": "v", "SECRET": "s"})
         'akv://v/s'
     """
-    return _expand_text(text, env, [], logger)
+    try:
+        result = _expand_text(text, env, [], logger)
+    except VariableNotFoundError:
+        _log_error(logger, "Variable expansion failed: variable not found")
+        raise
+    except CircularReferenceError:
+        _log_error(logger, "Variable expansion failed: circular reference detected")
+        raise
+    else:
+        if logger is not None:
+            logger.debug("Variable expansion completed")
+        return result
 
 
 def _resolve(
@@ -55,9 +80,6 @@ def _resolve(
 
     if var_name not in env:
         raise VariableNotFoundError(var_name)
-
-    if logger is not None:
-        logger.debug("Variable expansion in progress")
 
     stack.append(var_name)
     try:

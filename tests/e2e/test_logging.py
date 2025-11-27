@@ -126,9 +126,12 @@ def test_variable_expansion_is_logged(
         assert len(caplog.records) > 0
 
         # Verify operation-level logging (ADR-0030: operation type and status only)
-        # Should mention "Variable expansion" but NOT specific variable names
-        messages = [record.message for record in caplog.records]
-        assert any("variable expansion" in msg.lower() for msg in messages)
+        messages = [record.message.lower() for record in caplog.records]
+
+        # Should log completion status
+        assert any(
+            "variable expansion" in msg and "completed" in msg for msg in messages
+        )
 
         # Should NOT log specific variable names (ADR-0030)
         assert not any("FOO" in record.message for record in caplog.records)
@@ -137,3 +140,45 @@ def test_variable_expansion_is_logged(
         # Verify they were logged at DEBUG level
         debug_records = [r for r in caplog.records if r.levelname == "DEBUG"]
         assert len(debug_records) > 0
+
+
+def test_variable_expansion_error_is_logged(
+    caplog: pytest.LogCaptureFixture,
+    mocker: MockerFixture,
+) -> None:
+    """Test that variable expansion errors are logged with error category.
+
+    Acceptance criteria: Operations are logged with type, status, and error category
+
+    This test verifies that when variable expansion fails, the error is logged
+    with the error category but without exposing specific values per ADR-0030.
+    """
+    logger = logging.getLogger("test_expansion_error")
+
+    # Set up environment with missing variable
+    mocker.patch.dict(os.environ, {}, clear=True)
+
+    # Test variable expansion failure
+    with caplog.at_level(logging.ERROR, logger="test_expansion_error"):
+        # Expect VariableNotFoundError to be raised
+        with pytest.raises(envresolve.VariableNotFoundError):
+            envresolve.resolve_secret("${MISSING_VAR}", logger=logger)
+
+        # Should have logged the error
+        assert len(caplog.records) > 0
+
+        # Verify error-level logging with category
+        messages = [record.message.lower() for record in caplog.records]
+
+        # Should log error category
+        assert any(
+            "variable expansion" in msg and "variable not found" in msg
+            for msg in messages
+        )
+
+        # Should NOT log specific variable names (ADR-0030)
+        assert not any("MISSING_VAR" in record.message for record in caplog.records)
+
+        # Verify they were logged at ERROR level
+        error_records = [r for r in caplog.records if r.levelname == "ERROR"]
+        assert len(error_records) > 0
