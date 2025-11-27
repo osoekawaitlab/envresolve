@@ -57,7 +57,7 @@ def _resolve(
         raise VariableNotFoundError(var_name)
 
     if logger is not None:
-        logger.debug("Expanding variable: %s", var_name)
+        logger.debug("Variable expansion in progress")
 
     stack.append(var_name)
     try:

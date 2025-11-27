@@ -101,12 +101,14 @@ def test_variable_expansion_is_logged(
     caplog: pytest.LogCaptureFixture,
     mocker: MockerFixture,
 ) -> None:
-    """Test that variable expansion is logged with appropriate detail.
+    """Test that variable expansion is logged with operation type and status.
 
-    Acceptance criteria: Variable expansion is logged with appropriate detail
+    Acceptance criteria: Operations are logged with type, status, and error category
 
     This test verifies that when resolve_secret() performs variable expansion
-    (plain text without secret URI), the expansion is logged at DEBUG level.
+    (plain text without secret URI), the operation is logged at DEBUG level
+    with operation type and status, but without exposing specific values
+    (variable names, etc.) per ADR-0030.
     """
     logger = logging.getLogger("test_expansion")
 
@@ -120,11 +122,18 @@ def test_variable_expansion_is_logged(
         # Result should have variables expanded
         assert result == "prefix-bar-qux-suffix"
 
-        # Should have logged the variable expansion
+        # Should have logged the variable expansion operation
         assert len(caplog.records) > 0
-        # Verify the log messages mention the variable names
-        assert any("FOO" in record.message for record in caplog.records)
-        assert any("BAZ" in record.message for record in caplog.records)
+
+        # Verify operation-level logging (ADR-0030: operation type and status only)
+        # Should mention "Variable expansion" but NOT specific variable names
+        messages = [record.message for record in caplog.records]
+        assert any("variable expansion" in msg.lower() for msg in messages)
+
+        # Should NOT log specific variable names (ADR-0030)
+        assert not any("FOO" in record.message for record in caplog.records)
+        assert not any("BAZ" in record.message for record in caplog.records)
+
         # Verify they were logged at DEBUG level
         debug_records = [r for r in caplog.records if r.levelname == "DEBUG"]
         assert len(debug_records) > 0
