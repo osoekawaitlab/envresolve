@@ -99,3 +99,80 @@ def test_expand_variables_accepts_logger_parameter() -> None:
     assert result == "bar"
     # Logger should have been called to log the expansion
     logger.debug.assert_called()
+
+
+def test_expand_variables_logs_completion_on_success() -> None:
+    """Test that successful expansion logs completion message."""
+    logger = MagicMock(spec=logging.Logger)
+
+    expand_variables("${FOO}", {"FOO": "bar"}, logger=logger)
+
+    # Verify debug log was called with completion message
+    logger.debug.assert_called_once_with("Variable expansion completed")
+
+
+def test_expand_variables_logs_error_on_variable_not_found() -> None:
+    """Test that VariableNotFoundError logs error message."""
+    logger = MagicMock(spec=logging.Logger)
+
+    with pytest.raises(VariableNotFoundError):
+        expand_variables("${MISSING}", {}, logger=logger)
+
+    # Verify error log was called with error message
+    logger.error.assert_called_once_with(
+        "Variable expansion failed: variable not found"
+    )
+
+
+def test_expand_variables_logs_error_on_circular_reference() -> None:
+    """Test that CircularReferenceError logs error message."""
+    logger = MagicMock(spec=logging.Logger)
+    env = {"A": "${B}", "B": "${A}"}
+
+    with pytest.raises(CircularReferenceError):
+        expand_variables("${A}", env, logger=logger)
+
+    # Verify error log was called with error message
+    logger.error.assert_called_once_with(
+        "Variable expansion failed: circular reference detected"
+    )
+
+
+def test_expand_variables_does_not_log_when_logger_is_none() -> None:
+    """Test that no logging occurs when logger is None."""
+    # Should not raise any errors even though logger is None
+    result = expand_variables("${FOO}", {"FOO": "bar"}, logger=None)
+
+    assert result == "bar"
+
+
+def test_expand_variables_does_not_log_variable_names() -> None:
+    """Test that variable names are not included in log messages."""
+    logger = MagicMock(spec=logging.Logger)
+
+    expand_variables("${SECRET_KEY}", {"SECRET_KEY": "value"}, logger=logger)
+
+    # Verify that variable names are not in any log calls
+    for call in logger.debug.call_args_list:
+        args = call[0]
+        assert "SECRET_KEY" not in str(args)
+
+    for call in logger.error.call_args_list:
+        args = call[0]
+        assert "SECRET_KEY" not in str(args)
+
+
+def test_expand_variables_does_not_log_variable_values() -> None:
+    """Test that variable values are not included in log messages."""
+    logger = MagicMock(spec=logging.Logger)
+
+    expand_variables("${FOO}", {"FOO": "secret-value"}, logger=logger)
+
+    # Verify that variable values are not in any log calls
+    for call in logger.debug.call_args_list:
+        args = call[0]
+        assert "secret-value" not in str(args)
+
+    for call in logger.error.call_args_list:
+        args = call[0]
+        assert "secret-value" not in str(args)

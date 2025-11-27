@@ -1,6 +1,7 @@
 """Resolve env vars from secret stores."""
 
 from envresolve.api import (
+    EnvResolver,
     load_env,
     register_azure_kv_provider,
     resolve_os_environ,
@@ -27,6 +28,7 @@ __all__ = [
     "DotEnvExpander",
     "EnvExpander",
     "EnvResolveError",
+    "EnvResolver",
     "EnvironmentVariableResolutionError",
     "MutuallyExclusiveArgumentsError",
     "ProviderRegistrationError",

@@ -12,9 +12,9 @@ import pytest
 from pytest_mock import MockerFixture
 
 import envresolve
-from envresolve.api import EnvResolver
-from envresolve.models import ParsedURI
-from envresolve.providers.base import SecretProvider
+from envresolve import EnvResolver
+
+from .helpers import MockProvider
 
 
 def test_env_resolver_accepts_optional_logger_parameter() -> None:
@@ -200,13 +200,6 @@ def test_secret_resolution_is_logged(
     """
     logger = logging.getLogger("test_resolution")
 
-    # Mock Azure KV provider
-    class MockProvider(SecretProvider):
-        def resolve(
-            self, parsed_uri: ParsedURI, logger: logging.Logger | None = None  # noqa: ARG002
-        ) -> str:
-            return "mock-secret-value"
-
     # Register mock provider
     envresolve.register_azure_kv_provider(provider=MockProvider())
 
@@ -250,11 +243,13 @@ def test_secret_resolution_error_is_logged(
     """
     logger = logging.getLogger("test_resolution_error")
 
+    envresolve.register_azure_kv_provider(provider=MockProvider())
+
     # Test secret resolution failure (no provider registered)
     with caplog.at_level(logging.ERROR, logger="test_resolution_error"):
         # Expect SecretResolutionError to be raised
         with pytest.raises(envresolve.SecretResolutionError):
-            envresolve.resolve_secret("akv://my-vault/db-password", logger=logger)
+            envresolve.resolve_secret("akv://fake-vault/db-password", logger=logger)
 
         # Should have logged the error
         assert len(caplog.records) > 0
@@ -268,7 +263,7 @@ def test_secret_resolution_error_is_logged(
         )
 
         # Should NOT log specific values (ADR-0030)
-        assert not any("my-vault" in record.message for record in caplog.records)
+        assert not any("fake-vault" in record.message for record in caplog.records)
         assert not any("db-password" in record.message for record in caplog.records)
         assert not any("akv://" in record.message for record in caplog.records)
 
