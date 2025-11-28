@@ -143,7 +143,7 @@ def test_load_env_with_akv_uris(azure_mocks: AzureSDKMocks, tmp_path: Path) -> N
     # Load and resolve
     result = envresolve.load_env(str(env_file), export=False)
 
-    assert result["DB_PASSWORD"] == "resolved-db-password"  # noqa: S105
+    assert result["DB_PASSWORD"] == "resolved-db-password"
     assert result["API_KEY"] == "resolved-api-key"
     assert result["PLAIN_VALUE"] == "just-a-string"
 

@@ -8,6 +8,7 @@ This module coordinates the resolution process:
 5. Iterative resolution (for nested URIs and variable expansion)
 """
 
+import logging
 import os
 from typing import TYPE_CHECKING
 
@@ -31,7 +32,24 @@ class SecretResolver:
         """
         self._providers = providers
 
-    def resolve(self, uri: str, env: dict[str, str] | None = None) -> str:
+    def _log_error(self, logger: logging.Logger | None, message: str) -> None:
+        """Log an error message without exposing sensitive information.
+
+        Args:
+            logger: Optional logger for diagnostic messages
+            message: Error message to log
+        """
+        if logger is not None:
+            # Use logger.error instead of logger.exception to avoid exposing
+            # URIs, vault names, secret names in traceback (ADR-0030)
+            logger.error(message)
+
+    def resolve(
+        self,
+        uri: str,
+        env: dict[str, str] | None = None,
+        logger: logging.Logger | None = None,
+    ) -> str:
         """Resolve a URI to its secret value with iterative resolution.
 
         This method performs iterative resolution to handle:
@@ -46,6 +64,7 @@ class SecretResolver:
         Args:
             uri: The URI to resolve (may contain variables)
             env: Environment dict for variable expansion (defaults to os.environ)
+            logger: Optional logger for diagnostic messages
 
         Returns:
             Resolved secret value, or the original string if not a secret URI
@@ -62,6 +81,7 @@ class SecretResolver:
         # Track seen values to detect circular references
         seen: set[str] = set()
         current = uri
+        secret_uri_found = False
 
         while True:
             # Check for circular reference
@@ -73,23 +93,34 @@ class SecretResolver:
             seen.add(current)
 
             # Step 1: Expand variables
-            expanded = expand_variables(current, env)
+            expanded = expand_variables(current, env, logger=logger)
 
             # Step 2: Check if it's a secret URI
             if not is_secret_uri(expanded):
                 # Not a secret URI - this is the final value
+                if secret_uri_found and logger is not None:
+                    logger.debug("Secret resolution completed")
                 return expanded
+
+            # Mark that we found at least one secret URI
+            secret_uri_found = True
 
             # Step 3: Parse URI
             parsed_uri = parse_secret_uri(expanded)
 
             # Step 4: Get provider and resolve
-            provider = self._get_provider(parsed_uri)
-            resolved = provider.resolve(parsed_uri)
+            try:
+                provider = self._get_provider(parsed_uri)
+                resolved = provider.resolve(parsed_uri, logger=logger)
+            except SecretResolutionError:
+                self._log_error(logger, "Secret resolution failed: provider error")
+                raise
 
             # Check if resolution produced a change
             if resolved == current:
                 # No change - we've reached a stable value
+                if logger is not None:
+                    logger.debug("Secret resolution completed")
                 return resolved
 
             # Continue with the resolved value

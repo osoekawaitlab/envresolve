@@ -32,9 +32,10 @@ def test_register_azure_kv_provider_with_custom_provider() -> None:
         ParsedURI(
             scheme="akv",
             vault="test-vault",
-            secret="test-secret",  # noqa: S106
+            secret="test-secret",
             version=None,
-        )
+        ),
+        logger=None,
     )
 
 

@@ -1,5 +1,6 @@
 """Unit tests for the public API layer."""
 
+import logging
 import os
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -43,16 +44,79 @@ def test_dotenv_expander_is_exported() -> None:
 class MockProvider:
     """Simple mock provider for testing."""
 
-    def resolve(self, parsed_uri: ParsedURI) -> str:
+    def resolve(
+        self,
+        parsed_uri: ParsedURI,
+        logger: logging.Logger | None = None,  # noqa: ARG002
+    ) -> str:
         """Return a resolved value based on secret name."""
         return f"resolved-{parsed_uri['secret']}"
+
+
+def test_env_resolver_accepts_logger_parameter() -> None:
+    """Test that EnvResolver accepts an optional logger parameter in constructor."""
+    logger = MagicMock(spec=logging.Logger)
+
+    # Should accept logger parameter
+    resolver_with_logger = EnvResolver(logger=logger)
+    assert resolver_with_logger is not None
+
+    # Should work without logger parameter
+    resolver_without_logger = EnvResolver()
+    assert resolver_without_logger is not None
+
+
+def test_set_logger_function_exists() -> None:
+    """Test that set_logger function exists in the module."""
+    assert hasattr(envresolve, "set_logger")
+    assert callable(envresolve.set_logger)
+
+
+def test_set_logger_accepts_logger_parameter() -> None:
+    """Test that set_logger accepts a logger parameter."""
+    logger = MagicMock(spec=logging.Logger)
+
+    # Should accept logger
+    envresolve.set_logger(logger)
+
+    # Should accept None
+    envresolve.set_logger(None)
+
+
+def test_resolve_secret_accepts_logger_parameter() -> None:
+    """Test that resolve_secret accepts an optional logger parameter."""
+    logger = MagicMock(spec=logging.Logger)
+
+    # Should accept logger parameter
+    result = envresolve.resolve_secret("plain-string", logger=logger)
+    assert result == "plain-string"
+
+    # Should work without logger parameter
+    result = envresolve.resolve_secret("plain-string")
+    assert result == "plain-string"
+
+
+def test_env_resolver_resolve_secret_accepts_logger_parameter() -> None:
+    """Test that EnvResolver.resolve_secret accepts an optional logger parameter."""
+    constructor_logger = MagicMock(spec=logging.Logger)
+    method_logger = MagicMock(spec=logging.Logger)
+
+    resolver = EnvResolver(logger=constructor_logger)
+
+    # Should accept logger parameter
+    result = resolver.resolve_secret("plain-string", logger=method_logger)
+    assert result == "plain-string"
+
+    # Should work without logger parameter (uses constructor logger)
+    result = resolver.resolve_secret("plain-string")
+    assert result == "plain-string"
 
 
 @pytest.fixture
 def resolver_with_mock() -> EnvResolver:
     """Fixture providing EnvResolver with mock provider."""
     resolver = EnvResolver()
-    resolver._providers["akv"] = MockProvider()  # noqa: SLF001
+    resolver._providers["akv"] = MockProvider()
     return resolver
 
 
@@ -156,7 +220,7 @@ def test_resolve_os_environ_with_prefix_filter(
         assert "DEV_API_KEY" not in os.environ
         assert "DEV_DB_URL" not in os.environ
         # Non-prefixed keys should be unchanged
-        assert os.environ["PROD_SECRET"] == "akv://vault/secret"  # noqa: S105
+        assert os.environ["PROD_SECRET"] == "akv://vault/secret"
 
 
 def test_resolve_os_environ_with_overwrite_false(
@@ -187,15 +251,19 @@ def test_resolve_os_environ_with_stop_on_error_false() -> None:
 
     # Create a provider that fails for specific secrets
     class FailingProvider:
-        def resolve(self, parsed_uri: ParsedURI) -> str:
-            if parsed_uri["secret"] == "failing-secret":  # noqa: S105
+        def resolve(
+            self,
+            parsed_uri: ParsedURI,
+            logger: logging.Logger | None = None,  # noqa: ARG002
+        ) -> str:
+            if parsed_uri["secret"] == "failing-secret":
                 uri = f"akv://{parsed_uri['vault']}/{parsed_uri['secret']}"
                 msg = "Simulated resolution failure"
                 raise SecretResolutionError(msg, uri)
             return f"resolved-{parsed_uri['secret']}"
 
     resolver = EnvResolver()
-    resolver._providers["akv"] = FailingProvider()  # noqa: SLF001
+    resolver._providers["akv"] = FailingProvider()
 
     with patch.dict(
         os.environ,
@@ -227,15 +295,19 @@ def test_resolve_os_environ_with_stop_on_error_true() -> None:
 
     # Create a provider that fails for specific secrets
     class FailingProvider:
-        def resolve(self, parsed_uri: ParsedURI) -> str:
-            if parsed_uri["secret"] == "failing-secret":  # noqa: S105
+        def resolve(
+            self,
+            parsed_uri: ParsedURI,
+            logger: logging.Logger | None = None,  # noqa: ARG002
+        ) -> str:
+            if parsed_uri["secret"] == "failing-secret":
                 uri = f"akv://{parsed_uri['vault']}/{parsed_uri['secret']}"
                 msg = "Simulated resolution failure"
                 raise SecretResolutionError(msg, uri)
             return f"resolved-{parsed_uri['secret']}"
 
     resolver = EnvResolver()
-    resolver._providers["akv"] = FailingProvider()  # noqa: SLF001
+    resolver._providers["akv"] = FailingProvider()
 
     with (
         patch.dict(
@@ -292,12 +364,16 @@ def test_resolve_os_environ_propagates_unexpected_errors() -> None:
 
     # Create a provider that raises a non-domain error
     class UnexpectedErrorProvider:
-        def resolve(self, parsed_uri: ParsedURI) -> str:
+        def resolve(
+            self,
+            parsed_uri: ParsedURI,
+            logger: logging.Logger | None = None,  # noqa: ARG002
+        ) -> str:
             mesg = "Unexpected internal error for {}".format(parsed_uri["secret"])
             raise ValueError(mesg)
 
     resolver = EnvResolver()
-    resolver._providers["akv"] = UnexpectedErrorProvider()  # noqa: SLF001
+    resolver._providers["akv"] = UnexpectedErrorProvider()
 
     with (
         patch.dict(
@@ -566,3 +642,164 @@ def test_resolve_os_environ_with_empty_ignore_patterns_list(
     result = resolver.resolve_os_environ(ignore_patterns=[])
     assert result["PS1"] == "resolved_ps1"  # Resolved
     assert result["VALID"] == "hello"
+
+
+def test_load_env_uses_constructor_logger_when_no_override(
+    tmp_path: Path,
+) -> None:
+    """Test that load_env uses constructor logger when no logger parameter."""
+    dotenv_path = tmp_path / ".env"
+    dotenv_path.write_text("TEST_VAR=test_value\n")
+
+    # Create mock logger
+    mock_logger = MagicMock(spec=logging.Logger)
+
+    # Create resolver with constructor logger
+    resolver = EnvResolver(logger=mock_logger)
+
+    # Call load_env WITHOUT logger parameter
+    result = resolver.load_env(dotenv_path=dotenv_path, export=False)
+
+    assert result["TEST_VAR"] == "test_value"
+    # Verify that the constructor logger was used
+    assert mock_logger.debug.called
+    # Check for expected debug messages
+    debug_calls = [call[0][0] for call in mock_logger.debug.call_args_list]
+    assert any("Loading environment" in msg for msg in debug_calls)
+
+
+def test_load_env_parameter_logger_overrides_constructor_logger(
+    tmp_path: Path,
+) -> None:
+    """Test that load_env logger parameter overrides constructor logger."""
+    dotenv_path = tmp_path / ".env"
+    dotenv_path.write_text("TEST_VAR=test_value\n")
+
+    # Create two mock loggers
+    constructor_logger = MagicMock(spec=logging.Logger)
+    parameter_logger = MagicMock(spec=logging.Logger)
+
+    # Create resolver with constructor logger
+    resolver = EnvResolver(logger=constructor_logger)
+
+    # Call load_env WITH logger parameter
+    result = resolver.load_env(
+        dotenv_path=dotenv_path, export=False, logger=parameter_logger
+    )
+
+    assert result["TEST_VAR"] == "test_value"
+    # Verify that the parameter logger was used, NOT the constructor logger
+    assert parameter_logger.debug.called
+    assert not constructor_logger.debug.called
+
+
+def test_resolve_os_environ_uses_constructor_logger_when_no_override(
+    mocker: MockFixture,
+) -> None:
+    """Test that resolve_os_environ uses constructor logger when no parameter."""
+    # Create mock logger
+    mock_logger = MagicMock(spec=logging.Logger)
+
+    # Create resolver with constructor logger
+    resolver = EnvResolver(logger=mock_logger)
+
+    mocker.patch.dict(
+        os.environ,
+        {"TEST_VAR": "test_value"},
+        clear=True,
+    )
+
+    # Call resolve_os_environ WITHOUT logger parameter
+    result = resolver.resolve_os_environ()
+
+    assert result["TEST_VAR"] == "test_value"
+    # Verify that the constructor logger was used
+    assert mock_logger.debug.called
+    # Check for expected debug messages
+    debug_calls = [call[0][0] for call in mock_logger.debug.call_args_list]
+    assert any("Resolving os.environ" in msg for msg in debug_calls)
+
+
+def test_resolve_os_environ_parameter_logger_overrides_constructor_logger(
+    mocker: MockFixture,
+) -> None:
+    """Test that resolve_os_environ logger parameter overrides constructor logger."""
+    # Create two mock loggers
+    constructor_logger = MagicMock(spec=logging.Logger)
+    parameter_logger = MagicMock(spec=logging.Logger)
+
+    # Create resolver with constructor logger
+    resolver = EnvResolver(logger=constructor_logger)
+
+    mocker.patch.dict(
+        os.environ,
+        {"TEST_VAR": "test_value"},
+        clear=True,
+    )
+
+    # Call resolve_os_environ WITH logger parameter
+    result = resolver.resolve_os_environ(logger=parameter_logger)
+
+    assert result["TEST_VAR"] == "test_value"
+    # Verify that the parameter logger was used, NOT the constructor logger
+    assert parameter_logger.debug.called
+    assert not constructor_logger.debug.called
+
+
+def test_resolve_with_env_accepts_logger_parameter() -> None:
+    """Test that resolve_with_env accepts an optional logger parameter."""
+    resolver = EnvResolver()
+    resolver._providers["akv"] = MockProvider()
+
+    custom_env = {"MY_VAR": "my_value"}
+
+    # Create mock logger
+    mock_logger = MagicMock(spec=logging.Logger)
+
+    # Should accept logger parameter
+    result = resolver.resolve_with_env("$MY_VAR", custom_env, logger=mock_logger)
+    assert result == "my_value"
+
+    # Should work without logger parameter
+    result = resolver.resolve_with_env("$MY_VAR", custom_env)
+    assert result == "my_value"
+
+
+def test_resolve_with_env_uses_constructor_logger_when_no_override() -> None:
+    """Test that resolve_with_env uses constructor logger when no parameter."""
+    # Create mock logger
+    mock_logger = MagicMock(spec=logging.Logger)
+
+    # Create resolver with constructor logger
+    resolver = EnvResolver(logger=mock_logger)
+    resolver._providers["akv"] = MockProvider()
+
+    custom_env = {"MY_VAR": "my_value"}
+
+    # Call resolve_with_env WITHOUT logger parameter
+    result = resolver.resolve_with_env("$MY_VAR", custom_env)
+
+    assert result == "my_value"
+    # Verify that the constructor logger was used
+    assert mock_logger.debug.called
+
+
+def test_resolve_with_env_parameter_logger_overrides_constructor_logger() -> None:
+    """Test that resolve_with_env logger parameter overrides constructor logger."""
+    # Create two mock loggers
+    constructor_logger = MagicMock(spec=logging.Logger)
+    parameter_logger = MagicMock(spec=logging.Logger)
+
+    # Create resolver with constructor logger
+    resolver = EnvResolver(logger=constructor_logger)
+    resolver._providers["akv"] = MockProvider()
+
+    custom_env = {"MY_VAR": "my_value"}
+
+    # Call resolve_with_env WITH logger parameter
+    result = resolver.resolve_with_env("$MY_VAR", custom_env, logger=parameter_logger)
+
+    assert result == "my_value"
+    # Verify that the parameter logger was used, NOT the constructor logger
+    assert parameter_logger.debug.called
+    assert not constructor_logger.debug.called

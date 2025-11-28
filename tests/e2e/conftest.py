@@ -11,14 +11,16 @@ import envresolve.api
 def reset_default_resolver() -> Iterator[None]:
     """Fixture to automatically reset the global default resolver's state.
 
-    This ensures test isolation by resetting providers between tests.
+    This ensures test isolation by resetting providers and logger between tests.
     """
     # Save the original state before the test runs
-    original_providers = envresolve.api._default_resolver._providers.copy()  # noqa: SLF001
-    original_resolver = envresolve.api._default_resolver._resolver  # noqa: SLF001
+    original_providers = envresolve.api._default_resolver._providers.copy()
+    original_resolver = envresolve.api._default_resolver._resolver
+    original_logger = envresolve.api._default_resolver._logger
 
     yield  # Test runs here
 
     # Restore the original state after the test completes
-    envresolve.api._default_resolver._providers = original_providers  # noqa: SLF001
-    envresolve.api._default_resolver._resolver = original_resolver  # noqa: SLF001
+    envresolve.api._default_resolver._providers = original_providers
+    envresolve.api._default_resolver._resolver = original_resolver
+    envresolve.api._default_resolver._logger = original_logger

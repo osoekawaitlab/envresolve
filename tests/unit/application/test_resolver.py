@@ -1,12 +1,13 @@
 """Unit tests for SecretResolver."""
 
+import logging
 import os
 from unittest.mock import MagicMock
 
 import pytest
 
 from envresolve.application.resolver import SecretResolver
-from envresolve.exceptions import CircularReferenceError
+from envresolve.exceptions import CircularReferenceError, SecretResolutionError
 from envresolve.models import ParsedURI
 
 
@@ -18,7 +19,11 @@ class MockProvider:
         self.secret_map = secret_map
         self.resolve_calls: list[ParsedURI] = []
 
-    def resolve(self, parsed_uri: ParsedURI) -> str:
+    def resolve(
+        self,
+        parsed_uri: ParsedURI,
+        logger: logging.Logger | None = None,  # noqa: ARG002
+    ) -> str:
         """Resolve a secret from the mock storage."""
         self.resolve_calls.append(parsed_uri)
         secret_name = parsed_uri["secret"]
@@ -62,8 +67,8 @@ def test_resolver_uri_to_uri_resolution() -> None:
     assert result == "final-value"
     expected_call_count = 2
     assert len(provider.resolve_calls) == expected_call_count
-    assert provider.resolve_calls[0]["secret"] == "indirect"  # noqa: S105
-    assert provider.resolve_calls[1]["secret"] == "actual"  # noqa: S105
+    assert provider.resolve_calls[0]["secret"] == "indirect"
+    assert provider.resolve_calls[1]["secret"] == "actual"
 
 
 def test_resolver_three_level_chain() -> None:
@@ -93,7 +98,7 @@ def test_resolver_variable_expansion_in_uri() -> None:
     result = resolver.resolve("akv://vault/${SECRET_NAME}", env)
 
     assert result == "secret-value"
-    assert provider.resolve_calls[0]["secret"] == "my-secret"  # noqa: S105
+    assert provider.resolve_calls[0]["secret"] == "my-secret"
 
 
 def test_resolver_variable_expansion_in_resolved_value() -> None:
@@ -170,7 +175,10 @@ def test_resolver_stops_when_value_stabilizes() -> None:
     # (shouldn't happen in practice, but tests idempotency)
     call_count = 0
 
-    def stable_resolver(_parsed_uri: ParsedURI) -> str:
+    def stable_resolver(
+        _parsed_uri: ParsedURI,
+        logger: logging.Logger | None = None,  # noqa: ARG001
+    ) -> str:
         nonlocal call_count
         call_count += 1
         if call_count == 1:
@@ -223,10 +231,101 @@ def test_resolver_uses_os_environ_by_default() -> None:
         result = resolver.resolve("akv://vault/${TEST_VAR}")
 
         assert result == "secret-value"
-        assert provider.resolve_calls[0]["secret"] == "test-secret"  # noqa: S105
+        assert provider.resolve_calls[0]["secret"] == "test-secret"
     finally:
         # Restore original value
         if original_value is None:
             os.environ.pop("TEST_VAR", None)
         else:
             os.environ["TEST_VAR"] = original_value
+
+
+def test_resolver_logs_completion_on_success() -> None:
+    """Test that successful secret resolution logs completion message."""
+    logger = MagicMock(spec=logging.Logger)
+    provider = MockProvider({"db-password": "secret-value"})
+    resolver = SecretResolver(providers={"akv": provider})
+
+    resolver.resolve("akv://vault/db-password", logger=logger)
+
+    # Verify debug log was called with completion message
+    # Should have both variable expansion and secret resolution completion
+    debug_calls = [call[0][0] for call in logger.debug.call_args_list]
+    assert "Secret resolution completed" in debug_calls
+
+
+def test_resolver_logs_error_on_provider_not_found() -> None:
+    """Test that missing provider logs error message."""
+    logger = MagicMock(spec=logging.Logger)
+    resolver = SecretResolver(providers={})
+
+    with pytest.raises(SecretResolutionError):
+        resolver.resolve("akv://vault/secret", logger=logger)
+
+    # Verify error log was called with error message
+    logger.error.assert_called_once_with("Secret resolution failed: provider error")
+
+
+def test_resolver_does_not_log_when_logger_is_none() -> None:
+    """Test that no logging occurs when logger is None."""
+    provider = MockProvider({"secret": "value"})
+    resolver = SecretResolver(providers={"akv": provider})
+
+    # Should not raise any errors even though logger is None
+    result = resolver.resolve("akv://vault/secret", logger=None)
+
+    assert result == "value"
+
+
+def test_resolver_does_not_log_uris() -> None:
+    """Test that URIs are not included in log messages."""
+    logger = MagicMock(spec=logging.Logger)
+    provider = MockProvider({"db-password": "value"})
+    resolver = SecretResolver(providers={"akv": provider})
+
+    resolver.resolve("akv://prod-vault/db-password", logger=logger)
+
+    # Verify that URIs are not in any log calls
+    for call in logger.debug.call_args_list:
+        args = call[0]
+        assert "akv://" not in str(args)
+        assert "prod-vault" not in str(args)
+        assert "db-password" not in str(args)
+
+    for call in logger.error.call_args_list:
+        args = call[0]
+        assert "akv://" not in str(args)
+        assert "prod-vault" not in str(args)
+        assert "db-password" not in str(args)
+
+
+def test_resolver_does_not_log_secret_values() -> None:
+    """Test that secret values are not included in log messages."""
+    logger = MagicMock(spec=logging.Logger)
+    provider = MockProvider({"secret": "super-secret-value"})
+    resolver = SecretResolver(providers={"akv": provider})
+
+    resolver.resolve("akv://vault/secret", logger=logger)
+
+    # Verify that secret values are not in any log calls
+    for call in logger.debug.call_args_list:
+        args = call[0]
+        assert "super-secret-value" not in str(args)
+
+    for call in logger.error.call_args_list:
+        args = call[0]
+        assert "super-secret-value" not in str(args)
+
+
+def test_resolver_logs_only_for_secret_uris() -> None:
+    """Test that completion is only logged when a secret URI was resolved."""
+    logger = MagicMock(spec=logging.Logger)
+    resolver = SecretResolver(providers={})
+
+    # Plain text (no secret URI) - should log variable expansion only
+    resolver.resolve("plain-text", logger=logger)
+
+    # Verify only variable expansion completion, not secret resolution
+    debug_calls = [call[0][0] for call in logger.debug.call_args_list]
+    assert "Variable expansion completed" in debug_calls
+    assert "Secret resolution completed" not in debug_calls

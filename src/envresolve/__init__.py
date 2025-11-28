@@ -1,10 +1,12 @@
 """Resolve env vars from secret stores."""
 
 from envresolve.api import (
+    EnvResolver,
     load_env,
     register_azure_kv_provider,
     resolve_os_environ,
     resolve_secret,
+    set_logger,
 )
 from envresolve.application.expanders import DotEnvExpander, EnvExpander
 from envresolve.exceptions import (
@@ -19,13 +21,14 @@ from envresolve.exceptions import (
 )
 from envresolve.services.expansion import expand_variables
 
-__version__ = "0.1.9"
+__version__ = "0.1.10"
 
 __all__ = [
     "CircularReferenceError",
     "DotEnvExpander",
     "EnvExpander",
     "EnvResolveError",
+    "EnvResolver",
     "EnvironmentVariableResolutionError",
     "MutuallyExclusiveArgumentsError",
     "ProviderRegistrationError",
@@ -37,4 +40,5 @@ __all__ = [
     "register_azure_kv_provider",
     "resolve_os_environ",
     "resolve_secret",
+    "set_logger",
 ]

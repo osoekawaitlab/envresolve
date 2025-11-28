@@ -2,6 +2,7 @@
 
 import fnmatch
 import importlib
+import logging
 import os
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -28,10 +29,15 @@ class EnvResolver:
     eliminating the need for module-level global variables.
     """
 
-    def __init__(self) -> None:
-        """Initialize an empty provider registry."""
+    def __init__(self, logger: logging.Logger | None = None) -> None:
+        """Initialize an empty provider registry.
+
+        Args:
+            logger: Optional logger for diagnostic messages. If None, no logging occurs.
+        """
         self._providers: dict[str, SecretProvider] = {}
         self._resolver: SecretResolver | None = None
+        self._logger = logger
 
     def _get_resolver(self) -> SecretResolver:
         """Get or create the resolver instance.
@@ -92,7 +98,7 @@ class EnvResolver:
         # Reset resolver to pick up new providers
         self._resolver = None
 
-    def resolve_secret(self, uri: str) -> str:
+    def resolve_secret(self, uri: str, logger: logging.Logger | None = None) -> str:
         """Resolve a secret URI to its value.
 
         This function supports:
@@ -102,6 +108,8 @@ class EnvResolver:
 
         Args:
             uri: Secret URI or plain string to resolve
+            logger: Optional logger for diagnostic messages. If provided, overrides
+                the logger set in the constructor.
 
         Returns:
             Resolved secret value or the original string if not a secret URI
@@ -112,23 +120,29 @@ class EnvResolver:
             VariableNotFoundError: If a referenced variable is not found
             CircularReferenceError: If a circular variable reference is detected
         """
+        effective_logger = logger if logger is not None else self._logger
         resolver = self._get_resolver()
-        return resolver.resolve(uri)
+        return resolver.resolve(uri, logger=effective_logger)
 
-    def resolve_with_env(self, value: str, env: dict[str, str]) -> str:
+    def resolve_with_env(
+        self, value: str, env: dict[str, str], logger: logging.Logger | None = None
+    ) -> str:
         """Expand variables and resolve secret URIs with custom environment.
 
         Args:
             value: Value to resolve (may contain variables or be a secret URI)
             env: Environment dict for variable expansion
+            logger: Optional logger for diagnostic messages. If provided, overrides
+                the logger set in the constructor.
 
         Returns:
             Resolved value
         """
+        effective_logger = logger if logger is not None else self._logger
         resolver = self._get_resolver()
-        return resolver.resolve(value, env)
+        return resolver.resolve(value, env, logger=effective_logger)
 
-    def load_env(  # noqa: PLR0913
+    def load_env(
         self,
         dotenv_path: str | Path | None = None,
         *,
@@ -138,6 +152,7 @@ class EnvResolver:
         stop_on_resolution_error: bool = True,
         ignore_keys: list[str] | None = None,
         ignore_patterns: list[str] | None = None,
+        logger: logging.Logger | None = None,
     ) -> dict[str, str]:
         """Load environment variables from a .env file and resolve secret URIs.
 
@@ -165,6 +180,8 @@ class EnvResolver:
             ignore_patterns: List of glob patterns to match keys for skipping expansion.
                 Keys matching any pattern are included as-is without variable expansion
                 or secret resolution. Supports wildcards: *, ?, [seq]. (default: None)
+            logger: Optional logger for diagnostic messages. If provided, overrides
+                the logger set in the constructor.
 
         Returns:
             Dictionary of resolved environment variables
@@ -175,6 +192,11 @@ class EnvResolver:
             URIParseError: If a URI format is invalid
             CircularReferenceError: If a circular variable reference is detected
         """
+        effective_logger = logger if logger is not None else self._logger
+
+        if effective_logger is not None:
+            effective_logger.debug("Loading environment from .env file")
+
         # Load .env file
         # When dotenv_path is None, use find_dotenv with usecwd=True
         if dotenv_path is None:
@@ -187,42 +209,32 @@ class EnvResolver:
             if v is not None
         }
 
+        if effective_logger is not None:
+            effective_logger.debug("Environment loaded from .env file")
+
         # Build complete environment (for variable expansion)
         complete_env = dict(os.environ)
         complete_env.update(env_dict)
 
         # Resolve each variable
-        resolved: dict[str, str] = {}
-        for key, value in env_dict.items():
-            # Skip expansion for ignored keys or patterns
-            if self._should_ignore_key(key, ignore_keys, ignore_patterns):
-                resolved[key] = value
-                continue
-
-            try:
-                resolved_value = self._resolve_variable(
-                    value,
-                    complete_env,
-                    stop_on_expansion_error=stop_on_expansion_error,
-                    stop_on_resolution_error=stop_on_resolution_error,
-                )
-            except (VariableNotFoundError, SecretResolutionError) as e:
-                msg = f"Failed to resolve environment variable '{key}': {e}"
-                raise EnvironmentVariableResolutionError(
-                    msg,
-                    context_key=key,
-                    original_error=e,
-                ) from e
-            if resolved_value is None:
-                continue
-
-            resolved[key] = resolved_value
+        resolved = self._resolve_env_dict(
+            env_dict,
+            complete_env,
+            stop_on_expansion_error=stop_on_expansion_error,
+            stop_on_resolution_error=stop_on_resolution_error,
+            ignore_keys=ignore_keys,
+            ignore_patterns=ignore_patterns,
+            logger=effective_logger,
+        )
 
         # Export to os.environ if requested
         if export:
             for key, value in resolved.items():
                 if override or key not in os.environ:
                     os.environ[key] = value
+
+        if effective_logger is not None:
+            effective_logger.debug(".env file loading completed")
 
         return resolved
 
@@ -259,65 +271,92 @@ class EnvResolver:
             and any(fnmatch.fnmatch(key, pattern) for pattern in ignore_patterns)
         )
 
-    def _resolve_variable(
+    def _resolve_env_dict(
         self,
-        value: str,
-        env: dict[str, str] | None = None,
+        env_dict: dict[str, str],
+        complete_env: dict[str, str],
         *,
         stop_on_expansion_error: bool,
         stop_on_resolution_error: bool,
-    ) -> str | None:
-        """Resolve a single variable, handling errors granularly.
-
-        Args:
-            value: Value to resolve (may contain variables or be a secret URI)
-            env: Environment dict for variable expansion. If None, uses os.environ.
-            stop_on_expansion_error: If False, return None on VariableNotFoundError
-            stop_on_resolution_error: If False, return None on SecretResolutionError
-
-        Returns:
-            Resolved value, or None if error occurred and corresponding flag is False
-        """
-        if env is None:
-            env = dict(os.environ)
-        try:
-            return self.resolve_with_env(value, env)
-        except VariableNotFoundError:
-            if stop_on_expansion_error:
-                raise
-            return None
-        except SecretResolutionError:
-            if stop_on_resolution_error:
-                raise
-            return None
-        # CircularReferenceError is always raised as it's a configuration error.
-
-    def resolve_os_environ(  # noqa: PLR0913
-        self,
-        keys: list[str] | None = None,
-        prefix: str | None = None,
-        *,
-        overwrite: bool = True,
-        stop_on_expansion_error: bool = True,
-        stop_on_resolution_error: bool = True,
         ignore_keys: list[str] | None = None,
         ignore_patterns: list[str] | None = None,
+        logger: logging.Logger | None = None,
     ) -> dict[str, str]:
-        """Resolve secret URIs in os.environ.
+        """Resolve environment dictionary with error handling.
+
+        Args:
+            env_dict: Dictionary of environment variables to resolve
+            complete_env: Complete environment for variable expansion
+            stop_on_expansion_error: If False, skip variables with expansion errors
+            stop_on_resolution_error: If False, skip variables with resolution errors
+            ignore_keys: List of keys to skip expansion for
+            ignore_patterns: List of glob patterns to match keys for skipping expansion
+            logger: Optional logger for diagnostic messages
+
+        Returns:
+            Dictionary of resolved environment variables
 
         Raises:
             EnvironmentVariableResolutionError: If a variable resolution error occurs
-                (wraps VariableNotFoundError or SecretResolutionError with context)
-            MutuallyExclusiveArgumentsError: If both keys and prefix are specified
-            URIParseError: If the URI format is invalid
-            CircularReferenceError: If a circular variable reference is detected
         """
-        if keys is not None and prefix is not None:
-            arg1 = "keys"
-            arg2 = "prefix"
-            raise MutuallyExclusiveArgumentsError(arg1, arg2)
+        resolved: dict[str, str] = {}
+        for key, value in env_dict.items():
+            # Skip expansion for ignored keys or patterns
+            if self._should_ignore_key(key, ignore_keys, ignore_patterns):
+                resolved[key] = value
+                continue
 
-        target_env = self._get_target_environ(keys, prefix)
+            try:
+                resolved_value = self._resolve_variable(
+                    value,
+                    complete_env,
+                    stop_on_expansion_error=stop_on_expansion_error,
+                    stop_on_resolution_error=stop_on_resolution_error,
+                    logger=logger,
+                )
+            except (VariableNotFoundError, SecretResolutionError) as e:
+                msg = f"Failed to resolve environment variable '{key}': {e}"
+                raise EnvironmentVariableResolutionError(
+                    msg,
+                    context_key=key,
+                    original_error=e,
+                ) from e
+            if resolved_value is None:
+                continue
+
+            resolved[key] = resolved_value
+        return resolved
+
+    def _resolve_and_export_os_environ(
+        self,
+        target_env: dict[str, str],
+        prefix: str | None,
+        *,
+        overwrite: bool,
+        stop_on_expansion_error: bool,
+        stop_on_resolution_error: bool,
+        ignore_keys: list[str] | None = None,
+        ignore_patterns: list[str] | None = None,
+        logger: logging.Logger | None = None,
+    ) -> dict[str, str]:
+        """Resolve os.environ variables and optionally export them.
+
+        Args:
+            target_env: Dictionary of environment variables to resolve
+            prefix: Prefix to strip from keys (if present)
+            overwrite: If True, overwrite existing os.environ variables
+            stop_on_expansion_error: If False, skip variables with expansion errors
+            stop_on_resolution_error: If False, skip variables with resolution errors
+            ignore_keys: List of keys to skip expansion for
+            ignore_patterns: List of glob patterns to match keys for skipping expansion
+            logger: Optional logger for diagnostic messages
+
+        Returns:
+            Dictionary of resolved environment variables
+
+        Raises:
+            EnvironmentVariableResolutionError: If a variable resolution error occurs
+        """
         resolved: dict[str, str] = {}
 
         for key, value in target_env.items():
@@ -333,6 +372,7 @@ class EnvResolver:
                     value,
                     stop_on_expansion_error=stop_on_expansion_error,
                     stop_on_resolution_error=stop_on_resolution_error,
+                    logger=logger,
                 )
             except (VariableNotFoundError, SecretResolutionError) as e:
                 msg = f"Failed to resolve environment variable '{key}': {e}"
@@ -356,9 +396,131 @@ class EnvResolver:
 
         return resolved
 
+    def _resolve_variable(
+        self,
+        value: str,
+        env: dict[str, str] | None = None,
+        *,
+        stop_on_expansion_error: bool,
+        stop_on_resolution_error: bool,
+        logger: logging.Logger | None = None,
+    ) -> str | None:
+        """Resolve a single variable, handling errors granularly.
+
+        Args:
+            value: Value to resolve (may contain variables or be a secret URI)
+            env: Environment dict for variable expansion. If None, uses os.environ.
+            stop_on_expansion_error: If False, return None on VariableNotFoundError
+            stop_on_resolution_error: If False, return None on SecretResolutionError
+            logger: Optional logger for diagnostic messages
+
+        Returns:
+            Resolved value, or None if error occurred and corresponding flag is False
+        """
+        if env is None:
+            env = dict(os.environ)
+        try:
+            resolver = self._get_resolver()
+            return resolver.resolve(value, env, logger=logger)
+        except VariableNotFoundError:
+            if stop_on_expansion_error:
+                raise
+            return None
+        except SecretResolutionError:
+            if stop_on_resolution_error:
+                raise
+            return None
+        # CircularReferenceError is always raised as it's a configuration error.
+
+    def resolve_os_environ(
+        self,
+        keys: list[str] | None = None,
+        prefix: str | None = None,
+        *,
+        overwrite: bool = True,
+        stop_on_expansion_error: bool = True,
+        stop_on_resolution_error: bool = True,
+        ignore_keys: list[str] | None = None,
+        ignore_patterns: list[str] | None = None,
+        logger: logging.Logger | None = None,
+    ) -> dict[str, str]:
+        """Resolve secret URIs in os.environ.
+
+        Args:
+            keys: List of specific environment variable keys to resolve
+            prefix: Prefix to filter environment variables
+            overwrite: If True, overwrite existing os.environ variables
+            stop_on_expansion_error: If False, skip variables with expansion errors
+            stop_on_resolution_error: If False, skip variables with resolution errors
+            ignore_keys: List of keys to skip expansion for
+            ignore_patterns: List of glob patterns to match keys for skipping expansion
+            logger: Optional logger for diagnostic messages. If provided, overrides
+                the logger set in the constructor.
+
+        Returns:
+            Dictionary of resolved environment variables
+
+        Raises:
+            EnvironmentVariableResolutionError: If a variable resolution error occurs
+                (wraps VariableNotFoundError or SecretResolutionError with context)
+            MutuallyExclusiveArgumentsError: If both keys and prefix are specified
+            URIParseError: If the URI format is invalid
+            CircularReferenceError: If a circular variable reference is detected
+        """
+        effective_logger = logger if logger is not None else self._logger
+
+        if effective_logger is not None:
+            effective_logger.debug("Resolving os.environ variables")
+
+        if keys is not None and prefix is not None:
+            arg1 = "keys"
+            arg2 = "prefix"
+            raise MutuallyExclusiveArgumentsError(arg1, arg2)
+
+        target_env = self._get_target_environ(keys, prefix)
+
+        resolved = self._resolve_and_export_os_environ(
+            target_env,
+            prefix,
+            overwrite=overwrite,
+            stop_on_expansion_error=stop_on_expansion_error,
+            stop_on_resolution_error=stop_on_resolution_error,
+            ignore_keys=ignore_keys,
+            ignore_patterns=ignore_patterns,
+            logger=effective_logger,
+        )
+
+        if effective_logger is not None:
+            effective_logger.debug("os.environ resolution completed")
+
+        return resolved
+
 
 # Default instance for module-level API
 _default_resolver = EnvResolver()
+
+
+def set_logger(logger: logging.Logger | None) -> None:
+    """Set the default logger for the global facade functions.
+
+    This function configures the logger used by the default EnvResolver instance
+    that backs the module-level facade functions (resolve_secret, load_env, etc.).
+
+    Args:
+        logger: Logger instance for diagnostic messages. If None, logging is disabled.
+
+    Examples:
+        >>> import envresolve
+        >>> import logging
+        >>> # Set up logging
+        >>> logger = logging.getLogger(__name__)
+        >>> envresolve.set_logger(logger)
+        >>> # Now all module-level functions will use this logger
+        >>> envresolve.resolve_secret("akv://vault/secret")  # doctest: +SKIP
+        >>> # Disable logging
+        >>> envresolve.set_logger(None)
+    """
+    _default_resolver._logger = logger  # noqa: SLF001
 
 
 def register_azure_kv_provider(provider: "SecretProvider | None" = None) -> None:
@@ -389,7 +551,7 @@ def register_azure_kv_provider(provider: "SecretProvider | None" = None) -> None
     _default_resolver.register_azure_kv_provider(provider=provider)
 
 
-def resolve_secret(uri: str) -> str:
+def resolve_secret(uri: str, logger: logging.Logger | None = None) -> str:
     """Resolve a secret URI to its value.
 
     This function supports:
@@ -399,6 +561,8 @@ def resolve_secret(uri: str) -> str:
 
     Args:
         uri: Secret URI or plain string to resolve
+        logger: Optional logger for diagnostic messages. If provided, overrides
+            the global default logger set by set_logger().
 
     Returns:
         Resolved secret value or the original string if not a secret URI
@@ -423,10 +587,11 @@ def resolve_secret(uri: str) -> str:
         >>> # envresolve.register_azure_kv_provider()
         >>> # secret = envresolve.resolve_secret("akv://my-vault/db-password")
     """
-    return _default_resolver.resolve_secret(uri)
+    effective_logger = logger if logger is not None else _default_resolver._logger  # noqa: SLF001
+    return _default_resolver.resolve_secret(uri, logger=effective_logger)
 
 
-def load_env(  # noqa: PLR0913
+def load_env(
     dotenv_path: str | Path | None = None,
     *,
     export: bool = True,
@@ -435,6 +600,7 @@ def load_env(  # noqa: PLR0913
     stop_on_resolution_error: bool = True,
     ignore_keys: list[str] | None = None,
     ignore_patterns: list[str] | None = None,
+    logger: logging.Logger | None = None,
 ) -> dict[str, str]:
     """Load environment variables from a .env file and resolve secret URIs.
 
@@ -461,6 +627,8 @@ def load_env(  # noqa: PLR0913
         ignore_patterns: List of glob patterns to match keys for skipping expansion.
             Keys matching any pattern are included as-is without variable expansion
             or secret resolution. Supports wildcards: *, ?, [seq]. (default: None)
+        logger: Optional logger for diagnostic messages. If provided, overrides
+            the global default logger set by set_logger().
 
     Returns:
         Dictionary of resolved environment variables
@@ -481,6 +649,7 @@ def load_env(  # noqa: PLR0913
         >>> # Skip expansion for system variables
         >>> resolved = envresolve.load_env(ignore_keys=["PS1"])  # doctest: +SKIP
     """
+    effective_logger = logger if logger is not None else _default_resolver._logger  # noqa: SLF001
     return _default_resolver.load_env(
         dotenv_path,
         export=export,
@@ -489,10 +658,11 @@ def load_env(  # noqa: PLR0913
         stop_on_resolution_error=stop_on_resolution_error,
         ignore_keys=ignore_keys,
         ignore_patterns=ignore_patterns,
+        logger=effective_logger,
     )
 
 
-def resolve_os_environ(  # noqa: PLR0913
+def resolve_os_environ(
     keys: list[str] | None = None,
     prefix: str | None = None,
     *,
@@ -501,6 +671,7 @@ def resolve_os_environ(  # noqa: PLR0913
     stop_on_resolution_error: bool = True,
     ignore_keys: list[str] | None = None,
     ignore_patterns: list[str] | None = None,
+    logger: logging.Logger | None = None,
 ) -> dict[str, str]:
     """Resolve secret URIs in os.environ.
 
@@ -525,6 +696,8 @@ def resolve_os_environ(  # noqa: PLR0913
         ignore_patterns: List of glob patterns to match keys for skipping expansion.
             Keys matching any pattern are included as-is without variable expansion
             or secret resolution. Supports wildcards: *, ?, [seq]. (default: None)
+        logger: Optional logger for diagnostic messages. If provided, overrides
+            the global default logger set by set_logger().
 
     Returns:
         Dictionary of resolved values
@@ -549,6 +722,7 @@ def resolve_os_environ(  # noqa: PLR0913
         ...     ignore_keys=["PS1"]
         ... )  # doctest: +SKIP
     """
+    effective_logger = logger if logger is not None else _default_resolver._logger  # noqa: SLF001
     return _default_resolver.resolve_os_environ(
         keys=keys,
         prefix=prefix,
@@ -557,4 +731,5 @@ def resolve_os_environ(  # noqa: PLR0913
         stop_on_resolution_error=stop_on_resolution_error,
         ignore_keys=ignore_keys,
         ignore_patterns=ignore_patterns,
+        logger=effective_logger,
     )
