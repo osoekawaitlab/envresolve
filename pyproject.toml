@@ -77,8 +77,14 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
+"src/envresolve/api.py" = [
+    "PLR0913",  # too-many-arguments (public API design choice)
+]
 "tests/**/*.py" = [
     "S101",    # assert-used (pytest uses asserts)
+    "S105",    # hardcoded-password-string (test data)
+    "S106",    # hardcoded-password-func-arg (test data)
+    "SLF001",  # private-member-access (test internals)
 ]
 
 [tool.ruff.lint.pydocstyle]

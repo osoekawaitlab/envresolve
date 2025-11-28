@@ -145,7 +145,7 @@ def test_resolve_os_environ_preserves_non_target_values(
 
     result = envresolve.resolve_os_environ()
 
-    assert result["SECRET"] == "resolved-secret"  # noqa: S105
+    assert result["SECRET"] == "resolved-secret"
     assert result["PLAIN"] == "plain-value"
     assert result["POSTGRES_URL"] == "postgres://localhost/db"
 

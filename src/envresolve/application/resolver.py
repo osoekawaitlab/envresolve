@@ -32,6 +32,18 @@ class SecretResolver:
         """
         self._providers = providers
 
+    def _log_error(self, logger: logging.Logger | None, message: str) -> None:
+        """Log an error message without exposing sensitive information.
+
+        Args:
+            logger: Optional logger for diagnostic messages
+            message: Error message to log
+        """
+        if logger is not None:
+            # Use logger.error instead of logger.exception to avoid exposing
+            # URIs, vault names, secret names in traceback (ADR-0030)
+            logger.error(message)
+
     def resolve(
         self,
         uri: str,
@@ -101,10 +113,7 @@ class SecretResolver:
                 provider = self._get_provider(parsed_uri)
                 resolved = provider.resolve(parsed_uri, logger=logger)
             except SecretResolutionError:
-                if logger is not None:
-                    # Use logger.error instead of logger.exception to avoid exposing
-                    # URIs, vault names, secret names in traceback (ADR-0030)
-                    logger.error("Secret resolution failed: provider error")  # noqa: TRY400
+                self._log_error(logger, "Secret resolution failed: provider error")
                 raise
 
             # Check if resolution produced a change

@@ -11,7 +11,7 @@ def test_parse_akv_uri_simple() -> None:
     result = parse_secret_uri("akv://my-vault/secret-name")
     assert result["scheme"] == "akv"
     assert result["vault"] == "my-vault"
-    assert result["secret"] == "secret-name"  # noqa: S105
+    assert result["secret"] == "secret-name"
     assert result["version"] is None
 
 
@@ -20,7 +20,7 @@ def test_parse_akv_uri_with_version() -> None:
     result = parse_secret_uri("akv://my-vault/secret-name?version=abc123")
     assert result["scheme"] == "akv"
     assert result["vault"] == "my-vault"
-    assert result["secret"] == "secret-name"  # noqa: S105
+    assert result["secret"] == "secret-name"
     assert result["version"] == "abc123"
 
 
@@ -33,7 +33,7 @@ def test_parse_uri_with_hyphen_in_vault_name() -> None:
 def test_parse_uri_with_hyphen_in_secret_name() -> None:
     """Test secret names can contain hyphens."""
     result = parse_secret_uri("akv://vault/my-secret-name")
-    assert result["secret"] == "my-secret-name"  # noqa: S105
+    assert result["secret"] == "my-secret-name"
 
 
 def test_parse_uri_invalid_scheme_raises_error() -> None:

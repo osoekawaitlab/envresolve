@@ -67,8 +67,8 @@ def test_resolver_uri_to_uri_resolution() -> None:
     assert result == "final-value"
     expected_call_count = 2
     assert len(provider.resolve_calls) == expected_call_count
-    assert provider.resolve_calls[0]["secret"] == "indirect"  # noqa: S105
-    assert provider.resolve_calls[1]["secret"] == "actual"  # noqa: S105
+    assert provider.resolve_calls[0]["secret"] == "indirect"
+    assert provider.resolve_calls[1]["secret"] == "actual"
 
 
 def test_resolver_three_level_chain() -> None:
@@ -98,7 +98,7 @@ def test_resolver_variable_expansion_in_uri() -> None:
     result = resolver.resolve("akv://vault/${SECRET_NAME}", env)
 
     assert result == "secret-value"
-    assert provider.resolve_calls[0]["secret"] == "my-secret"  # noqa: S105
+    assert provider.resolve_calls[0]["secret"] == "my-secret"
 
 
 def test_resolver_variable_expansion_in_resolved_value() -> None:
@@ -231,7 +231,7 @@ def test_resolver_uses_os_environ_by_default() -> None:
         result = resolver.resolve("akv://vault/${TEST_VAR}")
 
         assert result == "secret-value"
-        assert provider.resolve_calls[0]["secret"] == "test-secret"  # noqa: S105
+        assert provider.resolve_calls[0]["secret"] == "test-secret"
     finally:
         # Restore original value
         if original_value is None:

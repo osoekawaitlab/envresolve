@@ -116,7 +116,7 @@ def test_env_resolver_resolve_secret_accepts_logger_parameter() -> None:
 def resolver_with_mock() -> EnvResolver:
     """Fixture providing EnvResolver with mock provider."""
     resolver = EnvResolver()
-    resolver._providers["akv"] = MockProvider()  # noqa: SLF001
+    resolver._providers["akv"] = MockProvider()
     return resolver
 
 
@@ -220,7 +220,7 @@ def test_resolve_os_environ_with_prefix_filter(
         assert "DEV_API_KEY" not in os.environ
         assert "DEV_DB_URL" not in os.environ
         # Non-prefixed keys should be unchanged
-        assert os.environ["PROD_SECRET"] == "akv://vault/secret"  # noqa: S105
+        assert os.environ["PROD_SECRET"] == "akv://vault/secret"
 
 
 def test_resolve_os_environ_with_overwrite_false(
@@ -256,14 +256,14 @@ def test_resolve_os_environ_with_stop_on_error_false() -> None:
             parsed_uri: ParsedURI,
             logger: logging.Logger | None = None,  # noqa: ARG002
         ) -> str:
-            if parsed_uri["secret"] == "failing-secret":  # noqa: S105
+            if parsed_uri["secret"] == "failing-secret":
                 uri = f"akv://{parsed_uri['vault']}/{parsed_uri['secret']}"
                 msg = "Simulated resolution failure"
                 raise SecretResolutionError(msg, uri)
             return f"resolved-{parsed_uri['secret']}"
 
     resolver = EnvResolver()
-    resolver._providers["akv"] = FailingProvider()  # noqa: SLF001
+    resolver._providers["akv"] = FailingProvider()
 
     with patch.dict(
         os.environ,
@@ -300,14 +300,14 @@ def test_resolve_os_environ_with_stop_on_error_true() -> None:
             parsed_uri: ParsedURI,
             logger: logging.Logger | None = None,  # noqa: ARG002
         ) -> str:
-            if parsed_uri["secret"] == "failing-secret":  # noqa: S105
+            if parsed_uri["secret"] == "failing-secret":
                 uri = f"akv://{parsed_uri['vault']}/{parsed_uri['secret']}"
                 msg = "Simulated resolution failure"
                 raise SecretResolutionError(msg, uri)
             return f"resolved-{parsed_uri['secret']}"
 
     resolver = EnvResolver()
-    resolver._providers["akv"] = FailingProvider()  # noqa: SLF001
+    resolver._providers["akv"] = FailingProvider()
 
     with (
         patch.dict(
@@ -373,7 +373,7 @@ def test_resolve_os_environ_propagates_unexpected_errors() -> None:
             raise ValueError(mesg)
 
     resolver = EnvResolver()
-    resolver._providers["akv"] = UnexpectedErrorProvider()  # noqa: SLF001
+    resolver._providers["akv"] = UnexpectedErrorProvider()
 
     with (
         patch.dict(

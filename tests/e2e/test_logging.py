@@ -84,11 +84,11 @@ def test_env_resolver_methods_accept_logger_parameter() -> None:
 
     # resolve_secret should accept logger parameter
     secret_result = resolver.resolve_secret("plain-string", logger=method_logger)
-    assert secret_result == "plain-string"  # noqa: S105
+    assert secret_result == "plain-string"
 
     # Should work without logger parameter (uses constructor logger)
     secret_result = resolver.resolve_secret("plain-string")
-    assert secret_result == "plain-string"  # noqa: S105
+    assert secret_result == "plain-string"
 
     # load_env should accept logger parameter
     env_result = resolver.load_env(dotenv_path=None, logger=method_logger)

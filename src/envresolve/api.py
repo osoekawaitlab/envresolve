@@ -137,7 +137,7 @@ class EnvResolver:
         resolver = self._get_resolver()
         return resolver.resolve(value, env)
 
-    def load_env(  # noqa: PLR0913
+    def load_env(
         self,
         dotenv_path: str | Path | None = None,
         *,
@@ -264,7 +264,7 @@ class EnvResolver:
             and any(fnmatch.fnmatch(key, pattern) for pattern in ignore_patterns)
         )
 
-    def _resolve_env_dict(  # noqa: PLR0913
+    def _resolve_env_dict(
         self,
         env_dict: dict[str, str],
         complete_env: dict[str, str],
@@ -320,7 +320,7 @@ class EnvResolver:
             resolved[key] = resolved_value
         return resolved
 
-    def _resolve_and_export_os_environ(  # noqa: PLR0913
+    def _resolve_and_export_os_environ(
         self,
         target_env: dict[str, str],
         prefix: str | None,
@@ -425,7 +425,7 @@ class EnvResolver:
             return None
         # CircularReferenceError is always raised as it's a configuration error.
 
-    def resolve_os_environ(  # noqa: PLR0913
+    def resolve_os_environ(
         self,
         keys: list[str] | None = None,
         prefix: str | None = None,
@@ -582,7 +582,7 @@ def resolve_secret(uri: str, logger: logging.Logger | None = None) -> str:
     return _default_resolver.resolve_secret(uri, logger=effective_logger)
 
 
-def load_env(  # noqa: PLR0913
+def load_env(
     dotenv_path: str | Path | None = None,
     *,
     export: bool = True,
@@ -653,7 +653,7 @@ def load_env(  # noqa: PLR0913
     )
 
 
-def resolve_os_environ(  # noqa: PLR0913
+def resolve_os_environ(
     keys: list[str] | None = None,
     prefix: str | None = None,
     *,
