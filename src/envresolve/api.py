@@ -124,18 +124,23 @@ class EnvResolver:
         resolver = self._get_resolver()
         return resolver.resolve(uri, logger=effective_logger)
 
-    def resolve_with_env(self, value: str, env: dict[str, str]) -> str:
+    def resolve_with_env(
+        self, value: str, env: dict[str, str], logger: logging.Logger | None = None
+    ) -> str:
         """Expand variables and resolve secret URIs with custom environment.
 
         Args:
             value: Value to resolve (may contain variables or be a secret URI)
             env: Environment dict for variable expansion
+            logger: Optional logger for diagnostic messages. If provided, overrides
+                the logger set in the constructor.
 
         Returns:
             Resolved value
         """
+        effective_logger = logger if logger is not None else self._logger
         resolver = self._get_resolver()
-        return resolver.resolve(value, env)
+        return resolver.resolve(value, env, logger=effective_logger)
 
     def load_env(
         self,
@@ -187,8 +192,10 @@ class EnvResolver:
             URIParseError: If a URI format is invalid
             CircularReferenceError: If a circular variable reference is detected
         """
-        if logger is not None:
-            logger.debug("Loading environment from .env file")
+        effective_logger = logger if logger is not None else self._logger
+
+        if effective_logger is not None:
+            effective_logger.debug("Loading environment from .env file")
 
         # Load .env file
         # When dotenv_path is None, use find_dotenv with usecwd=True
@@ -202,8 +209,8 @@ class EnvResolver:
             if v is not None
         }
 
-        if logger is not None:
-            logger.debug("Environment loaded from .env file")
+        if effective_logger is not None:
+            effective_logger.debug("Environment loaded from .env file")
 
         # Build complete environment (for variable expansion)
         complete_env = dict(os.environ)
@@ -217,7 +224,7 @@ class EnvResolver:
             stop_on_resolution_error=stop_on_resolution_error,
             ignore_keys=ignore_keys,
             ignore_patterns=ignore_patterns,
-            logger=logger,
+            logger=effective_logger,
         )
 
         # Export to os.environ if requested
@@ -226,8 +233,8 @@ class EnvResolver:
                 if override or key not in os.environ:
                     os.environ[key] = value
 
-        if logger is not None:
-            logger.debug(".env file loading completed")
+        if effective_logger is not None:
+            effective_logger.debug(".env file loading completed")
 
         return resolved
 
@@ -460,8 +467,10 @@ class EnvResolver:
             URIParseError: If the URI format is invalid
             CircularReferenceError: If a circular variable reference is detected
         """
-        if logger is not None:
-            logger.debug("Resolving os.environ variables")
+        effective_logger = logger if logger is not None else self._logger
+
+        if effective_logger is not None:
+            effective_logger.debug("Resolving os.environ variables")
 
         if keys is not None and prefix is not None:
             arg1 = "keys"
@@ -478,11 +487,11 @@ class EnvResolver:
             stop_on_resolution_error=stop_on_resolution_error,
             ignore_keys=ignore_keys,
             ignore_patterns=ignore_patterns,
-            logger=logger,
+            logger=effective_logger,
         )
 
-        if logger is not None:
-            logger.debug("os.environ resolution completed")
+        if effective_logger is not None:
+            effective_logger.debug("os.environ resolution completed")
 
         return resolved
 
