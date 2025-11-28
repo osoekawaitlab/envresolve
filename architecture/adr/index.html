@@ -519,6 +519,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Logging
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1115,6 +1138,24 @@
   <a href="#adr-0028-forbid-all-implicit-configuration-via-environment-variables" class="md-nav__link">
     <span class="md-ellipsis">
       ADR 0028: Forbid All Implicit Configuration via Environment Variables
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0029-logger-propagation-through-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0029: Logger Propagation Through Layers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0030-logging-information-disclosure-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0030: Logging Information Disclosure Boundaries
     </span>
   </a>
   
@@ -1867,6 +1908,52 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0029-logger-propagation-through-layers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ADR 0029: Logger Propagation Through Layers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/0030-logging-information-disclosure-boundaries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ADR 0030: Logging Information Disclosure Boundaries
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2179,6 +2266,24 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#adr-0029-logger-propagation-through-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0029: Logger Propagation Through Layers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adr-0030-logging-information-disclosure-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR 0030: Logging Information Disclosure Boundaries
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2393,6 +2498,18 @@
 <strong>Date</strong>: 2025-11-17</p>
 <p>Decided to forbid any feature that implicitly alters library behavior based on environment variables, to uphold the principles of security and explicit configuration.</p>
 <p><a href="../../adr/0028-forbid-implicit-env-var-config/">View Full ADR</a></p>
+<hr />
+<h3 id="adr-0029-logger-propagation-through-layers">ADR 0029: Logger Propagation Through Layers<a class="headerlink" href="#adr-0029-logger-propagation-through-layers" title="Permanent link">&para;</a></h3>
+<p><strong>Status</strong>: Accepted
+<strong>Date</strong>: 2025-11-25</p>
+<p>Pass logger instances explicitly as parameters through all layers rather than mutating instance state, ensuring thread-safe logger override behavior.</p>
+<p><a href="../../adr/0029-logger-propagation-through-layers/">View Full ADR</a></p>
+<hr />
+<h3 id="adr-0030-logging-information-disclosure-boundaries">ADR 0030: Logging Information Disclosure Boundaries<a class="headerlink" href="#adr-0030-logging-information-disclosure-boundaries" title="Permanent link">&para;</a></h3>
+<p><strong>Status</strong>: Accepted
+<strong>Date</strong>: 2025-11-26</p>
+<p>Default logging exposes only operation types and error categories, without specific values. Exceptions contain full details for application-level logging decisions.</p>
+<p><a href="../../adr/0030-logging-information-disclosure-boundaries/">View Full ADR</a></p>
 <hr />
 <h2 id="adr-template">ADR Template<a class="headerlink" href="#adr-template" title="Permanent link">&para;</a></h2>
 <p>All ADRs follow a consistent template defined in <a href="../../adr/0000-adr-template/">ADR 0000: ADR Template</a>.</p>

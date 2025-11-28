@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://github.com/osoekawaitlab/envresolve/adr/0019-do-not-implement-validation-helpers/">
+        <link rel="canonical" href="https://github.com/osoekawaitlab/envresolve/adr/0029-logger-propagation-through-layers/">
       
       
-        <link rel="prev" href="../0018-granular-error-handling/">
+        <link rel="prev" href="../0028-forbid-implicit-env-var-config/">
       
       
-        <link rel="next" href="../0020-ignore-keys-for-selective-exclusion/">
+        <link rel="next" href="../0030-logging-information-disclosure-boundaries/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -24,7 +24,7 @@
     
     
       
-        <title>ADR 0019: Do Not Implement Validation Helper Functions and Metadata Query Helpers - envresolve</title>
+        <title>ADR 0029: Logger Propagation Through Layers - envresolve</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#adr-0019-do-not-implement-validation-helper-functions-and-metadata-query-helpers" class="md-skip">
+        <a href="#adr-0029-logger-propagation-through-layers" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ADR 0019: Do Not Implement Validation Helper Functions and Metadata Query Helpers
+              ADR 0029: Logger Propagation Through Layers
             
           </span>
         </div>
@@ -1328,32 +1328,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    ADR 0019: Do Not Implement Validation Helper Functions and Metadata Query Helpers
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0019-do-not-implement-validation-helpers/" class="md-nav__link">
         
   
   
@@ -1364,146 +1342,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#status" class="md-nav__link">
-    <span class="md-ellipsis">
-      Status
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#date" class="md-nav__link">
-    <span class="md-ellipsis">
-      Date
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
-    <span class="md-ellipsis">
-      Context
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      Decision
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rationale" class="md-nav__link">
-    <span class="md-ellipsis">
-      Rationale
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Rationale">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#validation-helpers" class="md-nav__link">
-    <span class="md-ellipsis">
-      Validation Helpers
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#metadata-query-helpers" class="md-nav__link">
-    <span class="md-ellipsis">
-      Metadata Query Helpers
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#implications" class="md-nav__link">
-    <span class="md-ellipsis">
-      Implications
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Implications">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#positive-implications" class="md-nav__link">
-    <span class="md-ellipsis">
-      Positive Implications
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#concerns" class="md-nav__link">
-    <span class="md-ellipsis">
-      Concerns
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#alternatives" class="md-nav__link">
-    <span class="md-ellipsis">
-      Alternatives
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#future-direction" class="md-nav__link">
-    <span class="md-ellipsis">
-      Future Direction
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1720,10 +1558,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0029-logger-propagation-through-layers/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    ADR 0029: Logger Propagation Through Layers
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1734,6 +1594,164 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      Status
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#date" class="md-nav__link">
+    <span class="md-ellipsis">
+      Date
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Decision
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rationale
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implications
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positive-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Positive Implications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Concerns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternatives
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#threading-local-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Threading Local Storage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#context-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context Object
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#temporarily-mutate-instance-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      Temporarily Mutate Instance State
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-direction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Future Direction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1846,30 +1864,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Rationale">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#validation-helpers" class="md-nav__link">
-    <span class="md-ellipsis">
-      Validation Helpers
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#metadata-query-helpers" class="md-nav__link">
-    <span class="md-ellipsis">
-      Metadata Query Helpers
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -1912,12 +1906,54 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Alternatives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#threading-local-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Threading Local Storage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#context-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context Object
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#temporarily-mutate-instance-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      Temporarily Mutate Instance State
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
   <a href="#future-direction" class="md-nav__link">
     <span class="md-ellipsis">
       Future Direction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
     </span>
   </a>
   
@@ -1942,53 +1978,103 @@
   
 
 
-<h1 id="adr-0019-do-not-implement-validation-helper-functions-and-metadata-query-helpers">ADR 0019: Do Not Implement Validation Helper Functions and Metadata Query Helpers<a class="headerlink" href="#adr-0019-do-not-implement-validation-helper-functions-and-metadata-query-helpers" title="Permanent link">&para;</a></h1>
+<h1 id="adr-0029-logger-propagation-through-layers">ADR 0029: Logger Propagation Through Layers<a class="headerlink" href="#adr-0029-logger-propagation-through-layers" title="Permanent link">&para;</a></h1>
 <h2 id="status">Status<a class="headerlink" href="#status" title="Permanent link">&para;</a></h2>
 <p>Accepted</p>
 <h2 id="date">Date<a class="headerlink" href="#date" title="Permanent link">&para;</a></h2>
-<p>2025-11-12</p>
+<p>2025-11-25</p>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p>The v0.1.x roadmap included two features:</p>
-<ul>
-<li>Validation helpers for string-based API (<code>is_resolved</code>, <code>needs_expansion</code>, <code>is_secret_uri</code>)</li>
-<li>Optional metadata/query helpers for resolved values</li>
-</ul>
-<p>These were proposed as convenience utilities to help users validate strings and query resolution metadata.</p>
+<p>The library needs to support optional logging for diagnostic purposes. Users should be able to:</p>
+<ol>
+<li>Configure a logger at the <code>EnvResolver</code> instance level via constructor</li>
+<li>Set a global default logger via <code>set_logger()</code> for module-level facade functions</li>
+<li>Override the logger on a per-call basis via method parameters</li>
+</ol>
+<p>The implementation must be thread-safe. If multiple threads call methods with different logger overrides simultaneously, they should not interfere with each other's logging behavior.</p>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p>Do not implement these features.</p>
+<p>Logger instances will be passed explicitly as parameters through all layers of the resolution stack, rather than mutating instance state.</p>
+<p><strong>API Layer:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">resolve_secret</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">effective_logger</span> <span class="o">=</span> <span class="n">logger</span> <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">resolver</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_resolver</span><span class="p">()</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="k">return</span> <span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">effective_logger</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Application Layer (<code>SecretResolver</code>):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">resolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="c1"># Use logger for diagnostic messages</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="c1"># Pass logger to provider.resolve() if needed</span>
+</code></pre></div>
+<p><strong>Provider Layer (<code>SecretProvider</code>):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">resolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed_uri</span><span class="p">:</span> <span class="n">ParsedURI</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="c1"># Use logger for diagnostic messages</span>
+</code></pre></div>
+<p><strong>Note</strong>: The <code>SecretProvider</code> protocol is part of the public API, as users can implement custom providers. This signature change is a breaking change for custom provider implementations.</p>
 <h2 id="rationale">Rationale<a class="headerlink" href="#rationale" title="Permanent link">&para;</a></h2>
-<h3 id="validation-helpers">Validation Helpers<a class="headerlink" href="#validation-helpers" title="Permanent link">&para;</a></h3>
-<ol>
-<li><strong>Trivial pattern matching</strong>: Functions like <code>is_resolved()</code> reduce to simple checks (<code>'$' in string</code>) that users can write in one line.</li>
-<li><strong>Unclear use cases</strong>: No concrete scenarios identified where pre-validation provides value over direct resolution with error handling.</li>
-<li><strong>API bloat</strong>: Adding public functions increases maintenance burden, documentation overhead, and testing requirements without clear benefit.</li>
-<li><strong>Premature abstraction</strong>: Exposes internal parsing logic as public API, constraining future implementation changes.</li>
-</ol>
-<h3 id="metadata-query-helpers">Metadata Query Helpers<a class="headerlink" href="#metadata-query-helpers" title="Permanent link">&para;</a></h3>
-<ol>
-<li><strong>Undefined requirements</strong>: The roadmap item lacks concrete specification of what metadata would be tracked or how it would be queried.</li>
-<li><strong>No identified use cases</strong>: Without specific user needs, this is speculative feature development (YAGNI principle).</li>
-</ol>
+<ul>
+<li><strong>Thread Safety</strong>: Passing logger as a parameter eliminates shared mutable state, making the implementation inherently thread-safe</li>
+<li><strong>Explicit and Traceable</strong>: The logger's path through the system is explicit in method signatures, making it easy to understand and debug</li>
+<li><strong>Simple Design</strong>: This approach is straightforward without introducing new abstractions like context objects</li>
+<li><strong>Acceptable Breaking Change</strong>: While <code>SecretProvider</code> is a public protocol, the library is in 0.x version where breaking changes are acceptable. Custom provider implementations will need to add the <code>logger</code> parameter, but this is a straightforward migration</li>
+</ul>
 <h2 id="implications">Implications<a class="headerlink" href="#implications" title="Permanent link">&para;</a></h2>
 <h3 id="positive-implications">Positive Implications<a class="headerlink" href="#positive-implications" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Maintains focused, minimal API surface</li>
-<li>Reduces maintenance overhead</li>
-<li>Preserves implementation flexibility</li>
+<li>Thread-safe logger override behavior</li>
+<li>Clear, explicit control flow for logger propagation</li>
+<li>Easy to test and debug</li>
+<li>No risk of logger state leaking between concurrent calls</li>
+<li>Follows common Python patterns for passing context through call stacks</li>
 </ul>
 <h3 id="concerns">Concerns<a class="headerlink" href="#concerns" title="Permanent link">&para;</a></h3>
 <ul>
-<li>If users request these features, they will need custom implementations</li>
-<li>Mitigation: Revisit this decision if concrete use cases emerge from user feedback</li>
+<li><strong>Breaking Change for Custom Providers</strong>: Users who have implemented custom <code>SecretProvider</code> classes will need to update their <code>resolve()</code> method signature to include the <code>logger</code> parameter</li>
+<li>
+<p><strong>Mitigation</strong>: The library is in 0.x version where breaking changes are expected. Migration is straightforward: add <code>logger: logging.Logger | None = None</code> parameter. This will be clearly documented in release notes and migration guide.</p>
+</li>
+<li>
+<p><strong>Parameter Passing Overhead</strong>: Logger parameter must be passed through each layer</p>
+</li>
+<li>
+<p><strong>Mitigation</strong>: The overhead is minimal, and the explicitness improves code clarity</p>
+</li>
+<li>
+<p><strong>Less Flexibility for Future Context</strong>: If we need to add more context parameters in the future (e.g., request ID, timeout), we'll have to either add more parameters or refactor to a context object, which would be another breaking change</p>
+</li>
+<li><strong>Mitigation</strong>: Accept this trade-off. The library is in 0.x, so future breaking changes are acceptable if needed. The current simple design is appropriate for present requirements.</li>
 </ul>
 <h2 id="alternatives">Alternatives<a class="headerlink" href="#alternatives" title="Permanent link">&para;</a></h2>
-<p><strong>Provide utility functions anyway</strong>: Would offer convenience but at the cost of API complexity and maintenance burden without proven demand.</p>
-<h2 id="future-direction">Future Direction<a class="headerlink" href="#future-direction" title="Permanent link">&para;</a></h2>
-<p>Reopen this decision if:</p>
+<h3 id="threading-local-storage">Threading Local Storage<a class="headerlink" href="#threading-local-storage" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Multiple users independently request similar validation functionality</li>
-<li>Specific use cases emerge that cannot be solved with existing APIs</li>
-<li>Internal parser complexity makes user-side validation significantly error-prone</li>
+<li><strong>Description</strong>: Use <code>threading.local()</code> to store the logger override implicitly</li>
+<li><strong>Pros</strong>: No signature changes required; thread-safe</li>
+<li><strong>Cons</strong>: Implicit state management makes debugging difficult; goes against Python best practices; harder to test</li>
+<li><strong>Reason for Rejection</strong>: Implicit state is harder to reason about and debug, especially in a library context where users may have complex threading scenarios</li>
+</ul>
+<h3 id="context-object">Context Object<a class="headerlink" href="#context-object" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Description</strong>: Introduce a <code>ResolverContext</code> dataclass containing logger and future context information</li>
+<li><strong>Pros</strong>: Thread-safe; extensible for future context data; keeps parameter count low; single breaking change if more context is needed later</li>
+<li><strong>Cons</strong>: Introduces new abstraction when only logger is currently needed; over-engineering for present requirements</li>
+<li><strong>Reason for Rejection</strong>: While this would make future extensions easier, it's premature abstraction. The current requirement is only for logger propagation. However, note that if additional context parameters are needed in the future, this would require another breaking change.</li>
+</ul>
+<h3 id="temporarily-mutate-instance-state">Temporarily Mutate Instance State<a class="headerlink" href="#temporarily-mutate-instance-state" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Description</strong>: Temporarily mutate <code>self._logger</code> within a try/finally block</li>
+<li><strong>Pros</strong>: Simple; no signature changes for internal layers or public protocol</li>
+<li><strong>Cons</strong>: Not thread-safe; could cause subtle bugs in multi-threaded applications; difficult to reason about</li>
+<li><strong>Reason for Rejection</strong>: Thread safety is a fundamental requirement. Secret management libraries are often used in concurrent environments (web servers, async code), so thread safety cannot be compromised.</li>
+</ul>
+<h2 id="future-direction">Future Direction<a class="headerlink" href="#future-direction" title="Permanent link">&para;</a></h2>
+<ul>
+<li>If additional context information is needed in the future (e.g., request IDs, retry counts, timeout values), consider introducing a context object. This would be another breaking change to the <code>SecretProvider</code> protocol, but is acceptable in 0.x versions.</li>
+<li>The pattern established here (explicit parameter propagation) should be followed for any similar cross-cutting concerns</li>
+<li>Monitor for any performance issues related to parameter passing, though none are expected given the overhead is negligible</li>
+<li>Document the breaking change clearly in release notes, including migration examples for custom provider implementations</li>
+</ul>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Issue #40: Add logging support to envresolve</li>
+<li>ADR-0024: Core Design Principle of 'Fine-Grained Control' - This decision aligns with explicit configuration over implicit behavior</li>
 </ul>
 
 
