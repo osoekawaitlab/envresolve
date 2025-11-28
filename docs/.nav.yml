@@ -4,6 +4,7 @@ nav:
   - User Guide:
       - Installation: user-guide/installation.md
       - Basic Usage: user-guide/basic-usage.md
+      - Logging: user-guide/logging.md
   - API Reference:
       - Public API: api-reference/public_api.md
       - Providers: api-reference/providers.md

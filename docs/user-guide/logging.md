@@ -65,6 +65,42 @@ logger = logging.getLogger(__name__)
 result = envresolve.resolve_secret("${DATABASE_URL}", logger=logger)
 ```
 
+#### Disabling Logging for Specific Calls
+
+**Important:** Passing `logger=None` does **not** disable logging if a global default logger is set. Instead, the call will fall back to using the global logger.
+
+To disable logging for a specific call when a global logger is set, temporarily clear the global logger:
+
+```python
+import envresolve
+
+# Set global logger
+envresolve.set_logger(logger)
+
+# This still uses the global logger (logger=None falls back to global)
+result = envresolve.resolve_secret("${DATABASE_URL}", logger=None)
+
+# To disable logging for specific calls, clear the global logger temporarily
+envresolve.set_logger(None)
+result = envresolve.resolve_secret("${DATABASE_URL}")  # No logging
+envresolve.set_logger(logger)  # Restore global logger
+```
+
+Alternatively, use `EnvResolver` instances with different logger configurations:
+
+```python
+from envresolve import EnvResolver
+
+# Instance with logging
+logged_resolver = EnvResolver(logger=logger)
+
+# Instance without logging
+silent_resolver = EnvResolver(logger=None)
+
+# Use the appropriate instance
+result = silent_resolver.resolve_secret("${DATABASE_URL}")  # No logging
+```
+
 ## What Gets Logged
 
 envresolve logs operations with:
@@ -332,7 +368,22 @@ def handle_request(request):
 
 ## Performance
 
-When no logger is provided, logging has **zero performance impact**. The implementation uses simple `if logger is not None` checks that have negligible overhead.
+Logging has **zero performance impact** when no logger is configured (no per-call logger, no constructor logger, and no global default logger). The implementation uses simple `if logger is not None` checks that have negligible overhead.
+
+### Logger Resolution Order
+
+The library determines which logger to use following this priority order:
+
+1. **Per-call logger parameter** - Highest priority
+2. **Constructor logger** (`EnvResolver(logger=...)`)
+3. **Global default logger** (`set_logger(...)`)
+4. **No logging** - If none of the above are set
+
+This means:
+
+- Setting a global default logger via `set_logger()` enables logging for **all** subsequent calls that don't explicitly provide a logger
+- To ensure zero performance impact, verify that no global logger is set and don't pass logger parameters
+- Per-call `logger=None` does **not** disable logging if a constructor or global logger is configured; it falls back to the next level in the priority order
 
 ## See Also
 
