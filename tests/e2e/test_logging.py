@@ -63,11 +63,13 @@ def test_global_facade_functions_accept_logger_parameter() -> None:
     result = envresolve.resolve_secret("plain-string", logger=logger)
     assert result == "plain-string"
 
-    # load_env should accept logger parameter
-    # (Will test with actual .env file later when logging is implemented)
+    # load_env should accept logger parameter (logging is now implemented)
+    env_result = envresolve.load_env(dotenv_path=None, logger=logger)
+    assert isinstance(env_result, dict)
 
-    # resolve_os_environ should accept logger parameter
-    # (Will test with actual environment variables later when logging is implemented)
+    # resolve_os_environ should accept logger parameter (logging is now implemented)
+    os_result = envresolve.resolve_os_environ(logger=logger)
+    assert isinstance(os_result, dict)
 
 
 def test_env_resolver_methods_accept_logger_parameter() -> None:
@@ -89,12 +91,10 @@ def test_env_resolver_methods_accept_logger_parameter() -> None:
     assert secret_result == "plain-string"  # noqa: S105
 
     # load_env should accept logger parameter
-    # (basic smoke test - actual logging will be tested when implementation is complete)
     env_result = resolver.load_env(dotenv_path=None, logger=method_logger)
     assert isinstance(env_result, dict)
 
     # resolve_os_environ should accept logger parameter
-    # (basic smoke test - actual logging will be tested when implementation is complete)
     os_result = resolver.resolve_os_environ(logger=method_logger)
     assert isinstance(os_result, dict)
 
