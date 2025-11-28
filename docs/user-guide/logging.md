@@ -372,18 +372,32 @@ Logging has **zero performance impact** when no logger is configured (no per-cal
 
 ### Logger Resolution Order
 
-The library determines which logger to use following this priority order:
+The logger resolution order depends on which API you use:
 
-1. **Per-call logger parameter** - Highest priority
-2. **Constructor logger** (`EnvResolver(logger=...)`)
-3. **Global default logger** (`set_logger(...)`)
-4. **No logging** - If none of the above are set
+#### For EnvResolver Instances
+
+When using `EnvResolver` instances:
+
+1. **Per-call logger parameter** (e.g., `resolver.resolve_secret(uri, logger=my_logger)`)
+2. **Constructor logger** (e.g., `EnvResolver(logger=my_logger)`)
+3. **No logging** if neither is provided
+
+**Note**: The global default logger set via `set_logger()` does **NOT** affect `EnvResolver` instances. Each instance is independent.
+
+#### For Global Facade Functions
+
+When using module-level functions (e.g., `envresolve.resolve_secret()`):
+
+1. **Per-call logger parameter** (e.g., `envresolve.resolve_secret(uri, logger=my_logger)`)
+2. **Global default logger** (set via `envresolve.set_logger(my_logger)`)
+3. **No logging** if neither is provided
 
 This means:
 
-- Setting a global default logger via `set_logger()` enables logging for **all** subsequent calls that don't explicitly provide a logger
-- To ensure zero performance impact, verify that no global logger is set and don't pass logger parameters
-- Per-call `logger=None` does **not** disable logging if a constructor or global logger is configured; it falls back to the next level in the priority order
+- `EnvResolver` instances: `logger=None` falls back to constructor logger, NOT global logger
+- Global functions: `logger=None` falls back to global default logger
+- Per-call `logger=None` does **not** disable logging if a fallback logger exists
+- To ensure zero performance impact: don't set global logger AND don't pass logger parameters
 
 ## See Also
 
