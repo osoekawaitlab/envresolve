@@ -32,6 +32,9 @@ def _parse_variable_spec(spec: str) -> tuple[str, str | None]:
     Returns:
         Tuple of (variable_name, default_value or None)
 
+    Raises:
+        VariableNotFoundError: If variable name is empty
+
     Examples:
         >>> _parse_variable_spec("VAR")
         ('VAR', None)
@@ -47,6 +50,10 @@ def _parse_variable_spec(spec: str) -> tuple[str, str | None]:
     parts = spec.split(":-", 1)
     var_name = parts[0]
     default_value = parts[1] if len(parts) > 1 else ""
+
+    # Validate variable name is not empty (e.g., ${:-default})
+    if not var_name:
+        raise VariableNotFoundError(var_name)
 
     return (var_name, default_value)
 

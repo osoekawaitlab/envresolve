@@ -167,3 +167,13 @@ def test_default_value_with_env_expander(mocker: MockerFixture) -> None:
     result = expander.expand("${ENV:-prod}-${REGION}-${CLUSTER:-main}")
 
     assert result == "prod-us-west-2-main"
+
+
+def test_empty_variable_name_with_default_raises_error() -> None:
+    """Test that empty variable name with default raises VariableNotFoundError."""
+    env: dict[str, str] = {}
+
+    with pytest.raises(VariableNotFoundError) as exc:
+        envresolve.expand_variables("${:-default}", env)
+
+    assert exc.value.variable_name == ""

@@ -221,6 +221,14 @@ def test_parse_variable_spec_with_multiple_delimiters() -> None:
     assert default_value == "default:-backup"
 
 
+def test_parse_variable_spec_with_empty_var_name_raises_error() -> None:
+    """Test that empty variable name raises VariableNotFoundError."""
+    with pytest.raises(VariableNotFoundError) as exc:
+        _parse_variable_spec(":-default")
+
+    assert exc.value.variable_name == ""
+
+
 # Phase 2: Resolution with Default Values Tests
 
 
