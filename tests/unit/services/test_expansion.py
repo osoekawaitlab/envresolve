@@ -5,8 +5,12 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from envresolve.exceptions import CircularReferenceError, VariableNotFoundError
-from envresolve.services.expansion import expand_variables
+from envresolve.exceptions import (
+    CircularReferenceError,
+    InvalidVariableNameError,
+    VariableNotFoundError,
+)
+from envresolve.services.expansion import _parse_variable_spec, expand_variables
 
 
 def test_expand_variables_function_exists() -> None:
@@ -176,3 +180,219 @@ def test_expand_variables_does_not_log_variable_values() -> None:
     for call in logger.error.call_args_list:
         args = call[0]
         assert "secret-value" not in str(args)
+
+
+# Phase 1: Core Parsing Logic Tests
+
+
+def test_parse_variable_spec_without_default() -> None:
+    """Test parsing variable spec without default value."""
+    var_name, default_value = _parse_variable_spec("VAR")
+
+    assert var_name == "VAR"
+    assert default_value is None
+
+
+def test_parse_variable_spec_with_default() -> None:
+    """Test parsing variable spec with default value."""
+    var_name, default_value = _parse_variable_spec("VAR:-default")
+
+    assert var_name == "VAR"
+    assert default_value == "default"
+
+
+def test_parse_variable_spec_with_empty_default() -> None:
+    """Test parsing variable spec with empty default value."""
+    var_name, default_value = _parse_variable_spec("VAR:-")
+
+    assert var_name == "VAR"
+    assert default_value == ""
+
+
+def test_parse_variable_spec_with_colon_in_default() -> None:
+    """Test parsing variable spec with colon in default value."""
+    var_name, default_value = _parse_variable_spec("VAR:-http://example.com:8080")
+
+    assert var_name == "VAR"
+    assert default_value == "http://example.com:8080"
+
+
+def test_parse_variable_spec_with_multiple_delimiters() -> None:
+    """Test parsing variable spec with multiple :- in default value."""
+    var_name, default_value = _parse_variable_spec("VAR:-default:-backup")
+
+    assert var_name == "VAR"
+    assert default_value == "default:-backup"
+
+
+def test_parse_variable_spec_with_empty_var_name_raises_error() -> None:
+    """Test that empty variable name raises VariableNotFoundError."""
+    with pytest.raises(InvalidVariableNameError) as exc:
+        _parse_variable_spec(":-default")
+
+    assert exc.value.variable_name == "<empty>"
+
+
+# Phase 2: Resolution with Default Values Tests
+
+
+def test_expand_undefined_variable_with_default() -> None:
+    """Test that undefined variable uses default value."""
+    result = expand_variables("${VAR:-fallback}", {})
+
+    assert result == "fallback"
+
+
+def test_expand_empty_variable_with_default() -> None:
+    """Test that empty variable uses default value."""
+    result = expand_variables("${VAR:-fallback}", {"VAR": ""})
+
+    assert result == "fallback"
+
+
+def test_expand_defined_variable_ignores_default() -> None:
+    """Test that defined variable ignores default value."""
+    result = expand_variables("${VAR:-fallback}", {"VAR": "actual"})
+
+    assert result == "actual"
+
+
+# Phase 3: Nested Default Values Tests
+
+
+def test_expand_nested_variable_in_default() -> None:
+    """Test that default value can contain nested variables."""
+    result = expand_variables("${VAR:-${OTHER}}", {"OTHER": "backup"})
+
+    assert result == "backup"
+
+
+def test_expand_multiple_default_levels() -> None:
+    """Test multiple levels of default values."""
+    result = expand_variables("${A:-${B:-${C}}}", {"C": "deep"})
+
+    assert result == "deep"
+
+
+def test_expand_default_with_multiple_vars() -> None:
+    """Test default value with multiple variables."""
+    result = expand_variables("${VAR:-prefix-${OTHER}-suffix}", {"OTHER": "mid"})
+
+    assert result == "prefix-mid-suffix"
+
+
+# Phase 4: Circular Reference Handling Tests
+
+
+def test_circular_reference_in_default_value() -> None:
+    """Test that circular reference through default is detected."""
+    env = {"A": "${B:-${A}}", "B": ""}
+
+    with pytest.raises(CircularReferenceError) as exc:
+        expand_variables("${A}", env)
+
+    # A is expanded, contains ${B:-${A}}, innermost ${A} processed first
+    assert exc.value.chain == ["A", "A"]
+
+
+def test_circular_reference_chain_with_default() -> None:
+    """Test complex circular reference involving defaults."""
+    env = {"A": "${C}", "C": "${B:-${A}}"}
+
+    with pytest.raises(CircularReferenceError) as exc:
+        expand_variables("${A}", env)
+
+    # A -> C -> B (empty, uses default ${A}) -> circular
+    assert "A" in exc.value.chain
+    assert "C" in exc.value.chain
+
+
+def test_default_with_undefined_nested_variable() -> None:
+    """Test default value containing undefined variable raises error."""
+    with pytest.raises(VariableNotFoundError) as exc:
+        expand_variables("${VAR:-${UNDEFINED}}", {})
+
+    assert exc.value.variable_name == "UNDEFINED"
+
+
+def test_non_circular_complex_default() -> None:
+    """Test non-circular complex default value."""
+    env = {"B": "${C}", "C": "value"}
+    result = expand_variables("${A:-${B}}", env)
+
+    assert result == "value"
+
+
+# Phase 5: Edge Case Tests
+
+
+def test_empty_default_value() -> None:
+    """Test that empty default value returns empty string."""
+    result = expand_variables("${VAR:-}", {})
+
+    assert result == ""
+
+
+def test_default_with_special_characters() -> None:
+    """Test default value with special characters."""
+    result = expand_variables("${VAR:-url:port}", {})
+
+    assert result == "url:port"
+
+
+def test_default_with_whitespace() -> None:
+    """Test that whitespace in default value is preserved."""
+    result = expand_variables("${VAR:-  spaces  }", {})
+
+    assert result == "  spaces  "
+
+
+def test_default_with_dollar_sign() -> None:
+    """Test default value containing dollar sign."""
+    result = expand_variables("${VAR:-price is $100}", {})
+
+    assert result == "price is $100"
+
+
+def test_invalid_variable_name_in_default_syntax_raises_error() -> None:
+    """Test that invalid variable name with default syntax raises error."""
+    with pytest.raises(InvalidVariableNameError, match=r"<empty>"):
+        expand_variables("${:-fallback}", {})
+
+
+def test_multiple_variables_with_defaults() -> None:
+    """Test multiple variables with default values in one string."""
+    result = expand_variables("${A:-x}/${B:-y}", {"A": "1"})
+
+    assert result == "1/y"
+
+
+def test_invalid_variable_name_with_prefix_digit_raises_error() -> None:
+    """Test that variable name starting with digit raises error."""
+    with pytest.raises(InvalidVariableNameError, match=r"1VAR"):
+        expand_variables("${1VAR:-x}", {})
+
+
+def test_invalid_variable_name_with_space_raises_error() -> None:
+    """Test that variable name containing space raises error."""
+    with pytest.raises(InvalidVariableNameError, match=r"<empty>| VAR"):
+        expand_variables("${ VAR:-x}", {})
+
+
+# Phase 6: Integration Tests
+
+
+def test_simple_var_with_default_syntax() -> None:
+    """Test simple variable syntax combined with default syntax."""
+    env = {"PREFIX": "start"}
+    result = expand_variables("$PREFIX-${SUFFIX:-end}", env)
+
+    assert result == "start-end"
+
+
+def test_nested_curly_with_defaults() -> None:
+    """Test nested curly braces with default values."""
+    env = {"ENV": "dev", "VAR_dev": "value"}
+    result = expand_variables("${VAR_${ENV:-prod}}", env)
+
+    assert result == "value"

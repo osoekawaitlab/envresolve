@@ -118,6 +118,7 @@ class EnvResolver:
             URIParseError: If the URI format is invalid
             SecretResolutionError: If secret resolution fails
             VariableNotFoundError: If a referenced variable is not found
+            InvalidVariableNameError: If a variable name is invalid
             CircularReferenceError: If a circular variable reference is detected
         """
         effective_logger = logger if logger is not None else self._logger
@@ -571,6 +572,7 @@ def resolve_secret(uri: str, logger: logging.Logger | None = None) -> str:
         URIParseError: If the URI format is invalid
         SecretResolutionError: If secret resolution fails
         VariableNotFoundError: If a referenced variable is not found
+        InvalidVariableNameError: If a variable name is invalid
         CircularReferenceError: If a circular variable reference is detected
 
     Examples:

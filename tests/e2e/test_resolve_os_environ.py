@@ -10,6 +10,7 @@ import pytest
 from pytest_mock import MockFixture
 
 import envresolve
+from envresolve.providers.base import SecretProvider
 
 if TYPE_CHECKING:
     from azure.keyvault.secrets import KeyVaultSecret
@@ -553,7 +554,7 @@ def test_resolve_os_environ_wraps_resolution_error_with_context(
     - Error message includes both secret URI and context
     """
     # Register mock provider that fails
-    mock_provider = MagicMock(spec=envresolve.providers.base.SecretProvider)
+    mock_provider = MagicMock(spec=SecretProvider)
     mock_provider.resolve.side_effect = envresolve.SecretResolutionError(
         "Secret not found", "akv://vault/missing-secret"
     )

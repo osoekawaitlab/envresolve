@@ -7,7 +7,11 @@ import pytest
 from pytest_mock import MockerFixture
 
 import envresolve
-from envresolve.exceptions import CircularReferenceError, VariableNotFoundError
+from envresolve import (
+    CircularReferenceError,
+    InvalidVariableNameError,
+    VariableNotFoundError,
+)
 
 
 def test_simple_variable_expansion_with_curly_braces() -> None:
@@ -99,3 +103,81 @@ def test_expansion_with_dotenv_file(tmp_path: Path) -> None:
 
     assert db_result == "akv://my-company-vault/db-password"
     assert api_result == "akv://my-company-vault/api-key"
+
+
+def test_default_value_with_undefined_variable() -> None:
+    """Test that default value is used when variable is undefined."""
+    env: dict[str, str] = {}
+
+    result = envresolve.expand_variables("${HOST:-localhost}", env)
+
+    assert result == "localhost"
+
+
+def test_default_value_with_empty_variable() -> None:
+    """Test that default value is used when variable is empty."""
+    env: dict[str, str] = {"HOST": ""}
+
+    result = envresolve.expand_variables("${HOST:-localhost}", env)
+
+    assert result == "localhost"
+
+
+def test_default_value_with_defined_variable() -> None:
+    """Test that defined variable value is used, ignoring default."""
+    env: dict[str, str] = {"HOST": "example.com"}
+
+    result = envresolve.expand_variables("${HOST:-localhost}", env)
+
+    assert result == "example.com"
+
+
+def test_default_value_with_nested_variables() -> None:
+    """Test that default values can contain nested variable references."""
+    env: dict[str, str] = {"FALLBACK_HOST": "backup.example.com"}
+
+    result = envresolve.expand_variables("${HOST:-${FALLBACK_HOST}}", env)
+
+    assert result == "backup.example.com"
+
+
+def test_default_value_in_complex_string() -> None:
+    """Test default values in a complex URI with multiple variables."""
+    env: dict[str, str] = {"HOST": "api.example.com"}
+
+    result = envresolve.expand_variables(
+        "${PROTO:-https}://${HOST}:${PORT:-443}/api", env
+    )
+
+    assert result == "https://api.example.com:443/api"
+
+
+def test_default_value_with_dotenv_file(tmp_path: Path) -> None:
+    """Test that default values work when loading from .env file."""
+    env_file = tmp_path / ".env"
+    env_file.write_text("VAULT_NAME=my-vault\n")
+
+    expander = envresolve.DotEnvExpander(env_file)
+    result = expander.expand("akv://${VAULT_NAME}/${SECRET:-default-secret}")
+
+    assert result == "akv://my-vault/default-secret"
+
+
+def test_default_value_with_env_expander(mocker: MockerFixture) -> None:
+    """Test that default values work with EnvExpander using os.environ."""
+    mocker.patch.dict(os.environ, {"REGION": "us-west-2"})
+
+    expander = envresolve.EnvExpander()
+    result = expander.expand("${ENV:-prod}-${REGION}-${CLUSTER:-main}")
+
+    assert result == "prod-us-west-2-main"
+
+
+def test_empty_variable_name_with_default_raises_error() -> None:
+    """Test that empty variable name with default raises VariableNotFoundError."""
+    env: dict[str, str] = {}
+
+    with pytest.raises(InvalidVariableNameError) as exc:
+        envresolve.expand_variables("${:-default}", env)
+
+    assert exc.value.variable_name == "<empty>"

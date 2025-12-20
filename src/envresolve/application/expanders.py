@@ -29,6 +29,7 @@ class BaseExpander:
         Raises:
             CircularReferenceError: If a circular reference is detected
             VariableNotFoundError: If a referenced variable is not found
+            InvalidVariableNameError: If a variable name is invalid
         """
         return expand_variables(text, self.env, logger=logger)
 

@@ -13,6 +13,7 @@ from envresolve.exceptions import (
     CircularReferenceError,
     EnvironmentVariableResolutionError,
     EnvResolveError,
+    InvalidVariableNameError,
     MutuallyExclusiveArgumentsError,
     ProviderRegistrationError,
     SecretResolutionError,
@@ -21,7 +22,7 @@ from envresolve.exceptions import (
 )
 from envresolve.services.expansion import expand_variables
 
-__version__ = "0.1.10"
+__version__ = "0.1.11"
 
 __all__ = [
     "CircularReferenceError",
@@ -30,6 +31,7 @@ __all__ = [
     "EnvResolveError",
     "EnvResolver",
     "EnvironmentVariableResolutionError",
+    "InvalidVariableNameError",
     "MutuallyExclusiveArgumentsError",
     "ProviderRegistrationError",
     "SecretResolutionError",

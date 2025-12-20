@@ -23,6 +23,35 @@ result = expand_variables("akv://${VAULT}/${SECRET}", env)
 print(result)  # akv://corp-kv/db-password
 ```
 
+### Default Values
+
+Use default values for undefined or empty variables with `${VAR:-default}` syntax:
+
+```python
+from envresolve import expand_variables
+
+# Variable is undefined - use default
+result = expand_variables("${HOST:-localhost}", {})
+print(result)  # localhost
+
+# Variable is empty - use default (Bash :- semantics)
+result = expand_variables("${HOST:-localhost}", {"HOST": ""})
+print(result)  # localhost
+
+# Variable is defined - ignore default
+result = expand_variables("${HOST:-localhost}", {"HOST": "example.com"})
+print(result)  # example.com
+
+# Defaults can contain nested variables
+env = {"FALLBACK_HOST": "backup.example.com"}
+result = expand_variables("${HOST:-${FALLBACK_HOST}}", env)
+print(result)  # backup.example.com
+
+# Multiple defaults in one string
+result = expand_variables("${PROTO:-https}://${HOST:-localhost}:${PORT:-443}", {})
+print(result)  # https://localhost:443
+```
+
 ### Load from .env File
 
 Load environment variables from a `.env` file with automatic secret resolution:
