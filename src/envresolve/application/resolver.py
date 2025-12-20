@@ -73,6 +73,7 @@ class SecretResolver:
             SecretResolutionError: If no provider is registered for the scheme
             URIParseError: If the URI format is invalid
             VariableNotFoundError: If a referenced variable is not found
+            InvalidVariableNameError: If a variable name is invalid
             CircularReferenceError: If a circular reference is detected
         """
         if env is None:

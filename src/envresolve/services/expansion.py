@@ -87,6 +87,7 @@ def expand_variables(
     Raises:
         CircularReferenceError: If a circular reference is detected
         VariableNotFoundError: If a referenced variable is not found and no default
+        InvalidVariableNameError: If a variable name is invalid
 
     Examples:
         >>> expand_variables("${VAULT}", {"VAULT": "my-vault"})
@@ -138,6 +139,7 @@ def _resolve(
     Raises:
         CircularReferenceError: If circular reference detected
         VariableNotFoundError: If variable not found and no default provided
+        InvalidVariableNameError: If variable name is invalid
     """
     if var_name in stack:
         cycle_start = stack.index(var_name)
