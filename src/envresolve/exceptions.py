@@ -35,6 +35,19 @@ class VariableNotFoundError(EnvResolveError):
         super().__init__(f"Variable not found: {variable_name}")
 
 
+class InvalidVariableNameError(EnvResolveError):
+    """Raised when a variable reference uses an invalid name."""
+
+    def __init__(self, variable_name: str) -> None:
+        """Initialize InvalidVariableNameError.
+
+        Args:
+            variable_name: The invalid variable name encountered
+        """
+        self.variable_name = variable_name
+        super().__init__(f"Invalid variable name: {variable_name}")
+
+
 class URIParseError(EnvResolveError):
     """Raised when a secret URI cannot be parsed."""
 

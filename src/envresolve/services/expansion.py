@@ -3,10 +3,15 @@
 import logging
 import re
 
-from envresolve.exceptions import CircularReferenceError, VariableNotFoundError
+from envresolve.exceptions import (
+    CircularReferenceError,
+    InvalidVariableNameError,
+    VariableNotFoundError,
+)
 
 INNER_CURLY_PATTERN = re.compile(r"\$\{([^{}]+)\}")
 SIMPLE_VAR_PATTERN = re.compile(r"\$([A-Za-z_][A-Za-z0-9_]*)\b")
+VAR_NAME_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 
 
 def _log_error(logger: logging.Logger | None, message: str) -> None:
@@ -32,9 +37,6 @@ def _parse_variable_spec(spec: str) -> tuple[str, str | None]:
     Returns:
         Tuple of (variable_name, default_value or None)
 
-    Raises:
-        VariableNotFoundError: If variable name is empty
-
     Examples:
         >>> _parse_variable_spec("VAR")
         ('VAR', None)
@@ -44,16 +46,16 @@ def _parse_variable_spec(spec: str) -> tuple[str, str | None]:
         ('VAR', 'http://example.com:8080')
     """
     if ":-" not in spec:
-        return (spec, None)
+        var_name, default_value = spec, None
+    else:
+        # Split on first :- only (allows :- in default value)
+        parts = spec.split(":-", 1)
+        var_name = parts[0]
+        default_value = parts[1] if len(parts) > 1 else ""
 
-    # Split on first :- only (allows :- in default value)
-    parts = spec.split(":-", 1)
-    var_name = parts[0]
-    default_value = parts[1] if len(parts) > 1 else ""
-
-    # Validate variable name is not empty (e.g., ${:-default})
-    if not var_name:
-        raise VariableNotFoundError(var_name)
+    # Validate variable name (e.g., prevents ${:-default} or ${1VAR:-x})
+    if not VAR_NAME_PATTERN.match(var_name):
+        raise InvalidVariableNameError(var_name or "<empty>")
 
     return (var_name, default_value)
 

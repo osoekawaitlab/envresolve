@@ -7,7 +7,11 @@ import pytest
 from pytest_mock import MockerFixture
 
 import envresolve
-from envresolve.exceptions import CircularReferenceError, VariableNotFoundError
+from envresolve import (
+    CircularReferenceError,
+    InvalidVariableNameError,
+    VariableNotFoundError,
+)
 
 
 def test_simple_variable_expansion_with_curly_braces() -> None:
@@ -173,7 +177,7 @@ def test_empty_variable_name_with_default_raises_error() -> None:
     """Test that empty variable name with default raises VariableNotFoundError."""
     env: dict[str, str] = {}
 
-    with pytest.raises(VariableNotFoundError) as exc:
+    with pytest.raises(InvalidVariableNameError) as exc:
         envresolve.expand_variables("${:-default}", env)
 
-    assert exc.value.variable_name == ""
+    assert exc.value.variable_name == "<empty>"

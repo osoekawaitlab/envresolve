@@ -5,7 +5,11 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from envresolve.exceptions import CircularReferenceError, VariableNotFoundError
+from envresolve.exceptions import (
+    CircularReferenceError,
+    InvalidVariableNameError,
+    VariableNotFoundError,
+)
 from envresolve.services.expansion import _parse_variable_spec, expand_variables
 
 
@@ -223,10 +227,10 @@ def test_parse_variable_spec_with_multiple_delimiters() -> None:
 
 def test_parse_variable_spec_with_empty_var_name_raises_error() -> None:
     """Test that empty variable name raises VariableNotFoundError."""
-    with pytest.raises(VariableNotFoundError) as exc:
+    with pytest.raises(InvalidVariableNameError) as exc:
         _parse_variable_spec(":-default")
 
-    assert exc.value.variable_name == ""
+    assert exc.value.variable_name == "<empty>"
 
 
 # Phase 2: Resolution with Default Values Tests
@@ -350,11 +354,29 @@ def test_default_with_dollar_sign() -> None:
     assert result == "price is $100"
 
 
+def test_invalid_variable_name_in_default_syntax_raises_error() -> None:
+    """Test that invalid variable name with default syntax raises error."""
+    with pytest.raises(InvalidVariableNameError, match=r"<empty>"):
+        expand_variables("${:-fallback}", {})
+
+
 def test_multiple_variables_with_defaults() -> None:
     """Test multiple variables with default values in one string."""
     result = expand_variables("${A:-x}/${B:-y}", {"A": "1"})
 
     assert result == "1/y"
+
+
+def test_invalid_variable_name_with_prefix_digit_raises_error() -> None:
+    """Test that variable name starting with digit raises error."""
+    with pytest.raises(InvalidVariableNameError, match=r"1VAR"):
+        expand_variables("${1VAR:-x}", {})
+
+
+def test_invalid_variable_name_with_space_raises_error() -> None:
+    """Test that variable name containing space raises error."""
+    with pytest.raises(InvalidVariableNameError, match=r"<empty>| VAR"):
+        expand_variables("${ VAR:-x}", {})
 
 
 # Phase 6: Integration Tests
