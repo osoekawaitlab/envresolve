@@ -23,6 +23,34 @@ def _log_error(logger: logging.Logger | None, message: str) -> None:
         logger.error(message)
 
 
+def _parse_variable_spec(spec: str) -> tuple[str, str | None]:
+    """Parse variable specification into name and default value.
+
+    Args:
+        spec: Variable specification (e.g., "VAR" or "VAR:-default")
+
+    Returns:
+        Tuple of (variable_name, default_value or None)
+
+    Examples:
+        >>> _parse_variable_spec("VAR")
+        ('VAR', None)
+        >>> _parse_variable_spec("VAR:-default")
+        ('VAR', 'default')
+        >>> _parse_variable_spec("VAR:-http://example.com:8080")
+        ('VAR', 'http://example.com:8080')
+    """
+    if ":-" not in spec:
+        return (spec, None)
+
+    # Split on first :- only (allows :- in default value)
+    parts = spec.split(":-", 1)
+    var_name = parts[0]
+    default_value = parts[1] if len(parts) > 1 else ""
+
+    return (var_name, default_value)
+
+
 def expand_variables(
     text: str, env: dict[str, str], logger: logging.Logger | None = None
 ) -> str:
@@ -32,6 +60,9 @@ def expand_variables(
     multiple variables in a single string. Circular references are detected by
     keeping track of the expansion stack and reporting the chain that caused the
     loop.
+
+    Supports default values with ${VAR:-default} syntax. If VAR is undefined or
+    empty, the default value is used. Default values are expanded recursively.
 
     Args:
         text: The text containing variables to expand
@@ -43,7 +74,7 @@ def expand_variables(
 
     Raises:
         CircularReferenceError: If a circular reference is detected
-        VariableNotFoundError: If a referenced variable is not found
+        VariableNotFoundError: If a referenced variable is not found and no default
 
     Examples:
         >>> expand_variables("${VAULT}", {"VAULT": "my-vault"})
@@ -52,6 +83,12 @@ def expand_variables(
         'value'
         >>> expand_variables("akv://${VAULT}/${SECRET}", {"VAULT": "v", "SECRET": "s"})
         'akv://v/s'
+        >>> expand_variables("${HOST:-localhost}", {})
+        'localhost'
+        >>> expand_variables("${HOST:-localhost}", {"HOST": ""})
+        'localhost'
+        >>> expand_variables("${HOST:-localhost}", {"HOST": "example.com"})
+        'example.com'
     """
     try:
         result = _expand_text(text, env, [], logger)
@@ -72,15 +109,42 @@ def _resolve(
     env: dict[str, str],
     stack: list[str],
     logger: logging.Logger | None,
+    default_value: str | None = None,
 ) -> str:
+    """Resolve a variable, using default if provided and var not found/empty.
+
+    Args:
+        var_name: Variable name to resolve
+        env: Environment dictionary
+        stack: Expansion stack for circular reference detection
+        logger: Optional logger
+        default_value: Optional default value if variable is undefined/empty
+
+    Returns:
+        Resolved and expanded value
+
+    Raises:
+        CircularReferenceError: If circular reference detected
+        VariableNotFoundError: If variable not found and no default provided
+    """
     if var_name in stack:
         cycle_start = stack.index(var_name)
         cycle = [*stack[cycle_start:], var_name]
         raise CircularReferenceError(var_name, cycle)
 
-    if var_name not in env:
+    # Check if variable is missing or empty
+    if var_name not in env or env[var_name] == "":
+        if default_value is not None:
+            # Expand the default value recursively
+            stack.append(var_name)
+            try:
+                return _expand_text(default_value, env, stack, logger)
+            finally:
+                stack.pop()
+        # No default, raise error
         raise VariableNotFoundError(var_name)
 
+    # Variable exists and is non-empty
     stack.append(var_name)
     try:
         return _expand_text(env[var_name], env, stack, logger)
@@ -102,7 +166,11 @@ def _expand_text(
         def replace_curly(match: re.Match[str]) -> str:
             nonlocal curly_changed
             curly_changed = True
-            return _resolve(match.group(1), env, stack, logger)
+            var_reference = match.group(1)
+
+            # Parse variable spec to extract name and default
+            var_name, default_value = _parse_variable_spec(var_reference)
+            return _resolve(var_name, env, stack, logger, default_value)
 
         next_value = INNER_CURLY_PATTERN.sub(replace_curly, current)
         if curly_changed:
