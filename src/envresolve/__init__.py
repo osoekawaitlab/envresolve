@@ -22,7 +22,7 @@ from envresolve.exceptions import (
 )
 from envresolve.services.expansion import expand_variables
 
-__version__ = "0.1.10"
+__version__ = "0.1.11"
 
 __all__ = [
     "CircularReferenceError",
