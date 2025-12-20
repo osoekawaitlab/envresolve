@@ -37,6 +37,9 @@ def _parse_variable_spec(spec: str) -> tuple[str, str | None]:
     Returns:
         Tuple of (variable_name, default_value or None)
 
+    Raises:
+        InvalidVariableNameError: If variable name does not match allowed pattern
+
     Examples:
         >>> _parse_variable_spec("VAR")
         ('VAR', None)
