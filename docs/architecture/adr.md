@@ -338,6 +338,17 @@ Default logging exposes only operation types and error categories, without speci
 
 ---
 
+### ADR 0031: Support Default Values in Variable Expansion (`${VAR:-default}` Syntax)
+
+**Status**: Accepted
+**Date**: 2025-12-20
+
+Implement `${VAR:-default}` syntax for providing fallback values when variables are undefined or empty. Default values are expanded recursively and work with existing two-phase algorithm.
+
+[View Full ADR](../adr/0031-default-value-syntax.md)
+
+---
+
 ## ADR Template
 
 All ADRs follow a consistent template defined in [ADR 0000: ADR Template](../adr/0000-adr-template.md).
