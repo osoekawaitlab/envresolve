@@ -7,7 +7,7 @@ from envresolve.exceptions import URIParseError
 from envresolve.models import ParsedURI
 
 # Supported secret URI schemes
-SUPPORTED_SCHEMES = {"akv"}
+SUPPORTED_SCHEMES = {"akv", "asm"}
 
 
 def is_secret_uri(uri: str) -> bool:
