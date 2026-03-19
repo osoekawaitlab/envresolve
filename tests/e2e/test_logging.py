@@ -51,13 +51,18 @@ def test_global_facade_provides_set_logger_function() -> None:
     envresolve.set_logger(None)
 
 
-def test_global_facade_functions_accept_logger_parameter() -> None:
+def test_global_facade_functions_accept_logger_parameter(
+    mocker: MockerFixture,
+) -> None:
     """Test that global facade functions accept optional logger parameter.
 
     Acceptance criteria: Global facade functions accept optional logger parameter
     that overrides global default
     """
     logger = logging.getLogger(__name__)
+
+    # Mock os.environ to avoid issues with shell variables like PS1
+    mocker.patch.dict(os.environ, {"TEST_VAR": "value"}, clear=True)
 
     # resolve_secret should accept logger parameter
     result = envresolve.resolve_secret("plain-string", logger=logger)
@@ -72,13 +77,18 @@ def test_global_facade_functions_accept_logger_parameter() -> None:
     assert isinstance(os_result, dict)
 
 
-def test_env_resolver_methods_accept_logger_parameter() -> None:
+def test_env_resolver_methods_accept_logger_parameter(
+    mocker: MockerFixture,
+) -> None:
     """Test that EnvResolver methods accept optional logger parameter.
 
     The logger parameter in methods should override the constructor logger.
     """
     constructor_logger = logging.getLogger("constructor")
     method_logger = logging.getLogger("method")
+
+    # Mock os.environ to avoid issues with shell variables like PS1
+    mocker.patch.dict(os.environ, {"TEST_VAR": "value"}, clear=True)
 
     resolver = EnvResolver(logger=constructor_logger)
 
