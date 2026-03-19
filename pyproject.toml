@@ -32,9 +32,13 @@ azure = [
     "azure-identity>=1.19.0",
     "azure-keyvault-secrets>=4.9.0",
 ]
+aws = [
+    "boto3>=1.42.71",
+]
 
 [dependency-groups]
 dev = [
+    "boto3-stubs[secretsmanager]>=1.42.71",
     "mypy>=1.18.2",
     "nox>=2025.5.1",
     "pytest>=8.4.2",
@@ -127,4 +131,5 @@ markers = [
     "e2e: End-to-end tests with mocked SDKs",
     "live: Tests requiring real external services",
     "azure: Azure-specific tests",
+    "aws: AWS-specific tests",
 ]
