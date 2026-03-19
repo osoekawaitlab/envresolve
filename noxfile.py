@@ -9,22 +9,22 @@ PYTHON_VERSIONS = ["3.10", "3.11", "3.12", "3.13", "3.14"]
 
 @nox.session(python="3.12")
 def tests_unit(session: nox.Session) -> None:
-    """Run unit tests only (requires Azure SDK for mocking)."""
-    session.install("-e", ".[azure]", "--group=dev")
+    """Run unit tests only (requires Azure and AWS SDKs for mocking)."""
+    session.install("-e", ".[azure,aws]", "--group=dev")
     session.run("pytest", "tests/unit/", "-v")
 
 
 @nox.session(python="3.12")
 def tests_e2e(session: nox.Session) -> None:
-    """Run E2E tests only (requires Azure SDK for mocking)."""
-    session.install("-e", ".[azure]", "--group=dev")
+    """Run E2E tests only (requires Azure and AWS SDKs for mocking)."""
+    session.install("-e", ".[azure,aws]", "--group=dev")
     session.run("pytest", "tests/e2e/", "-v")
 
 
 @nox.session(python="3.12")
 def tests(session: nox.Session) -> None:
-    """Run all tests with coverage reporting (requires Azure SDK)."""
-    session.install("-e", ".[azure]", "--group=dev")
+    """Run all tests with coverage reporting (requires Azure and AWS SDKs)."""
+    session.install("-e", ".[azure,aws]", "--group=dev")
     session.run(
         "pytest",
         "--cov=src/envresolve",
@@ -37,7 +37,7 @@ def tests(session: nox.Session) -> None:
 @nox.session(python=PYTHON_VERSIONS)
 def tests_all_versions(session: nox.Session) -> None:
     """Run all tests across all supported Python versions."""
-    session.install("-e", ".[azure]", "--group=dev")
+    session.install("-e", ".[azure,aws]", "--group=dev")
     session.run("pytest")
 
 
@@ -62,6 +62,13 @@ def tests_without_azure(session: nox.Session) -> None:
 
 @nox.session(python="3.12")
 def tests_live(session: nox.Session) -> None:
+    """Run all live integration tests against real cloud resources."""
+    session.install("-e", ".[azure,aws]", "--group=dev")
+    session.run("pytest", "-m", "live", "tests/live/", "-v")
+
+
+@nox.session(python="3.12")
+def tests_live_azure(session: nox.Session) -> None:
     """Run live integration tests against real Azure resources.
 
     Prerequisites (one-time setup):
@@ -83,13 +90,31 @@ def tests_live(session: nox.Session) -> None:
           when cleanup is needed.
     """
     session.install("-e", ".[azure]", "--group=dev")
-    session.run("pytest", "-m", "live", "tests/live/", "-v")
+    session.run("pytest", "-m", "live and azure", "tests/live/", "-v")
+
+
+@nox.session(python="3.12")
+def tests_live_aws(session: nox.Session) -> None:
+    """Run live integration tests against real AWS resources.
+
+    Prerequisites (one-time setup):
+      1. Configure AWS credentials (aws configure or environment variables)
+      2. Create a secret in AWS Secrets Manager
+
+    Required environment variables:
+      - ENVRESOLVE_LIVE_AWS_SECRET_NAME
+      - ENVRESOLVE_LIVE_AWS_SECRET_VALUE
+      - ENVRESOLVE_LIVE_AWS_SECRET_VERSION (optional)
+      - ENVRESOLVE_LIVE_AWS_REGION (optional)
+    """
+    session.install("-e", ".[aws]", "--group=dev")
+    session.run("pytest", "-m", "live and aws", "tests/live/", "-v")
 
 
 @nox.session(python="3.12")
 def mypy(session: nox.Session) -> None:
-    """Run mypy type checking (requires Azure SDK for type stubs)."""
-    session.install("-e", ".[azure]", "--group=dev")
+    """Run mypy type checking (requires Azure and AWS SDKs for type stubs)."""
+    session.install("-e", ".[azure,aws]", "--group=dev")
     session.run("mypy", "src/", "tests/")
 
 
@@ -110,7 +135,7 @@ def format_code(session: nox.Session) -> None:
 @nox.session(python="3.12")
 def quality(session: nox.Session) -> None:
     """Run all code quality checks (mypy, ruff)."""
-    session.install("-e", ".[azure]", "--group=dev")
+    session.install("-e", ".[azure,aws]", "--group=dev")
     session.run("mypy", "src/", "tests/")
     session.run("ruff", "check", ".")
 
@@ -118,7 +143,7 @@ def quality(session: nox.Session) -> None:
 @nox.session(python="3.12")
 def check_all(session: nox.Session) -> None:
     """Run all checks and tests."""
-    session.install("-e", ".[azure]", "--group=dev")
+    session.install("-e", ".[azure,aws]", "--group=dev")
     session.run("pytest")
     session.run("mypy", "src/", "tests/")
     session.run("ruff", "check", ".")
