@@ -3,6 +3,7 @@
 from envresolve.api import (
     EnvResolver,
     load_env,
+    register_aws_sm_provider,
     register_azure_kv_provider,
     resolve_os_environ,
     resolve_secret,
@@ -39,6 +40,7 @@ __all__ = [
     "VariableNotFoundError",
     "expand_variables",
     "load_env",
+    "register_aws_sm_provider",
     "register_azure_kv_provider",
     "resolve_os_environ",
     "resolve_secret",

@@ -98,6 +98,51 @@ class EnvResolver:
         # Reset resolver to pick up new providers
         self._resolver = None
 
+    def register_aws_sm_provider(
+        self, provider: "SecretProvider | None" = None
+    ) -> None:
+        """Register AWS Secrets Manager provider for asm:// scheme.
+
+        This method is safe to call multiple times (idempotent).
+
+        Args:
+            provider: Optional custom provider. If None, uses default
+                AWSSecretsManagerProvider.
+
+        Raises:
+            ProviderRegistrationError: If boto3 is not installed
+                (only when provider is None)
+        """
+        if provider is None:
+            try:
+                # Dynamically import the provider module
+                provider_module = importlib.import_module(
+                    "envresolve.providers.aws_sm"
+                )
+                provider_class = provider_module.AWSSecretsManagerProvider
+            except ImportError as e:
+                # Check which dependency is missing
+                missing_deps: list[str] = []
+                try:
+                    importlib.import_module("boto3")
+                except ImportError:
+                    missing_deps.append("boto3")
+
+                if missing_deps:
+                    deps_str = ", ".join(missing_deps)
+                    msg = (
+                        f"AWS Secrets Manager provider requires: {deps_str}. "
+                        "Install with: pip install envresolve[aws]"
+                    )
+                else:
+                    msg = f"Failed to import AWS Secrets Manager provider. Error: {e}"
+                raise ProviderRegistrationError(msg, original_error=e) from e
+            self._providers["asm"] = provider_class()
+        else:
+            self._providers["asm"] = provider
+        # Reset resolver to pick up new providers
+        self._resolver = None
+
     def resolve_secret(self, uri: str, logger: logging.Logger | None = None) -> str:
         """Resolve a secret URI to its value.
 
@@ -550,6 +595,36 @@ def register_azure_kv_provider(provider: "SecretProvider | None" = None) -> None
         >>> # secret = envresolve.resolve_secret("akv://my-vault/db-password")
     """
     _default_resolver.register_azure_kv_provider(provider=provider)
+
+
+def register_aws_sm_provider(provider: "SecretProvider | None" = None) -> None:
+    """Register AWS Secrets Manager provider for asm:// scheme.
+
+    This function should be called before attempting to resolve secrets
+    from AWS Secrets Manager. It is safe to call multiple times (idempotent).
+
+    Args:
+        provider: Optional custom provider. If None, uses default
+            AWSSecretsManagerProvider.
+
+    Raises:
+        ProviderRegistrationError: If boto3 is not installed
+            (only when provider is None)
+
+    Examples:
+        >>> import envresolve
+        >>> # Default behavior
+        >>> envresolve.register_aws_sm_provider()
+        >>> # Custom provider with custom session
+        >>> # import boto3
+        >>> # from envresolve.providers.aws_sm import AWSSecretsManagerProvider
+        >>> # session = boto3.Session(profile_name="my-profile")
+        >>> # custom = AWSSecretsManagerProvider(session=session)
+        >>> # envresolve.register_aws_sm_provider(provider=custom)
+        >>> # Now you can resolve secrets (requires AWS authentication)
+        >>> # secret = envresolve.resolve_secret("asm://my-secret/value")
+    """
+    _default_resolver.register_aws_sm_provider(provider=provider)
 
 
 def resolve_secret(uri: str, logger: logging.Logger | None = None) -> str:
