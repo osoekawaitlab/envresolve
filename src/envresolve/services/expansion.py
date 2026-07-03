@@ -111,6 +111,9 @@ def expand_variables(
     except CircularReferenceError:
         _log_error(logger, "Variable expansion failed: circular reference detected")
         raise
+    except InvalidVariableNameError:
+        _log_error(logger, "Variable expansion failed: invalid variable name")
+        raise
     else:
         if logger is not None:
             logger.debug("Variable expansion completed")
