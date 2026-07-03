@@ -349,6 +349,17 @@ Implement `${VAR:-default}` syntax for providing fallback values when variables 
 
 ---
 
+### ADR 0032: Categorize `InvalidVariableNameError` as a Suppressible Expansion Error
+
+**Status**: Accepted
+**Date**: 2026-07-03
+
+Categorize `InvalidVariableNameError` as an expansion failure controlled by `stop_on_expansion_error` (alongside `VariableNotFoundError`), so that unsupported `${...}` syntax in system variables such as `PS1` is skipped when leniency is requested instead of aborting the loop.
+
+[View Full ADR](../adr/0032-categorize-invalid-name-as-expansion-error.md)
+
+---
+
 ## ADR Template
 
 All ADRs follow a consistent template defined in [ADR 0000: ADR Template](../adr/0000-adr-template.md).

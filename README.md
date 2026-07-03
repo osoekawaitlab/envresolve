@@ -206,6 +206,23 @@ resolved = envresolve.load_env(stop_on_expansion_error=False)
 resolved = envresolve.load_env(stop_on_resolution_error=False)
 ```
 
+`stop_on_expansion_error=False` also skips variables whose values use
+`${...}` syntax that envresolve does not support (for example bash's
+`${VAR:+word}`, as found in the default Debian/Ubuntu `PS1`). This is
+useful when resolving `os.environ`, which may contain shell-provided
+variables that were never meant to be expanded:
+
+```python
+import os
+import envresolve
+
+# Default Debian/Ubuntu PS1 uses unsupported ${VAR:+word} syntax
+os.environ["PS1"] = "${debian_chroot:+($debian_chroot)}"
+
+# PS1 is skipped; the remaining variables are still resolved
+resolved = envresolve.resolve_os_environ(stop_on_expansion_error=False)
+```
+
 ## Installation
 
 ```bash

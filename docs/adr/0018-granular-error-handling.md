@@ -71,7 +71,7 @@ def resolve_os_environ(
 
 **Error categorization:**
 
-- `stop_on_expansion_error` controls: `VariableNotFoundError` only
+- `stop_on_expansion_error` controls: `VariableNotFoundError` (and, since ADR-0032, `InvalidVariableNameError`)
 - `stop_on_resolution_error` controls: `SecretResolutionError`
 - `CircularReferenceError` is **always raised** (configuration error, cannot be suppressed)
 
