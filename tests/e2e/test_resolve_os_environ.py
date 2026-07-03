@@ -302,6 +302,71 @@ def test_resolve_os_environ_expansion_error_suppressed(
 
 @pytest.mark.e2e
 @pytest.mark.usefixtures("resolve_mocks")
+def test_resolve_os_environ_invalid_variable_name_suppressed(
+    mocker: MockFixture,
+) -> None:
+    """Test resolve_os_environ skips unsupported ${...} syntax when lenient.
+
+    Regression test for issue #46: a variable whose value uses unsupported
+    parameter-expansion syntax (e.g. bash's ${VAR:+word}, as seen in the
+    default Debian/Ubuntu PS1) raises InvalidVariableNameError. With
+    stop_on_expansion_error=False the variable must be skipped and the loop
+    must continue instead of aborting.
+
+    Acceptance criteria:
+    - stop_on_expansion_error=False also suppresses InvalidVariableNameError
+    """
+    mocker.patch.dict(
+        os.environ,
+        {
+            "VALID": "hello",
+            "PS1": "${debian_chroot:+($debian_chroot)}",
+            "ALSO_VALID": "world",
+        },
+        clear=True,
+    )
+
+    result = envresolve.resolve_os_environ(
+        stop_on_expansion_error=False,
+        stop_on_resolution_error=False,
+    )
+
+    assert result == {"VALID": "hello", "ALSO_VALID": "world"}
+    assert "PS1" not in result
+
+
+@pytest.mark.e2e
+@pytest.mark.usefixtures("resolve_mocks")
+def test_resolve_os_environ_invalid_variable_name_raised_by_default(
+    mocker: MockFixture,
+) -> None:
+    """Test resolve_os_environ wraps InvalidVariableNameError by default.
+
+    Acceptance criteria:
+    - Raise EnvironmentVariableResolutionError wrapping InvalidVariableNameError
+      when an unsupported ${...} syntax is encountered and the default strict
+      behavior is used
+    """
+    mocker.patch.dict(
+        os.environ,
+        {
+            "VALID": "hello",
+            "INVALID": "${debian_chroot:+($debian_chroot)}",
+        },
+        clear=True,
+    )
+
+    with pytest.raises(envresolve.EnvironmentVariableResolutionError) as exc_info:
+        envresolve.resolve_os_environ()
+
+    assert exc_info.value.context_key == "INVALID"
+    assert isinstance(
+        exc_info.value.original_error, envresolve.InvalidVariableNameError
+    )
+
+
+@pytest.mark.e2e
+@pytest.mark.usefixtures("resolve_mocks")
 def test_resolve_os_environ_circular_reference_error_raised_by_default(
     mocker: MockFixture,
 ) -> None:

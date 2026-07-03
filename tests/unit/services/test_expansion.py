@@ -142,6 +142,19 @@ def test_expand_variables_logs_error_on_circular_reference() -> None:
     )
 
 
+def test_expand_variables_logs_error_on_invalid_variable_name() -> None:
+    """Test that InvalidVariableNameError logs error message."""
+    logger = MagicMock(spec=logging.Logger)
+
+    with pytest.raises(InvalidVariableNameError):
+        expand_variables("${debian_chroot:+($debian_chroot)}", {}, logger=logger)
+
+    # Verify error log was called with error message
+    logger.error.assert_called_once_with(
+        "Variable expansion failed: invalid variable name"
+    )
+
+
 def test_expand_variables_does_not_log_when_logger_is_none() -> None:
     """Test that no logging occurs when logger is None."""
     # Should not raise any errors even though logger is None
