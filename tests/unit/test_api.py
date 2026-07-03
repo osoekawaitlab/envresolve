@@ -13,6 +13,7 @@ from envresolve.api import EnvResolver
 from envresolve.exceptions import (
     EnvironmentVariableResolutionError,
     EnvResolveError,
+    InvalidVariableNameError,
     MutuallyExclusiveArgumentsError,
     ProviderRegistrationError,
     SecretResolutionError,
@@ -325,6 +326,52 @@ def test_resolve_os_environ_with_stop_on_error_true() -> None:
     # Verify the wrapper exception has correct attributes
     assert exc_info.value.context_key == "FAILING"
     assert isinstance(exc_info.value.original_error, SecretResolutionError)
+
+
+def test_resolve_os_environ_invalid_name_suppressed_when_lenient() -> None:
+    """Test resolve_os_environ skips InvalidVariableNameError when lenient.
+
+    Regression test for issue #46: unsupported ${...} syntax (e.g. bash's
+    ${VAR:+word}) raises InvalidVariableNameError, which stop_on_expansion_error
+    must suppress.
+    """
+    resolver = EnvResolver()
+
+    with patch.dict(
+        os.environ,
+        {
+            "VALID": "hello",
+            "PS1": "${debian_chroot:+($debian_chroot)}",
+            "ALSO_VALID": "world",
+        },
+        clear=True,
+    ):
+        result = resolver.resolve_os_environ(stop_on_expansion_error=False)
+
+        assert result == {"VALID": "hello", "ALSO_VALID": "world"}
+        assert "PS1" not in result
+
+
+def test_resolve_os_environ_invalid_name_wrapped_when_strict() -> None:
+    """Test resolve_os_environ wraps InvalidVariableNameError with context.
+
+    Under the default strict behavior, InvalidVariableNameError is wrapped in
+    EnvironmentVariableResolutionError, consistent with VariableNotFoundError.
+    """
+    resolver = EnvResolver()
+
+    with (
+        patch.dict(
+            os.environ,
+            {"INVALID": "${debian_chroot:+($debian_chroot)}"},
+            clear=True,
+        ),
+        pytest.raises(EnvironmentVariableResolutionError) as exc_info,
+    ):
+        resolver.resolve_os_environ()
+
+    assert exc_info.value.context_key == "INVALID"
+    assert isinstance(exc_info.value.original_error, InvalidVariableNameError)
 
 
 def test_resolve_os_environ_with_empty_environ(

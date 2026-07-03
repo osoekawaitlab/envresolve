@@ -12,6 +12,7 @@ from dotenv import dotenv_values, find_dotenv
 from envresolve.application.resolver import SecretResolver
 from envresolve.exceptions import (
     EnvironmentVariableResolutionError,
+    InvalidVariableNameError,
     MutuallyExclusiveArgumentsError,
     ProviderRegistrationError,
     SecretResolutionError,
@@ -189,7 +190,8 @@ class EnvResolver:
 
         Raises:
             EnvironmentVariableResolutionError: If a variable resolution error occurs
-                (wraps VariableNotFoundError or SecretResolutionError with context)
+                (wraps VariableNotFoundError, InvalidVariableNameError, or
+                SecretResolutionError with context)
             URIParseError: If a URI format is invalid
             CircularReferenceError: If a circular variable reference is detected
         """
@@ -315,7 +317,11 @@ class EnvResolver:
                     stop_on_resolution_error=stop_on_resolution_error,
                     logger=logger,
                 )
-            except (VariableNotFoundError, SecretResolutionError) as e:
+            except (
+                VariableNotFoundError,
+                InvalidVariableNameError,
+                SecretResolutionError,
+            ) as e:
                 msg = f"Failed to resolve environment variable '{key}': {e}"
                 raise EnvironmentVariableResolutionError(
                     msg,
@@ -375,7 +381,11 @@ class EnvResolver:
                     stop_on_resolution_error=stop_on_resolution_error,
                     logger=logger,
                 )
-            except (VariableNotFoundError, SecretResolutionError) as e:
+            except (
+                VariableNotFoundError,
+                InvalidVariableNameError,
+                SecretResolutionError,
+            ) as e:
                 msg = f"Failed to resolve environment variable '{key}': {e}"
                 raise EnvironmentVariableResolutionError(
                     msg,
@@ -412,6 +422,7 @@ class EnvResolver:
             value: Value to resolve (may contain variables or be a secret URI)
             env: Environment dict for variable expansion. If None, uses os.environ.
             stop_on_expansion_error: If False, return None on VariableNotFoundError
+                or InvalidVariableNameError
             stop_on_resolution_error: If False, return None on SecretResolutionError
             logger: Optional logger for diagnostic messages
 
@@ -423,7 +434,7 @@ class EnvResolver:
         try:
             resolver = self._get_resolver()
             return resolver.resolve(value, env, logger=logger)
-        except VariableNotFoundError:
+        except (VariableNotFoundError, InvalidVariableNameError):
             if stop_on_expansion_error:
                 raise
             return None
@@ -463,7 +474,8 @@ class EnvResolver:
 
         Raises:
             EnvironmentVariableResolutionError: If a variable resolution error occurs
-                (wraps VariableNotFoundError or SecretResolutionError with context)
+                (wraps VariableNotFoundError, InvalidVariableNameError, or
+                SecretResolutionError with context)
             MutuallyExclusiveArgumentsError: If both keys and prefix are specified
             URIParseError: If the URI format is invalid
             CircularReferenceError: If a circular variable reference is detected
@@ -637,7 +649,8 @@ def load_env(
 
     Raises:
         EnvironmentVariableResolutionError: If a variable resolution error occurs
-            (wraps VariableNotFoundError or SecretResolutionError with context)
+            (wraps VariableNotFoundError, InvalidVariableNameError, or
+            SecretResolutionError with context)
         URIParseError: If a URI format is invalid
         CircularReferenceError: If a circular variable reference is detected
 
@@ -706,7 +719,8 @@ def resolve_os_environ(
 
     Raises:
         EnvironmentVariableResolutionError: If a variable resolution error occurs
-            (wraps VariableNotFoundError or SecretResolutionError with context)
+            (wraps VariableNotFoundError, InvalidVariableNameError, or
+            SecretResolutionError with context)
         MutuallyExclusiveArgumentsError: If both keys and prefix are specified
         URIParseError: If the URI format is invalid
         CircularReferenceError: If a circular variable reference is detected
